@@ -36,6 +36,6 @@ type GetStaffResponseData struct {
 
 type GetStaffAttendanceResponseData struct {
 	AttendanceDate string
-	CheckinTime    string
-	CheckoutTime   string
+	CheckinTime    time.Time
+	CheckoutTime   sql.NullTime
 }

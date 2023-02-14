@@ -6,5 +6,5 @@ import (
 )
 
 func (s *staffServiceController) UpdateRequestStatus(ctx context.Context, request *schema.UpdateRequestStatusRequest, requestId string) error {
-	return nil
+	return s.repository.UpdateRequestStatus(ctx, request.Status, requestId)
 }

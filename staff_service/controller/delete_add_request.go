@@ -3,5 +3,5 @@ package controller
 import "context"
 
 func (s *staffServiceController) DeleteAddRequest(ctx context.Context, staffId string) error {
-	return nil
+	return s.repository.DeleteAddRequest(ctx, staffId)
 }
