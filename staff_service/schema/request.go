@@ -49,5 +49,5 @@ type CreateAddRequest struct {
 }
 
 type UpdateRequestStatusRequest struct {
-	Status bool
+	Status string
 }

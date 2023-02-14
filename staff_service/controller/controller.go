@@ -16,6 +16,8 @@ type IStaffServiceController interface {
 	CreateAddRequest(ctx context.Context, request *schema.CreateAddRequest) error
 	DeleteAddRequest(ctx context.Context, staffId string) error
 	UpdateRequestStatus(ctx context.Context, request *schema.UpdateRequestStatusRequest, requestId string) error
+	UpdateStaff(ctx context.Context, request *schema.UpdateStaffRequest, staffId string) error
+	DeleteStaff(ctx context.Context, staffId string) error
 }
 
 type staffServiceController struct {
