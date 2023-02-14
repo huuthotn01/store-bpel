@@ -1,0 +1,11 @@
+HTTP_PORT: 14080
+
+WAREHOUSE_SERVICE_PORT: 14081
+KAFKA_PORT: 9092
+
+MYSQL:
+  HOST: localhost
+  PORT: 3306
+  USERNAME: admin
+  PASSWORD: 'admin'
+  DATABASE: goods_service

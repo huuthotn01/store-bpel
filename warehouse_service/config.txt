@@ -1,0 +1,10 @@
+HTTP_PORT: 14081
+
+STAFF_SERVICE_PORT: 14082
+
+MYSQL:
+  HOST: localhost
+  PORT: 3306
+  USERNAME: admin
+  PASSWORD: 'admin'
+  DATABASE: warehouse_service
