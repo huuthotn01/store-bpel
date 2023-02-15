@@ -47,7 +47,7 @@ type AttendanceModel struct {
 type RequestsModel struct {
 	Id          string
 	RequestDate time.Time
-	RequestType int
+	RequestType int // 1 for ADD, 2 for DELETE
 	StaffId     string
 	Status      string
 }

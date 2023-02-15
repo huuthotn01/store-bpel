@@ -31,7 +31,6 @@ type GetStaffResponseData struct {
 	EndDate     sql.NullTime
 	Gender      int
 	PhoneNumber string
-	Email       string
 }
 
 type GetStaffAttendanceResponseData struct {

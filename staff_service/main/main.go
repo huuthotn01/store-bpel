@@ -247,8 +247,8 @@ func handleDeleteRequest(w http.ResponseWriter, r *http.Request) {
 	enc := json.NewEncoder(w)
 	vars := mux.Vars(r)
 	staffId := vars["staffId"]
-	if r.Method == "DELETE" {
-		err := ctrl.DeleteAddRequest(ctx, staffId)
+	if r.Method == "POST" {
+		err := ctrl.CreateDeleteRequest(ctx, staffId)
 		if err != nil {
 			err = enc.Encode(&schema.UpdateResponse{
 				StatusCode: 500,

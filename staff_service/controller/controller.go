@@ -14,13 +14,14 @@ type IStaffServiceController interface {
 	GetDetailStaff(ctx context.Context, staffId string) (*schema.GetStaffResponseData, error)
 	GetStaffAttendance(ctx context.Context, staffId string) ([]*schema.GetStaffAttendanceResponseData, error)
 	CreateAddRequest(ctx context.Context, request *schema.CreateAddRequest) error
-	DeleteAddRequest(ctx context.Context, staffId string) error
+	CreateDeleteRequest(ctx context.Context, staffId string) error
 	UpdateRequestStatus(ctx context.Context, request *schema.UpdateRequestStatusRequest, requestId string) error
 	UpdateStaff(ctx context.Context, request *schema.UpdateStaffRequest, staffId string) error
 	DeleteStaff(ctx context.Context, staffId string) error
 }
 
 type staffServiceController struct {
+	db         *gorm.DB
 	config     *config.Config
 	repository repo.IStaffServiceRepository
 }
@@ -30,6 +31,7 @@ func NewController(config *config.Config, db *gorm.DB) IStaffServiceController {
 	repository := repo.NewRepository(db)
 
 	return &staffServiceController{
+		db:         db,
 		config:     config,
 		repository: repository,
 	}
