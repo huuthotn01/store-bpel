@@ -32,7 +32,7 @@ func main() {
 	r := mux.NewRouter()
 	registerEndpoint(r)
 
-	if err = http.ListenAndServe(":"+cast.ToString(cfg.HttpPort), nil); err != nil {
+	if err = http.ListenAndServe(":"+cast.ToString(cfg.HttpPort), r); err != nil {
 		log.Fatal(err)
 	}
 	log.Printf("Staff Service initialized successfully at port %d", cfg.HttpPort)
