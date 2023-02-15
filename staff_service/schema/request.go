@@ -1,10 +1,8 @@
 package schema
 
-import "time"
-
 type AddStaffRequest struct {
 	Name         string
-	Birthdate    time.Time
+	Birthdate    string
 	Hometown     string
 	CitizenId    string
 	Phone        string
@@ -12,10 +10,11 @@ type AddStaffRequest struct {
 	Ward         string
 	District     string
 	Province     string
-	WorkingPlace string // TODO post check with API docs
-	Role         string // TODO post check with API docs
+	WorkingPlace string
+	Role         string
+	Gender       string
 	Salary       int
-	Username     string
+	Email        string
 }
 
 type UpdateStaffRequest struct {
@@ -30,6 +29,7 @@ type UpdateStaffRequest struct {
 	Street       string
 	WorkingPlace string
 	Role         string
+	Gender       string
 	Salary       int
 }
 
@@ -45,7 +45,9 @@ type CreateAddRequest struct {
 	Street       string
 	WorkingPlace string
 	Role         string
+	Gender       string
 	Salary       int
+	Email        string
 }
 
 type UpdateRequestStatusRequest struct {

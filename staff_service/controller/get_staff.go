@@ -2,7 +2,6 @@ package controller
 
 import (
 	"context"
-	"github.com/spf13/cast"
 	"store-bpel/staff_service/schema"
 )
 
@@ -21,10 +20,10 @@ func (s *staffServiceController) GetStaff(ctx context.Context) ([]*schema.GetSta
 			District:    staff.District,
 			Province:    staff.Province,
 			CitizenId:   staff.CitizenId,
-			Role:        cast.ToString(staff.StaffPosition),
+			Role:        staff.StaffPosition,
 			PhoneNumber: staff.Phone,
-			Email:       staff.Email,
 			StartDate:   staff.StartDate,
+			EndDate:     staff.EndDate,
 			Salary:      staff.Salary,
 		})
 	}
@@ -32,5 +31,22 @@ func (s *staffServiceController) GetStaff(ctx context.Context) ([]*schema.GetSta
 }
 
 func (s *staffServiceController) GetDetailStaff(ctx context.Context, staffId string) (*schema.GetStaffResponseData, error) {
-	return nil, nil
+	staff, err := s.repository.GetStaffDetail(ctx, staffId)
+	if err != nil {
+		return nil, err
+	}
+	return &schema.GetStaffResponseData{
+		StaffId:     staffId,
+		StaffName:   staff.StaffName,
+		Street:      staff.Street,
+		Ward:        staff.Ward,
+		District:    staff.District,
+		Province:    staff.Province,
+		CitizenId:   staff.CitizenId,
+		Role:        staff.StaffPosition,
+		PhoneNumber: staff.Phone,
+		StartDate:   staff.StartDate,
+		EndDate:     staff.EndDate,
+		Salary:      staff.Salary,
+	}, nil
 }

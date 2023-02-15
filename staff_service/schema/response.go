@@ -31,11 +31,10 @@ type GetStaffResponseData struct {
 	EndDate     sql.NullTime
 	Gender      int
 	PhoneNumber string
-	Email       string
 }
 
 type GetStaffAttendanceResponseData struct {
 	AttendanceDate string
-	CheckinTime    string
-	CheckoutTime   string
+	CheckinTime    time.Time
+	CheckoutTime   sql.NullTime
 }

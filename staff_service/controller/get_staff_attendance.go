@@ -6,5 +6,17 @@ import (
 )
 
 func (s *staffServiceController) GetStaffAttendance(ctx context.Context, staffId string) ([]*schema.GetStaffAttendanceResponseData, error) {
-	return nil, nil
+	attendance, err := s.repository.GetStaffAttendance(ctx, staffId)
+	if err != nil {
+		return nil, err
+	}
+	result := make([]*schema.GetStaffAttendanceResponseData, 0, len(attendance))
+	for _, atte := range attendance {
+		result = append(result, &schema.GetStaffAttendanceResponseData{
+			AttendanceDate: atte.AttendanceDate,
+			CheckinTime:    atte.CheckinTime,
+			CheckoutTime:   atte.CheckoutTime,
+		})
+	}
+	return result, nil
 }
