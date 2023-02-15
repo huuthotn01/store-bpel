@@ -40,6 +40,7 @@ func (s *staffServiceController) CreateAddRequest(ctx context.Context, request *
 			StaffPosition: request.Role,
 			Gender:        request.Gender,
 			Salary:        request.Salary,
+			Email:         request.Email,
 		}, request.Email)
 	})
 }

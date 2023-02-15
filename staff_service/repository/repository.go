@@ -42,7 +42,8 @@ func (r *staffServiceRepository) GetStaffDetail(ctx context.Context, staffId str
 func (r *staffServiceRepository) AddStaff(ctx context.Context, staff *StaffModel, username string) error {
 	return r.db.Transaction(func(tx *gorm.DB) error {
 		// add to staff table
-		err := tx.WithContext(ctx).Table(r.staffTableName).Create(staff).Error
+		err := tx.WithContext(ctx).Table(r.staffTableName).Select(`staff_id`, `staff_name`, `province`, `district`, `ward`, `street`, `hometown`, `citizen_id`, `staff_position`, `birthdate`, `salary`,
+			`gender`, `phone`, `email`).Create(staff).Error
 		if err != nil {
 			return err
 		}

@@ -28,7 +28,6 @@ type GetStaffResponseData struct {
 	BranchId    string
 	Salary      int
 	StartDate   time.Time
-	EndDate     sql.NullTime
 	Gender      int
 	PhoneNumber string
 }

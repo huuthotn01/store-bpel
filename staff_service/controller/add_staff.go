@@ -25,6 +25,7 @@ func (s *staffServiceController) AddStaff(ctx context.Context, request *schema.A
 		Salary:        request.Salary,
 		StaffPosition: request.Role,
 		Gender:        request.Gender,
+		Email:         request.Email,
 	}
 	err := s.repository.AddStaff(ctx, staffModel, request.Email)
 	// TODO call to branch service to add new staff and current working place

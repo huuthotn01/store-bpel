@@ -9,7 +9,7 @@ import (
 )
 
 func (s *staffServiceController) CreateDeleteRequest(ctx context.Context, staffId string) error {
-	requestId := fmt.Sprintf("add_%s", cast.ToString(time.Now().Unix()))
+	requestId := fmt.Sprintf("del_%s", cast.ToString(time.Now().Unix()))
 	return s.repository.CreateStaffRequest(ctx, &repository.RequestsModel{
 		Id:          requestId,
 		RequestDate: time.Now(),

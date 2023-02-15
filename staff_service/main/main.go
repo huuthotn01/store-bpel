@@ -40,9 +40,9 @@ func main() {
 
 func registerEndpoint(r *mux.Router) {
 	r.HandleFunc("/api/staff-service/staff/attendance/{staffId}", handleStaffAttendance)
-	r.HandleFunc("/api/staff-service/staff/request/add", handleAddRequest)
-	r.HandleFunc("/api/staff-service/staff/request/delete/{staffId}", handleDeleteRequest)
-	r.HandleFunc("/api/staff-service/staff/request/{requestId}", handleUpdateRequestStatus)
+	r.HandleFunc("/api/staff-service/request/add", handleAddRequest)
+	r.HandleFunc("/api/staff-service/request/delete/{staffId}", handleDeleteRequest)
+	r.HandleFunc("/api/staff-service/request/{requestId}", handleUpdateRequestStatus)
 	r.HandleFunc("/api/staff-service/staff/{staffId}", handleDetailStaff)
 	r.HandleFunc("/api/staff-service/staff", handleStaff)
 }
@@ -61,8 +61,8 @@ func handleStaff(w http.ResponseWriter, r *http.Request) {
 			})
 		} else {
 			err = enc.Encode(&schema.GetResponse{
-				StatusCode: 500,
-				Message:    err.Error(),
+				StatusCode: 200,
+				Message:    "OK",
 				Data:       resp,
 			})
 		}
@@ -121,8 +121,8 @@ func handleDetailStaff(w http.ResponseWriter, r *http.Request) {
 			})
 		} else {
 			err = enc.Encode(&schema.GetResponse{
-				StatusCode: 500,
-				Message:    err.Error(),
+				StatusCode: 200,
+				Message:    "OK",
 				Data:       resp,
 			})
 		}
@@ -190,8 +190,8 @@ func handleStaffAttendance(w http.ResponseWriter, r *http.Request) {
 			})
 		} else {
 			err = enc.Encode(&schema.GetResponse{
-				StatusCode: 500,
-				Message:    err.Error(),
+				StatusCode: 200,
+				Message:    "OK",
 				Data:       resp,
 			})
 		}
