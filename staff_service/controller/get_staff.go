@@ -23,7 +23,6 @@ func (s *staffServiceController) GetStaff(ctx context.Context) ([]*schema.GetSta
 			Role:        staff.StaffPosition,
 			PhoneNumber: staff.Phone,
 			StartDate:   staff.StartDate,
-			EndDate:     staff.EndDate,
 			Salary:      staff.Salary,
 		})
 	}
@@ -46,7 +45,6 @@ func (s *staffServiceController) GetDetailStaff(ctx context.Context, staffId str
 		Role:        staff.StaffPosition,
 		PhoneNumber: staff.Phone,
 		StartDate:   staff.StartDate,
-		EndDate:     staff.EndDate,
 		Salary:      staff.Salary,
 	}, nil
 }

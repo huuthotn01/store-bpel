@@ -31,10 +31,10 @@ type StaffModel struct {
 	StaffPosition string
 	Birthdate     string
 	StartDate     time.Time
-	EndDate       sql.NullTime
 	Salary        int
 	Gender        string
 	Phone         string
+	Email         string
 }
 
 type AttendanceModel struct {
