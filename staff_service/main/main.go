@@ -53,7 +53,13 @@ func handleStaff(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	enc := json.NewEncoder(w)
 	if r.Method == "GET" {
-		resp, err := ctrl.GetStaff(ctx)
+		var (
+			staffName = r.URL.Query().Get("name")
+			staffId   = r.URL.Query().Get("id")
+			resp      []*schema.GetStaffResponseData
+			err       error
+		)
+		resp, err = ctrl.GetStaff(ctx, staffName, staffId)
 		if err != nil {
 			err = enc.Encode(&schema.GetResponse{
 				StatusCode: 500,

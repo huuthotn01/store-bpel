@@ -5,8 +5,8 @@ import (
 	"store-bpel/staff_service/schema"
 )
 
-func (s *staffServiceController) GetStaff(ctx context.Context) ([]*schema.GetStaffResponseData, error) {
-	staffs, err := s.repository.GetStaff(ctx)
+func (s *staffServiceController) GetStaff(ctx context.Context, staffName, staffId string) ([]*schema.GetStaffResponseData, error) {
+	staffs, err := s.repository.GetStaff(ctx, staffName, staffId)
 	if err != nil {
 		return nil, err
 	}
@@ -24,6 +24,7 @@ func (s *staffServiceController) GetStaff(ctx context.Context) ([]*schema.GetSta
 			PhoneNumber: staff.Phone,
 			StartDate:   staff.StartDate,
 			Salary:      staff.Salary,
+			Status:      staff.Status,
 		})
 	}
 	return res, nil
@@ -46,5 +47,6 @@ func (s *staffServiceController) GetDetailStaff(ctx context.Context, staffId str
 		PhoneNumber: staff.Phone,
 		StartDate:   staff.StartDate,
 		Salary:      staff.Salary,
+		Status:      staff.Status,
 	}, nil
 }

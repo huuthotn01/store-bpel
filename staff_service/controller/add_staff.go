@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/spf13/cast"
+	"gorm.io/gorm"
 	"store-bpel/staff_service/repository"
 	"store-bpel/staff_service/schema"
 	"time"
@@ -26,9 +27,18 @@ func (s *staffServiceController) AddStaff(ctx context.Context, request *schema.A
 		StaffPosition: request.Role,
 		Gender:        request.Gender,
 		Email:         request.Email,
+		Status:        "APPROVED",
 	}
-	err := s.repository.AddStaff(ctx, staffModel, request.Email)
-	// TODO call to branch service to add new staff and current working place
-	// TODO call to account service to create account, use async
-	return err
+	return s.db.Transaction(func(tx *gorm.DB) error {
+		err := s.repository.AddStaff(ctx, staffModel)
+		if err != nil {
+			return err
+		}
+		return s.repository.CreateAccount(ctx, &repository.AccountModel{
+			Username: request.Email,
+			StaffId:  staffId,
+		})
+		// TODO call to branch service to add new staff and current working place
+		// TODO call to account service to create account, use async
+	})
 }

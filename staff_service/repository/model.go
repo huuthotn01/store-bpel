@@ -35,6 +35,7 @@ type StaffModel struct {
 	Gender        string
 	Phone         string
 	Email         string
+	Status        string // PENDING or APPROVED or DELETED
 }
 
 type AttendanceModel struct {
@@ -47,7 +48,7 @@ type AttendanceModel struct {
 type RequestsModel struct {
 	Id          string
 	RequestDate time.Time
-	RequestType int // 1 for ADD, 2 for DELETE
+	RequestType string // ADD or DELETE
 	StaffId     string
-	Status      string
+	Status      string // PENDING or APPROVED or UNAPPROVED
 }

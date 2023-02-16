@@ -30,6 +30,7 @@ type GetStaffResponseData struct {
 	StartDate   time.Time
 	Gender      int
 	PhoneNumber string
+	Status      string
 }
 
 type GetStaffAttendanceResponseData struct {
