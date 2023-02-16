@@ -13,7 +13,7 @@ func (s *staffServiceController) CreateDeleteRequest(ctx context.Context, staffI
 	return s.repository.CreateStaffRequest(ctx, &repository.RequestsModel{
 		Id:          requestId,
 		RequestDate: time.Now(),
-		RequestType: 2, // 2 for DELETE
+		RequestType: "DELETE",
 		StaffId:     staffId,
 		Status:      "PENDING",
 	})

@@ -11,9 +11,10 @@ create table if not exists staff (
     staff_position varchar(50) not null,
     start_date timestamp not null default current_timestamp,
     salary int not null,
-    gender varchar(10) not null,
+    gender ENUM('MALE', 'FEMALE', 'UNDEFINED') not null,
     phone varchar(12),
     email varchar(50),
+    status ENUM('PENDING', 'APPROVED', 'DELETED') not null,
     constraint PK_staff primary key (staff_id)
 ) engine = InnoDB default charset = utf8mb4 collate = utf8mb4_unicode_ci ;
 
@@ -34,8 +35,8 @@ create table if not exists attendance (
 create table if not exists requests (
     id varchar(100) not null,
     request_date date not null,
-    request_type int not null,
+    request_type ENUM('ADD', 'DELETE') not null,
     staff_id varchar(100) not null,
-    status varchar(50) not null,
+    status ENUM('PENDING', 'APPROVED', 'UNAPPROVED') not null,
     constraint PK_requests primary key (id)
 ) engine = InnoDB default charset = utf8mb4 collate = utf8mb4_unicode_ci ;

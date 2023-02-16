@@ -9,7 +9,7 @@ import (
 )
 
 type IStaffServiceController interface {
-	GetStaff(ctx context.Context) ([]*schema.GetStaffResponseData, error)
+	GetStaff(ctx context.Context, staffName, staffId string) ([]*schema.GetStaffResponseData, error)
 	AddStaff(ctx context.Context, request *schema.AddStaffRequest) error
 	GetDetailStaff(ctx context.Context, staffId string) (*schema.GetStaffResponseData, error)
 	GetStaffAttendance(ctx context.Context, staffId string) ([]*schema.GetStaffAttendanceResponseData, error)

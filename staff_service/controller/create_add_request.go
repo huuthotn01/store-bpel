@@ -11,6 +11,12 @@ import (
 )
 
 func (s *staffServiceController) CreateAddRequest(ctx context.Context, request *schema.CreateAddRequest) error {
+	/*
+		When receiving CreateAddRequest:
+		1. Create request in requests' table, with request_type = 'ADD' and status = 'PENDING'
+		2. Create staff in staff table with staff's status = 'PENDING'
+		3. Not create account yet.
+	*/
 	requestId := fmt.Sprintf("add_%s", cast.ToString(time.Now().Unix()))
 	staffId := fmt.Sprintf("staff_%s", cast.ToString(time.Now().Unix()))
 	return s.db.Transaction(func(tx *gorm.DB) error {
@@ -18,7 +24,7 @@ func (s *staffServiceController) CreateAddRequest(ctx context.Context, request *
 		err := s.repository.CreateStaffRequest(ctx, &repository.RequestsModel{
 			Id:          requestId,
 			RequestDate: time.Now(),
-			RequestType: 1, // 1 for ADD
+			RequestType: "ADD",
 			StaffId:     staffId,
 			Status:      "PENDING",
 		})
@@ -41,6 +47,7 @@ func (s *staffServiceController) CreateAddRequest(ctx context.Context, request *
 			Gender:        request.Gender,
 			Salary:        request.Salary,
 			Email:         request.Email,
-		}, request.Email)
+			Status:        "PENDING",
+		})
 	})
 }
