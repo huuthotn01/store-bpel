@@ -26,7 +26,9 @@ type GetStaffResponseData struct {
 	CitizenId   string
 	Role        string
 	BranchId    string
+	Hometown    string
 	Salary      int
+	Birthdate   string
 	StartDate   time.Time
 	Gender      int
 	PhoneNumber string
