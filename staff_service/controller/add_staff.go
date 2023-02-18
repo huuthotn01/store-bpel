@@ -2,16 +2,14 @@ package controller
 
 import (
 	"context"
-	"fmt"
-	"github.com/spf13/cast"
 	"gorm.io/gorm"
 	"store-bpel/staff_service/repository"
 	"store-bpel/staff_service/schema"
-	"time"
+	"strings"
 )
 
 func (s *staffServiceController) AddStaff(ctx context.Context, request *schema.AddStaffRequest) error {
-	staffId := fmt.Sprintf("staff_%s", cast.ToString(time.Now().Unix()))
+	staffId := strings.Split(request.Email, "@")[0]
 	staffModel := &repository.StaffModel{
 		StaffId:       staffId,
 		StaffName:     request.Name,
