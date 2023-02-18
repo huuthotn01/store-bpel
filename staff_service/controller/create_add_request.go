@@ -7,6 +7,7 @@ import (
 	"gorm.io/gorm"
 	"store-bpel/staff_service/repository"
 	"store-bpel/staff_service/schema"
+	"strings"
 	"time"
 )
 
@@ -18,7 +19,7 @@ func (s *staffServiceController) CreateAddRequest(ctx context.Context, request *
 		3. Not create account yet.
 	*/
 	requestId := fmt.Sprintf("add_%s", cast.ToString(time.Now().Unix()))
-	staffId := fmt.Sprintf("staff_%s", cast.ToString(time.Now().Unix()))
+	staffId := strings.Split(request.Email, "@")[0]
 	return s.db.Transaction(func(tx *gorm.DB) error {
 		// create add request
 		err := s.repository.CreateStaffRequest(ctx, &repository.RequestsModel{
