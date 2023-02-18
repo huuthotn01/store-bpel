@@ -2,8 +2,9 @@ package repository
 
 import (
 	"database/sql"
-	"gorm.io/gorm"
 	"time"
+
+	"gorm.io/gorm"
 )
 
 type staffServiceRepository struct {
@@ -36,6 +37,7 @@ type StaffModel struct {
 	Phone         string
 	Email         string
 	Status        string // PENDING or APPROVED or DELETED
+	BranchId      string
 }
 
 type AttendanceModel struct {

@@ -25,6 +25,9 @@ func (s *staffServiceController) GetStaff(ctx context.Context, staffName, staffI
 			StartDate:   staff.StartDate,
 			Salary:      staff.Salary,
 			Status:      staff.Status,
+			Birthdate:   staff.Birthdate,
+			Hometown:    staff.Hometown,
+			BranchId:    staff.BranchId,
 		})
 	}
 	return res, nil
@@ -48,5 +51,8 @@ func (s *staffServiceController) GetDetailStaff(ctx context.Context, staffId str
 		StartDate:   staff.StartDate,
 		Salary:      staff.Salary,
 		Status:      staff.Status,
+		Birthdate:   staff.Birthdate,
+		Hometown:    staff.Hometown,
+		BranchId:    staff.BranchId,
 	}, nil
 }
