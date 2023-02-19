@@ -29,7 +29,7 @@ create table if not exists attendance (
     staff_id varchar(100) not null,
     attendance_date date not null,
     checkin_time timestamp not null default current_timestamp,
-    checkout_time timestamp default current_timestamp,
+    checkout_time timestamp null,
     constraint PK_attendance primary key (staff_id, attendance_date)
 ) engine = InnoDB default charset = utf8mb4 collate = utf8mb4_unicode_ci ;
 

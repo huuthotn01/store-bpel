@@ -1,0 +1,8 @@
+HTTP_PORT: 14083
+
+MYSQL:
+  HOST: localhost
+  PORT: 3306
+  USERNAME: admin
+  PASSWORD: 'admin'
+  DATABASE: account_service

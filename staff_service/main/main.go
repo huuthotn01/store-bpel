@@ -102,10 +102,6 @@ func handleStaff(w http.ResponseWriter, r *http.Request) {
 				Message:    "OK",
 			})
 		}
-	} else if r.Method == "PUT" {
-
-	} else if r.Method == "DELETE" {
-
 	} else {
 		http.Error(w, "Method not supported", http.StatusNotFound)
 	}
