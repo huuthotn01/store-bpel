@@ -51,7 +51,7 @@ func main() {
 	}
 
 	var (
-		serviceNameCamelCase = strcase.ToCamel(serviceName)
+		serviceNameCamelCase  = strcase.ToCamel(serviceName)
 		serviceNameLowerCamel = strcase.ToLowerCamel(serviceName)
 	)
 
@@ -102,8 +102,7 @@ func getServiceIdentifier(serviceName string) string {
 	return strings.Split(serviceName, "_")[0]
 }
 
-const configTxtFileTemplate =
-`HTTP_PORT: 14000
+const configTxtFileTemplate = `HTTP_PORT: 14000
 
 MYSQL:
   HOST: localhost
@@ -113,8 +112,7 @@ MYSQL:
   DATABASE: %s
 `
 
-const makeFileTemplate =
-`start:
+const makeFileTemplate = `start:
 	cd main && go run .
 
 migrate:
@@ -127,26 +125,25 @@ migrate-down:
 	migrate -path migration -database "mysql://admin:admin@tcp(localhost:3306)/%s" -verbose down
 `
 
-const loadConfigFileTemplate =
-`package config
+const loadConfigFileTemplate = `package config
 
 import (
 	"github.com/spf13/viper"
 )
 
 type Config struct {
-	HttpPort int `+"`json:\"http_port\" mapstructure:\"http_port\"`"+`
-	MySQL *MySQLConfig `+"`json:\"mysql\" mapstructure:\"mysql\"`"+`
+	HttpPort int ` + "`json:\"http_port\" mapstructure:\"http_port\"`" + `
+	MySQL *MySQLConfig ` + "`json:\"mysql\" mapstructure:\"mysql\"`" + `
 
-	StaffServicePort int `+"`json:\"staff_service_port\" mapstructure:\"staff_service_port\"`"+`
+	StaffServicePort int ` + "`json:\"staff_service_port\" mapstructure:\"staff_service_port\"`" + `
 }
 
 type MySQLConfig struct {
-	Host string `+"`json:\"host\" mapstructure:\"host\"`"+`
-	Port int `+"`json:\"port\" mapstructure:\"port\"`"+`
-	Username string `+"`json:\"username\" mapstructure:\"username\"`"+`
-	Password string `+"`json:\"password\" mapstructure:\"password\"`"+`
-	Database string `+"`json:\"database\" mapstructure:\"database\"`"+`
+	Host string ` + "`json:\"host\" mapstructure:\"host\"`" + `
+	Port int ` + "`json:\"port\" mapstructure:\"port\"`" + `
+	Username string ` + "`json:\"username\" mapstructure:\"username\"`" + `
+	Password string ` + "`json:\"password\" mapstructure:\"password\"`" + `
+	Database string ` + "`json:\"database\" mapstructure:\"database\"`" + `
 }
 
 func Load() (config *Config, err error) {
@@ -164,8 +161,7 @@ func Load() (config *Config, err error) {
 }
 `
 
-const controllerFileTemplate =
-`package controller
+const controllerFileTemplate = `package controller
 
 import (
 	"gorm.io/gorm"
@@ -201,8 +197,7 @@ func NewController(cfg *config.Config, db *gorm.DB) I%sController {
 }
 `
 
-const kafkaAdapterFileTemplate =
-`package adapter
+const kafkaAdapterFileTemplate = `package adapter
 
 type IKafkaAdapter interface {
 
@@ -217,8 +212,7 @@ func NewKafkaAdapter() IKafkaAdapter {
 }
 `
 
-const databaseFileTemplate =
-`package main
+const databaseFileTemplate = `package main
 
 import (
 	"fmt"
@@ -257,12 +251,12 @@ func DbConnect(dbConfig *config.MySQLConfig) (*gorm.DB, error) {
 }
 `
 
-const mainFileTemplate =
-`package main
+const mainFileTemplate = `package main
 
 import (
 	"github.com/spf13/cast"
 	"log"
+	"github.com/gorilla/mux"
 	"net/http"
 	"store-bpel/%s/config"
 	"store-bpel/%s/controller"
@@ -283,21 +277,22 @@ func main() {
 	}
 
 	ctrl = controller.NewController(cfg, db)
-	registerEndpoint()
 
-	if err = http.ListenAndServe(":" + cast.ToString(cfg.HttpPort), nil); err != nil {
+	r := mux.NewRouter()
+	registerEndpoint(r)
+
+	if err = http.ListenAndServe(":" + cast.ToString(cfg.HttpPort), r); err != nil {
 		log.Fatal(err)
 	}
 	log.Printf("%s Service initialized successfully at port %s", cfg.HttpPort)
 }
 
-func registerEndpoint() {
-	// http.HandleFunc({api}, {handleFunc})
+func registerEndpoint(r *mux.Router) {
+	// r.HandleFunc({api}, {handleFunc})
 }
 `
 
-const modelFileTemplate =
-`package repository
+const modelFileTemplate = `package repository
 
 import (
 	"gorm.io/gorm"
@@ -308,8 +303,7 @@ type %sRepository struct {
 }
 `
 
-const repositoryFileTemplate =
-`package repository
+const repositoryFileTemplate = `package repository
 
 import (
 	"gorm.io/gorm"
@@ -326,8 +320,7 @@ func NewRepository(db *gorm.DB) I%sRepository {
 }
 `
 
-const responseSchemaFileTemplate =
-`package schema
+const responseSchemaFileTemplate = `package schema
 
 type UpdateResponse struct {
 	StatusCode int
