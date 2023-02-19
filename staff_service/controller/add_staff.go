@@ -2,10 +2,11 @@ package controller
 
 import (
 	"context"
-	"gorm.io/gorm"
 	"store-bpel/staff_service/repository"
 	"store-bpel/staff_service/schema"
 	"strings"
+
+	"gorm.io/gorm"
 )
 
 func (s *staffServiceController) AddStaff(ctx context.Context, request *schema.AddStaffRequest) error {
@@ -26,6 +27,7 @@ func (s *staffServiceController) AddStaff(ctx context.Context, request *schema.A
 		Gender:        request.Gender,
 		Email:         request.Email,
 		Status:        "APPROVED",
+		BranchId:      request.WorkingPlace,
 	}
 	return s.db.Transaction(func(tx *gorm.DB) error {
 		err := s.repository.AddStaff(ctx, staffModel)
