@@ -28,6 +28,8 @@ func (s *staffServiceController) GetStaff(ctx context.Context, staffName, staffI
 			Birthdate:   staff.Birthdate,
 			Hometown:    staff.Hometown,
 			BranchId:    staff.BranchId,
+			Email:       staff.Email,
+			Gender:      staff.Gender,
 		})
 	}
 	return res, nil
@@ -54,5 +56,7 @@ func (s *staffServiceController) GetDetailStaff(ctx context.Context, staffId str
 		Birthdate:   staff.Birthdate,
 		Hometown:    staff.Hometown,
 		BranchId:    staff.BranchId,
+		Email:       staff.Email,
+		Gender:      staff.Gender,
 	}, nil
 }

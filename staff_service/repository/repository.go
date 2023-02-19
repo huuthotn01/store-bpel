@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+
 	"gorm.io/gorm"
 )
 
@@ -17,6 +18,7 @@ type IStaffServiceRepository interface {
 	CreateStaffRequest(ctx context.Context, request *RequestsModel) error
 	UpdateRequestStatus(ctx context.Context, status, requestId string) error
 	GetStaffRequest(ctx context.Context, requestId string) (*RequestsModel, error)
+	GetListRequest(ctx context.Context) ([]*RequestsModel, error)
 }
 
 func NewRepository(db *gorm.DB) IStaffServiceRepository {
@@ -87,5 +89,11 @@ func (r *staffServiceRepository) UpdateRequestStatus(ctx context.Context, status
 func (r *staffServiceRepository) GetStaffRequest(ctx context.Context, requestId string) (*RequestsModel, error) {
 	var result *RequestsModel
 	query := r.db.WithContext(ctx).Table(r.requestsTaleName).Where("id = ?", requestId).First(&result)
+	return result, query.Error
+}
+
+func (r *staffServiceRepository) GetListRequest(ctx context.Context) ([]*RequestsModel, error) {
+	var result []*RequestsModel
+	query := r.db.WithContext(ctx).Table(r.requestsTaleName).Find(&result)
 	return result, query.Error
 }

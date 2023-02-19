@@ -30,13 +30,22 @@ type GetStaffResponseData struct {
 	Salary      int
 	Birthdate   string
 	StartDate   time.Time
-	Gender      int
+	Gender      string
 	PhoneNumber string
 	Status      string
+	Email       string
 }
 
 type GetStaffAttendanceResponseData struct {
 	AttendanceDate string
 	CheckinTime    time.Time
 	CheckoutTime   sql.NullTime
+}
+
+type GetRequestResponseData struct {
+	Id          string
+	RequestDate time.Time
+	RequestType string // ADD or DELETE
+	StaffId     string
+	Status      string
 }

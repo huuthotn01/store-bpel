@@ -3,14 +3,15 @@ package main
 import (
 	"context"
 	"encoding/json"
-	"github.com/gorilla/mux"
-	"github.com/spf13/cast"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"store-bpel/staff_service/config"
 	"store-bpel/staff_service/controller"
 	"store-bpel/staff_service/schema"
+
+	"github.com/gorilla/mux"
+	"github.com/spf13/cast"
 )
 
 var ctrl controller.IStaffServiceController
@@ -43,6 +44,7 @@ func registerEndpoint(r *mux.Router) {
 	r.HandleFunc("/api/staff-service/request/add", handleAddRequest)
 	r.HandleFunc("/api/staff-service/request/delete/{staffId}", handleDeleteRequest)
 	r.HandleFunc("/api/staff-service/request/{requestId}", handleUpdateRequestStatus)
+	r.HandleFunc("/api/staff-service/request", handleGetRequestList)
 	r.HandleFunc("/api/staff-service/staff/{staffId}", handleDetailStaff)
 	r.HandleFunc("/api/staff-service/staff", handleStaff)
 }
@@ -304,6 +306,40 @@ func handleUpdateRequestStatus(w http.ResponseWriter, r *http.Request) {
 				Message:    "OK",
 			})
 		}
+	} else {
+		http.Error(w, "Method not supported", http.StatusNotFound)
+	}
+}
+
+func handleGetRequestList(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	enc := json.NewEncoder(w)
+	if r.Method == "GET" {
+		var (
+			resp []*schema.GetRequestResponseData
+			err  error
+		)
+		resp, err = ctrl.GetRequest(ctx)
+		if err != nil {
+			err = enc.Encode(&schema.GetResponse{
+				StatusCode: 500,
+				Message:    err.Error(),
+			})
+		} else {
+			err = enc.Encode(&schema.GetResponse{
+				StatusCode: 200,
+				Message:    "OK",
+				Data:       resp,
+			})
+		}
+	} else if r.Method == "POST" {
+
+	} else if r.Method == "PUT" {
+
+	} else if r.Method == "DELETE" {
+
 	} else {
 		http.Error(w, "Method not supported", http.StatusNotFound)
 	}
