@@ -15,6 +15,7 @@ type IAccountServiceController interface {
 	GetListAccount(ctx context.Context, username string) ([]*schema.GetListAccountResponseData, error)
 	AddAccount(ctx context.Context, request *schema.AddAccountRequest) error
 	UpdateRole(ctx context.Context, username string, request *schema.UpdateRoleRequest) error
+	SignIn(ctx context.Context, request *schema.SignInRequest) (int, error)
 }
 
 type accountServiceController struct {

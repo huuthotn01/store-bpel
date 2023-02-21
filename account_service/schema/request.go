@@ -1,6 +1,6 @@
 package schema
 
-type AuthenticationRequest struct {
+type SignInRequest struct {
 	Username string
 	Password string
 }
