@@ -146,7 +146,43 @@ func handleSignIn(w http.ResponseWriter, r *http.Request) {
 }
 
 func handleSignUp(w http.ResponseWriter, r *http.Request) {
-
+	ctx := context.Background()
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	enc := json.NewEncoder(w)
+	if r.Method == http.MethodPost {
+		reqBody, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			err = enc.Encode(&schema.UpdateResponse{
+				StatusCode: 500,
+				Message:    err.Error(),
+			})
+			return
+		}
+		var request *schema.SignUpRequest
+		err = json.Unmarshal(reqBody, &request)
+		if err != nil {
+			err = enc.Encode(&schema.UpdateResponse{
+				StatusCode: 500,
+				Message:    err.Error(),
+			})
+			return
+		}
+		err = ctrl.SignUp(ctx, request)
+		if err != nil {
+			err = enc.Encode(&schema.UpdateResponse{
+				StatusCode: 500,
+				Message:    err.Error(),
+			})
+		} else {
+			err = enc.Encode(&schema.UpdateResponse{
+				StatusCode: 200,
+				Message:    "OK",
+			})
+		}
+	} else {
+		http.Error(w, "Method not supported", http.StatusNotFound)
+	}
 }
 
 func handleRole(w http.ResponseWriter, r *http.Request) {
