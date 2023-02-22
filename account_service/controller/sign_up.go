@@ -17,9 +17,14 @@ func (c *accountServiceController) SignUp(ctx context.Context, request *schema.S
 		return err
 	}
 
+	hashedPass, err := c.hashPasswordBcrypt(request.Password)
+	if err != nil {
+		return err
+	}
+
 	err = c.repository.AddAccount(ctx, &repository.AccountModel{
 		Username: request.Username,
-		Password: request.Password,
+		Password: hashedPass,
 		UserRole: request.Role,
 	})
 	if err != nil {
