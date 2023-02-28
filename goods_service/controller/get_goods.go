@@ -5,23 +5,34 @@ import (
 	"store-bpel/goods_service/schema"
 )
 
-func (s *goodsServiceController) GetGoods(ctx context.Context) (*schema.GetGoodsResponse, error) {
-	goods, err := s.repository.GetGoods(ctx)
-	res := make([]*schema.GoodsModel, 0, len(goods))
+func (c *goodsServiceController) GetGoods(ctx context.Context) ([]*schema.GetGoodsResponseData, error) {
+	goods, err := c.repository.GetGoods(ctx)
+	if err != nil {
+		return nil, err
+	}
+	res := make([]*schema.GetGoodsResponseData, 0, len(goods))
 	for _, item := range goods {
-		converted := schema.GoodsModel(*item)
+		converted := schema.GetGoodsResponseData(*item)
 		res = append(res, &converted)
 	}
+	// TODO handle WH call
+	_, err = c.warehouseServiceAdapter.GetWarehouse(ctx)
 	if err != nil {
 		return nil, err
 	}
-	_, err = s.warehouseServiceAdapter.GetWarehouse(ctx)
+	return res, nil
+}
+
+func (c *goodsServiceController) GetDetailGoods(ctx context.Context, goodsId string) (*schema.GetGoodsResponseData, error) {
+	goods, err := c.repository.GetDetailGoods(ctx, goodsId)
 	if err != nil {
 		return nil, err
 	}
-	return &schema.GetGoodsResponse{
-		StatusCode: 200,
-		Message: "OK",
-		Result: res,
-	}, nil
+	resConverted := schema.GetGoodsResponseData(*goods)
+	// TODO handle WH call
+	_, err = c.warehouseServiceAdapter.GetWarehouse(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return &resConverted, nil
 }
