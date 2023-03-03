@@ -1,14 +1,6 @@
 package branch_service
 
-type BranchRequest struct {
-	Body interface{}
-}
-
 type GetBranchDetailRequest struct {
-	Data GetBranchDetailData `xml:"getBranchDetail"`
-}
-
-type GetBranchDetailData struct {
 	BranchId string `xml:"BranchId"`
 }
 

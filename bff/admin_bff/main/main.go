@@ -53,10 +53,8 @@ func handleBranch(w http.ResponseWriter, r *http.Request) {
 		})
 		return
 	}
-	var request = new(branch_service.BranchRequest)
 	if r.Method == http.MethodGet {
-		body := &branch_service.GetBranchDetailRequest{}
-		request.Body = body
+		var request = new(branch_service.GetBranchDetailRequest)
 		err = xml.Unmarshal(payload, request)
 		if err != nil {
 			err = enc.Encode(&branch_service.UpdateResponse{
@@ -64,8 +62,8 @@ func handleBranch(w http.ResponseWriter, r *http.Request) {
 				Message:    fmt.Sprintf("BFF-Admin-handleBranch-GET-xml.Unmarshal err %v", err),
 			})
 		}
-		log.Printf("Body %v", request.Body)
-		branch, err := branchAdapter.GetBranch(ctx, body.Data.BranchId)
+		log.Printf("Request %v", request)
+		branch, err := branchAdapter.GetBranch(ctx, request.BranchId)
 		if err != nil {
 			err = enc.Encode(&branch_service.GetResponse{
 				StatusCode: 500,
@@ -79,14 +77,14 @@ func handleBranch(w http.ResponseWriter, r *http.Request) {
 			})
 		}
 	} else if r.Method == http.MethodPost {
-		request.Body = &branch_service.AddBranchRequestData{}
-		err = xml.Unmarshal(payload, request)
-		if err != nil {
-			err = enc.Encode(&branch_service.UpdateResponse{
-				StatusCode: 500,
-				Message:    err.Error(),
-			})
-		}
+		//request.Body = &branch_service.AddBranchRequestData{}
+		//err = xml.Unmarshal(payload, request)
+		//if err != nil {
+		//	err = enc.Encode(&branch_service.UpdateResponse{
+		//		StatusCode: 500,
+		//		Message:    err.Error(),
+		//	})
+		//}
 	} else {
 		http.Error(w, "Method not supported", http.StatusNotFound)
 	}
