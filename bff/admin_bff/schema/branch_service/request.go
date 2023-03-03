@@ -4,7 +4,7 @@ type GetBranchDetailRequest struct {
 	BranchId string `xml:"BranchId"`
 }
 
-type AddBranchRequestData struct {
+type AddBranchRequest struct {
 	Name     string `xml:"Name"`
 	Street   string `xml:"Street"`
 	Ward     string `xml:"Ward"`
@@ -14,7 +14,7 @@ type AddBranchRequestData struct {
 	Close    string `xml:"Close"`
 }
 
-type UpdateBranchRequestData struct {
+type UpdateBranchRequest struct {
 	BranchId string `xml:"BranchId"`
 	Name     string `xml:"Name"`
 	Street   string `xml:"Street"`

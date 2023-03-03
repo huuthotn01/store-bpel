@@ -1,6 +1,7 @@
 package adapter
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"errors"
@@ -14,6 +15,7 @@ import (
 
 type IBranchServiceAdapter interface {
 	GetBranch(ctx context.Context, branchId string) (*schema.GetBranchDetailResponse, error)
+	AddBranch(ctx context.Context, request *schema.AddBranchRequest) error
 }
 
 type branchServiceAdapter struct {
@@ -59,4 +61,38 @@ func (b *branchServiceAdapter) GetBranch(ctx context.Context, branchId string) (
 		return nil, err
 	}
 	return result, nil
+}
+
+func (b *branchServiceAdapter) AddBranch(ctx context.Context, request *schema.AddBranchRequest) error {
+	log.Println("Start to call branch service for AddBranch")
+	defer log.Println("End call branch service for AddBranch")
+	var result *schema.UpdateResponse
+	url := fmt.Sprintf("http://localhost:%d/api/branch-service", b.port)
+	data, err := json.Marshal(request)
+	if err != nil {
+		log.Printf("BFF-Adapter-BranchServiceAdapter-AddBranch-Marshal error %v", err)
+		return err
+	}
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, bytes.NewReader(data))
+	if err != nil {
+		log.Printf("BFF-Adapter-BranchServiceAdapter-AddBranch-NewRequestWithContext error %v", err)
+		return err
+	}
+	req.Header.Set("Content-Type", "application/json")
+	resp, err := b.httpClient.Do(req)
+	if err != nil {
+		log.Printf("BFF-Adapter-BranchServiceAdapter-AddBranch-httpClient.Do error %v", err)
+		return err
+	}
+	respByteArr, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Printf("BFF-Adapter-BranchServiceAdapter-AddBranch-ioutil.ReadAll error %v", err)
+		return err
+	}
+	err = json.Unmarshal(respByteArr, &result)
+	if err != nil {
+		log.Printf("BFF-Adapter-BranchServiceAdapter-AddBranch-json.Unmarshal error %v", err)
+		return err
+	}
+	return nil
 }
