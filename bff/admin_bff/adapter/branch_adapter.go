@@ -3,6 +3,7 @@ package adapter
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -28,22 +29,34 @@ func NewBranchAdapter(cfg *config.Config) IBranchServiceAdapter {
 }
 
 func (b *branchServiceAdapter) GetBranch(ctx context.Context, branchId string) (*schema.GetBranchDetailResponse, error) {
-	log.Println("Start to call branch service for GetBranch")
+	if branchId == "" {
+		err := errors.New("branchId must not be empty")
+		log.Printf("BFF-Adapter-BranchServiceAdapter-GetBranch error %v", err)
+		return nil, err
+	}
+	log.Printf("Start to call branch service for GetBranch, branchId %s", branchId)
 	defer log.Println("End call branch service for GetBranch")
 	var result *schema.GetBranchDetailResponse
 	url := fmt.Sprintf("http://localhost:%d/api/branch-service/%s", b.port, branchId)
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
+		log.Printf("BFF-Adapter-BranchServiceAdapter-GetBranch-NewRequestWithContext error %v", err)
 		return nil, err
 	}
 	resp, err := b.httpClient.Do(req)
 	if err != nil {
+		log.Printf("BFF-Adapter-BranchServiceAdapter-GetBranch-httpClient.Do error %v", err)
 		return nil, err
 	}
 	respByteArr, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
+		log.Printf("BFF-Adapter-BranchServiceAdapter-GetBranch-ioutil.ReadAll error %v", err)
 		return nil, err
 	}
 	err = json.Unmarshal(respByteArr, &result)
-	return result, err
+	if err != nil {
+		log.Printf("BFF-Adapter-BranchServiceAdapter-GetBranch-json.Unmarshal error %v", err)
+		return nil, err
+	}
+	return result, nil
 }

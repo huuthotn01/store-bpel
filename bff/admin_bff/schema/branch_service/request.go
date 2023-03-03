@@ -4,7 +4,11 @@ type BranchRequest struct {
 	Body interface{}
 }
 
-type GetBranchRequestData struct {
+type GetBranchDetailRequest struct {
+	Data GetBranchDetailData `xml:"getBranchDetail"`
+}
+
+type GetBranchDetailData struct {
 	BranchId string `xml:"BranchId"`
 }
 
