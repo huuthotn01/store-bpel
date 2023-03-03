@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/xml"
+	"fmt"
 	"github.com/spf13/cast"
 	"io/ioutil"
 	"log"
@@ -48,26 +49,27 @@ func handleBranch(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		err = enc.Encode(&branch_service.UpdateResponse{
 			StatusCode: 500,
-			Message:    err.Error(),
+			Message:    fmt.Sprintf("BFF-Admin-handleBranch-ioutil.ReadAll err %v", err),
 		})
 		return
 	}
 	var request = new(branch_service.BranchRequest)
 	if r.Method == http.MethodGet {
-		bodyData := &branch_service.GetBranchRequestData{}
-		request.Body = bodyData
+		body := &branch_service.GetBranchDetailRequest{}
+		request.Body = body
 		err = xml.Unmarshal(payload, request)
 		if err != nil {
 			err = enc.Encode(&branch_service.UpdateResponse{
 				StatusCode: 500,
-				Message:    err.Error(),
+				Message:    fmt.Sprintf("BFF-Admin-handleBranch-GET-xml.Unmarshal err %v", err),
 			})
 		}
-		branch, err := branchAdapter.GetBranch(ctx, bodyData.BranchId)
+		log.Printf("Body %v", request.Body)
+		branch, err := branchAdapter.GetBranch(ctx, body.Data.BranchId)
 		if err != nil {
 			err = enc.Encode(&branch_service.GetResponse{
 				StatusCode: 500,
-				Message:    err.Error(),
+				Message:    fmt.Sprintf("BFF-Admin-handleBranch-GET-GetBranch err %v", err),
 			})
 		} else {
 			err = enc.Encode(&branch_service.GetResponse{
