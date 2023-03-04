@@ -34,7 +34,7 @@ func (r *branchServiceRepository) GetBranch(ctx context.Context) ([]*BranchModel
 
 func (r *branchServiceRepository) GetBranchDetail(ctx context.Context, branchId string) (*BranchModel, error) {
 	var result *BranchModel
-	query := r.db.WithContext(ctx).Table(r.branchTableName).Where("branch_code = ?", branchId).Find(&result)
+	query := r.db.WithContext(ctx).Table(r.branchTableName).Where("branch_code = ?", branchId).First(&result)
 	return result, query.Error
 }
 

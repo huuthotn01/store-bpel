@@ -5,7 +5,6 @@ import (
 	"encoding/xml"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"store-bpel/bff/admin_bff/config"
 	"store-bpel/bff/admin_bff/schema/branch_service"
@@ -42,7 +41,6 @@ func handleGetBranch(w http.ResponseWriter, r *http.Request) {
 				Message:    fmt.Sprintf("BFF-Branch-handleGetBranch-xml.Unmarshal err %v", err),
 			})
 		}
-		log.Printf("Request %v", request)
 		branch, err := branchController.GetBranch(ctx, request.BranchId)
 		if err != nil {
 			err = enc.Encode(&branch_service.GetResponse{
@@ -82,7 +80,6 @@ func handleAddBranch(w http.ResponseWriter, r *http.Request) {
 				Message:    fmt.Sprintf("BFF-Branch-handleAddBranch-xml.Unmarshal err %v", err),
 			})
 		}
-		log.Printf("Request %v", request)
 		err = branchController.AddBranch(ctx, request)
 		if err != nil {
 			err = enc.Encode(&branch_service.UpdateResponse{

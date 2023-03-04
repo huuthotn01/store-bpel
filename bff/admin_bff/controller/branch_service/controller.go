@@ -9,7 +9,7 @@ import (
 )
 
 type IBranchBffController interface {
-	GetBranch(ctx context.Context, branchId string) (*schema.GetBranchDetailResponse, error)
+	GetBranch(ctx context.Context, branchId string) (*schema.GetBranchResponseData, error)
 	AddBranch(ctx context.Context, request *branch_schema.AddBranchRequest) error
 }
 
