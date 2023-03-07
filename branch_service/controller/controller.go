@@ -17,6 +17,7 @@ type IBranchServiceController interface {
 	UpdateBranchManager(ctx context.Context, request *schema.UpdateBranchManagerRequest, branchId int32) error
 	AddBranch(ctx context.Context, request *schema.AddBranchRequest) error
 	DeleteBranch(ctx context.Context, branchId int32) error
+	UploadBranchImage(ctx context.Context, branchId string) error
 }
 
 type branchServiceController struct {

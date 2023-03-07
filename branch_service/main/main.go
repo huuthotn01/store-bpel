@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"store-bpel/branch_service/config"
 	"store-bpel/branch_service/controller"
 	"store-bpel/branch_service/schema"
@@ -42,6 +43,7 @@ func registerEndpoint(r *mux.Router) {
 	r.HandleFunc("/api/branch-service", handleBranch)
 	r.HandleFunc("/api/branch-service/manager/{branchId}", handleBranchManager)
 	r.HandleFunc("/api/branch-service/staff/{branchId}", handleBranchStaff)
+	r.HandleFunc("/api/branch-service/image/{branchId}", handleBranchImage)
 }
 
 func handleBranch(w http.ResponseWriter, r *http.Request) {
@@ -49,7 +51,7 @@ func handleBranch(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	enc := json.NewEncoder(w)
-	if r.Method == "GET" {
+	if r.Method == http.MethodGet {
 		resp, err := ctrl.GetBranch(ctx)
 		if err != nil {
 			err = enc.Encode(&schema.GetResponse{
@@ -63,7 +65,7 @@ func handleBranch(w http.ResponseWriter, r *http.Request) {
 				Data:       resp,
 			})
 		}
-	} else if r.Method == "POST" {
+	} else if r.Method == http.MethodPost {
 		reqBody, err := ioutil.ReadAll(r.Body)
 		if err != nil {
 			err = enc.Encode(&schema.UpdateResponse{
@@ -105,7 +107,7 @@ func handleBranchDetail(w http.ResponseWriter, r *http.Request) {
 	enc := json.NewEncoder(w)
 	vars := mux.Vars(r)
 	branchId := vars["branchId"]
-	if r.Method == "GET" {
+	if r.Method == http.MethodGet {
 		resp, err := ctrl.GetBranchDetail(ctx, branchId)
 		if err != nil {
 			err = enc.Encode(&schema.GetResponse{
@@ -119,7 +121,7 @@ func handleBranchDetail(w http.ResponseWriter, r *http.Request) {
 				Data:       resp,
 			})
 		}
-	} else if r.Method == "PUT" {
+	} else if r.Method == http.MethodPut {
 		reqBody, err := ioutil.ReadAll(r.Body)
 		if err != nil {
 			err = enc.Encode(&schema.UpdateResponse{
@@ -149,7 +151,7 @@ func handleBranchDetail(w http.ResponseWriter, r *http.Request) {
 				Message:    "OK",
 			})
 		}
-	} else if r.Method == "DELETE" {
+	} else if r.Method == http.MethodDelete {
 		err := ctrl.DeleteBranch(ctx, cast.ToInt32(branchId))
 		if err != nil {
 			err = enc.Encode(&schema.UpdateResponse{
@@ -174,7 +176,7 @@ func handleBranchManager(w http.ResponseWriter, r *http.Request) {
 	enc := json.NewEncoder(w)
 	vars := mux.Vars(r)
 	branchId := vars["branchId"]
-	if r.Method == "PUT" {
+	if r.Method == http.MethodPut {
 		reqBody, err := ioutil.ReadAll(r.Body)
 		if err != nil {
 			err = enc.Encode(&schema.UpdateResponse{
@@ -216,7 +218,7 @@ func handleBranchStaff(w http.ResponseWriter, r *http.Request) {
 	enc := json.NewEncoder(w)
 	vars := mux.Vars(r)
 	branchId := vars["branchId"]
-	if r.Method == "GET" {
+	if r.Method == http.MethodGet {
 		resp, err := ctrl.GetBranchStaff(ctx, branchId)
 		if err != nil {
 			err = enc.Encode(&schema.GetResponse{
@@ -230,6 +232,95 @@ func handleBranchStaff(w http.ResponseWriter, r *http.Request) {
 				Data:       resp,
 			})
 		}
+	} else {
+		http.Error(w, "Method not supported", http.StatusNotFound)
+	}
+}
+
+// TODO IMPROVE NOT USED YET
+func handleBranchImage(w http.ResponseWriter, r *http.Request) {
+	// ctx := context.Background()
+	w.Header().Set("Content-Type", "multipart/form-data")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	enc := json.NewEncoder(w)
+	vars := mux.Vars(r)
+	branchId := vars["branchId"]
+	if r.Method == http.MethodPost {
+		err := r.ParseMultipartForm(10 << 20) // max size 10MB
+		if err != nil {
+			err = enc.Encode(&schema.UpdateResponse{
+				StatusCode: 500,
+				Message:    err.Error(),
+			})
+			return
+		}
+
+		file, handler, err := r.FormFile("images")
+		if err != nil {
+			err = enc.Encode(&schema.UpdateResponse{
+				StatusCode: 500,
+				Message:    err.Error(),
+			})
+			return
+		}
+		defer file.Close()
+		log.Printf("Filename: %s", handler.Filename)
+		log.Printf("File size: %d", handler.Size)
+		log.Printf("File header: %v", handler.Header)
+
+		// if the directory is not created, create it
+		if _, err := os.Stat("../images"); os.IsNotExist(err) {
+			os.Mkdir("../images", os.ModeTemporary)
+		}
+		if _, err := os.Stat("../images/branch-" + branchId); os.IsNotExist(err) {
+			os.Mkdir("../images/branch-"+branchId, os.ModeTemporary)
+		}
+
+		tempFile, err := ioutil.TempFile("../images/branch-"+branchId, "uploaded-*.png")
+		if err != nil {
+			err = enc.Encode(&schema.UpdateResponse{
+				StatusCode: 500,
+				Message:    err.Error(),
+			})
+			return
+		}
+		defer tempFile.Close()
+
+		fileBytes, err := ioutil.ReadAll(file)
+		if err != nil {
+			err = enc.Encode(&schema.UpdateResponse{
+				StatusCode: 500,
+				Message:    err.Error(),
+			})
+			return
+		}
+		_, err = tempFile.Write(fileBytes)
+		if err != nil {
+			err = enc.Encode(&schema.UpdateResponse{
+				StatusCode: 500,
+				Message:    err.Error(),
+			})
+			return
+		}
+
+		log.Println("Uploaded file successfully")
+
+		err = enc.Encode(&schema.UpdateResponse{
+			StatusCode: 200,
+			Message:    "OK",
+		})
+		//err := ctrl.UploadBranchImage(ctx, branchId)
+		//if err != nil {
+		//	err = enc.Encode(&schema.UpdateResponse{
+		//		StatusCode: 500,
+		//		Message:    err.Error(),
+		//	})
+		//} else {
+		//	err = enc.Encode(&schema.UpdateResponse{
+		//		StatusCode: 200,
+		//		Message:    "OK",
+		//	})
+		//}
 	} else {
 		http.Error(w, "Method not supported", http.StatusNotFound)
 	}

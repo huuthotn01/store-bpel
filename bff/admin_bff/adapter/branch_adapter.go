@@ -16,6 +16,7 @@ import (
 type IBranchServiceAdapter interface {
 	GetBranch(ctx context.Context, branchId string) (*schema.GetBranchResponseData, error)
 	AddBranch(ctx context.Context, request *schema.AddBranchRequest) error
+	UpdateBranch(ctx context.Context, branchId string, request *schema.UpdateBranchRequest) error
 }
 
 type branchServiceAdapter struct {
@@ -112,6 +113,50 @@ func (b *branchServiceAdapter) AddBranch(ctx context.Context, request *schema.Ad
 	err = json.Unmarshal(respByteArr, &result)
 	if err != nil {
 		log.Printf("BFF-Adapter-BranchServiceAdapter-AddBranch-json.Unmarshal error %v", err)
+		return err
+	}
+
+	if result.StatusCode != http.StatusOK {
+		return errors.New(result.Message)
+	}
+
+	return nil
+}
+
+func (b *branchServiceAdapter) UpdateBranch(ctx context.Context, branchId string, request *schema.UpdateBranchRequest) error {
+	log.Println("Start to call branch service for UpdateBranch")
+	defer log.Println("End call branch service for UpdateBranch")
+
+	var result *schema.UpdateResponse
+	url := fmt.Sprintf("http://localhost:%d/api/branch-service/%s", b.port, branchId)
+	data, err := json.Marshal(request)
+	if err != nil {
+		log.Printf("BFF-Adapter-BranchServiceAdapter-UpdateBranch-Marshal error %v", err)
+		return err
+	}
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodPut, url, bytes.NewReader(data))
+	if err != nil {
+		log.Printf("BFF-Adapter-BranchServiceAdapter-UpdateBranch-NewRequestWithContext error %v", err)
+		return err
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+	resp, err := b.httpClient.Do(req)
+	if err != nil {
+		log.Printf("BFF-Adapter-BranchServiceAdapter-UpdateBranch-httpClient.Do error %v", err)
+		return err
+	}
+
+	respByteArr, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Printf("BFF-Adapter-BranchServiceAdapter-UpdateBranch-ioutil.ReadAll error %v", err)
+		return err
+	}
+
+	err = json.Unmarshal(respByteArr, &result)
+	if err != nil {
+		log.Printf("BFF-Adapter-BranchServiceAdapter-UpdateBranch-json.Unmarshal error %v", err)
 		return err
 	}
 

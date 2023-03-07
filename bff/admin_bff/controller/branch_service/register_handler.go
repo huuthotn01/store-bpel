@@ -18,6 +18,7 @@ func RegisterEndpointHandler(mux *http.ServeMux, cfg *config.Config) {
 	// register handler
 	mux.HandleFunc("/api/bff/branch-service/get", handleGetBranch)
 	mux.HandleFunc("/api/bff/branch-service/add", handleAddBranch)
+	mux.HandleFunc("/api/bff/branch-service/update", handleUpdateBranch)
 }
 
 func handleGetBranch(w http.ResponseWriter, r *http.Request) {
@@ -81,6 +82,45 @@ func handleAddBranch(w http.ResponseWriter, r *http.Request) {
 			})
 		}
 		err = branchController.AddBranch(ctx, request)
+		if err != nil {
+			err = enc.Encode(&branch_service.UpdateResponse{
+				StatusCode: 500,
+				Message:    fmt.Sprintf("BFF-Branch-handleAddBranch-AddBranch err %v", err),
+			})
+		} else {
+			err = enc.Encode(&branch_service.UpdateResponse{
+				StatusCode: 200,
+				Message:    "OK",
+			})
+		}
+	} else {
+		http.Error(w, "Method not supported", http.StatusNotFound)
+	}
+}
+
+func handleUpdateBranch(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
+	w.Header().Set("Content-Type", "application/xml")
+	enc := xml.NewEncoder(w)
+	payload, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		err = enc.Encode(&branch_service.UpdateResponse{
+			StatusCode: 500,
+			Message:    fmt.Sprintf("BFF-Branch-handleUpdateBranch-ioutil.ReadAll err %v", err),
+		})
+		return
+	}
+
+	if r.Method == http.MethodPost {
+		var request = new(branch_service.UpdateBranchRequest)
+		err = xml.Unmarshal(payload, request)
+		if err != nil {
+			err = enc.Encode(&branch_service.UpdateResponse{
+				StatusCode: 500,
+				Message:    fmt.Sprintf("BFF-Branch-handleAddBranch-xml.Unmarshal err %v", err),
+			})
+		}
+		err = branchController.UpdateBranch(ctx, request)
 		if err != nil {
 			err = enc.Encode(&branch_service.UpdateResponse{
 				StatusCode: 500,
