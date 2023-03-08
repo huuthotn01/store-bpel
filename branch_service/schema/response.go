@@ -7,10 +7,16 @@ type UpdateResponse struct {
 	Message    string
 }
 
-type GetResponse struct {
+type GetBranchResponse struct {
 	StatusCode int
 	Message    string
-	Data       interface{}
+	Data       []*GetBranchResponseData
+}
+
+type GetBranchDetailResponse struct {
+	StatusCode int
+	Message    string
+	Data       *GetBranchResponseData
 }
 
 type GetBranchResponseData struct {
@@ -26,6 +32,8 @@ type GetBranchResponseData struct {
 	CloseTime      string
 }
 
-type GetBranchStaffResponseData struct {
-	Staffs []string
+type GetBranchStaffResponse struct {
+	StatusCode int
+	Message    string
+	Data       []string
 }

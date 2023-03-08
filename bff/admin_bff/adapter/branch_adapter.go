@@ -14,11 +14,13 @@ import (
 )
 
 type IBranchServiceAdapter interface {
-	GetBranch(ctx context.Context, branchId string) (*schema.GetBranchResponseData, error)
+	GetBranchDetail(ctx context.Context, branchId string) (*schema.GetBranchResponseData, error)
+	GetBranch(ctx context.Context) ([]*schema.GetBranchResponseData, error)
 	AddBranch(ctx context.Context, request *schema.AddBranchRequest) error
 	UpdateBranch(ctx context.Context, branchId string, request *schema.UpdateBranchRequest) error
 	UpdateBranchManager(ctx context.Context, branchId string, request *schema.UpdateBranchManagerRequest) error
 	DeleteBranch(ctx context.Context, branchId string) error
+	GetBranchStaff(ctx context.Context, branchId string) ([]string, error)
 }
 
 type branchServiceAdapter struct {
@@ -33,23 +35,61 @@ func NewBranchAdapter(cfg *config.Config) IBranchServiceAdapter {
 	}
 }
 
-func (b *branchServiceAdapter) GetBranch(ctx context.Context, branchId string) (*schema.GetBranchResponseData, error) {
+func (b *branchServiceAdapter) GetBranchDetail(ctx context.Context, branchId string) (*schema.GetBranchResponseData, error) {
 	if branchId == "" {
 		err := errors.New("branchId must not be empty")
-		log.Printf("BFF-Adapter-BranchServiceAdapter-GetBranch error %v", err)
+		log.Printf("BFF-Adapter-BranchServiceAdapter-GetBranchDetail error %v", err)
 		return nil, err
 	}
 
-	log.Printf("Start to call branch service for GetBranch, branchId %s", branchId)
+	log.Printf("Start to call branch service for GetBranchDetail, branchId %s", branchId)
+	defer log.Println("End call branch service for GetBranchDetail")
+
+	var (
+		result = &schema.GetBranchDetailResponse{}
+	)
+
+	url := fmt.Sprintf("http://localhost:%d/api/branch-service/%s", b.port, branchId)
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
+	if err != nil {
+		log.Printf("BFF-Adapter-BranchServiceAdapter-GetBranchDetail-NewRequestWithContext error %v", err)
+		return nil, err
+	}
+
+	resp, err := b.httpClient.Do(req)
+	if err != nil {
+		log.Printf("BFF-Adapter-BranchServiceAdapter-GetBranchDetail-httpClient.Do error %v", err)
+		return nil, err
+	}
+
+	respByteArr, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Printf("BFF-Adapter-BranchServiceAdapter-GetBranchDetail-ioutil.ReadAll error %v", err)
+		return nil, err
+	}
+
+	err = json.Unmarshal(respByteArr, &result)
+	if err != nil {
+		log.Printf("BFF-Adapter-BranchServiceAdapter-GetBranchDetail-json.Unmarshal error %v", err)
+		return nil, err
+	}
+
+	if result.StatusCode != http.StatusOK {
+		return nil, errors.New(result.Message)
+	}
+
+	return result.Data, nil
+}
+
+func (b *branchServiceAdapter) GetBranch(ctx context.Context) ([]*schema.GetBranchResponseData, error) {
+	log.Printf("Start to call branch service for GetBranch")
 	defer log.Println("End call branch service for GetBranch")
 
 	var (
-		result     = &schema.GetResponse{}
-		resultData = &schema.GetBranchResponseData{}
+		result = &schema.GetBranchResponse{}
 	)
-	result.Data = resultData
 
-	url := fmt.Sprintf("http://localhost:%d/api/branch-service/%s", b.port, branchId)
+	url := fmt.Sprintf("http://localhost:%d/api/branch-service", b.port)
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
 		log.Printf("BFF-Adapter-BranchServiceAdapter-GetBranch-NewRequestWithContext error %v", err)
@@ -78,7 +118,7 @@ func (b *branchServiceAdapter) GetBranch(ctx context.Context, branchId string) (
 		return nil, errors.New(result.Message)
 	}
 
-	return resultData, nil
+	return result.Data, nil
 }
 
 func (b *branchServiceAdapter) AddBranch(ctx context.Context, request *schema.AddBranchRequest) error {
@@ -252,7 +292,7 @@ func (b *branchServiceAdapter) DeleteBranch(ctx context.Context, branchId string
 	return nil
 }
 
-func (b *branchServiceAdapter) GetBranchStaff(ctx context.Context, branchId string) (*schema.GetBranchStaffResponseData, error) {
+func (b *branchServiceAdapter) GetBranchStaff(ctx context.Context, branchId string) ([]string, error) {
 	if branchId == "" {
 		err := errors.New("branchId must not be empty")
 		log.Printf("BFF-Adapter-BranchServiceAdapter-GetBranchStaff error %v", err)
@@ -263,10 +303,8 @@ func (b *branchServiceAdapter) GetBranchStaff(ctx context.Context, branchId stri
 	defer log.Println("End call branch service for GetBranchStaff")
 
 	var (
-		result     = &schema.GetResponse{}
-		resultData = &schema.GetBranchStaffResponseData{}
+		result = &schema.GetBranchStaffResponse{}
 	)
-	result.Data = resultData
 
 	url := fmt.Sprintf("http://localhost:%d/api/branch-service/staff/%s", b.port, branchId)
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
@@ -297,5 +335,5 @@ func (b *branchServiceAdapter) GetBranchStaff(ctx context.Context, branchId stri
 		return nil, errors.New(result.Message)
 	}
 
-	return resultData, nil
+	return result.Data, nil
 }

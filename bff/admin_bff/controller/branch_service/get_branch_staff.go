@@ -6,5 +6,12 @@ import (
 )
 
 func (b *branchBffController) GetBranchStaff(ctx context.Context, request *branch_schema.GetBranchStaffRequest) (*branch_schema.GetBranchStaffResponseData, error) {
-	return nil, nil
+	staff, err := b.branchAdapter.GetBranchStaff(ctx, request.BranchId)
+	if err != nil {
+		return nil, err
+	}
+
+	return &branch_schema.GetBranchStaffResponseData{
+		Staffs: staff,
+	}, nil
 }
