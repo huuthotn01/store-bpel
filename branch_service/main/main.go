@@ -54,12 +54,12 @@ func handleBranch(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
 		resp, err := ctrl.GetBranch(ctx)
 		if err != nil {
-			err = enc.Encode(&schema.GetResponse{
+			err = enc.Encode(&schema.GetBranchResponse{
 				StatusCode: 500,
 				Message:    err.Error(),
 			})
 		} else {
-			err = enc.Encode(&schema.GetResponse{
+			err = enc.Encode(&schema.GetBranchResponse{
 				StatusCode: 200,
 				Message:    "OK",
 				Data:       resp,
@@ -110,12 +110,12 @@ func handleBranchDetail(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
 		resp, err := ctrl.GetBranchDetail(ctx, branchId)
 		if err != nil {
-			err = enc.Encode(&schema.GetResponse{
+			err = enc.Encode(&schema.GetBranchDetailResponse{
 				StatusCode: 500,
 				Message:    err.Error(),
 			})
 		} else {
-			err = enc.Encode(&schema.GetResponse{
+			err = enc.Encode(&schema.GetBranchDetailResponse{
 				StatusCode: 200,
 				Message:    "OK",
 				Data:       resp,
@@ -221,12 +221,12 @@ func handleBranchStaff(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
 		resp, err := ctrl.GetBranchStaff(ctx, branchId)
 		if err != nil {
-			err = enc.Encode(&schema.GetResponse{
+			err = enc.Encode(&schema.GetBranchStaffResponse{
 				StatusCode: 500,
 				Message:    err.Error(),
 			})
 		} else {
-			err = enc.Encode(&schema.GetResponse{
+			err = enc.Encode(&schema.GetBranchStaffResponse{
 				StatusCode: 200,
 				Message:    "OK",
 				Data:       resp,

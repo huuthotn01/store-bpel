@@ -16,7 +16,8 @@ func RegisterEndpointHandler(mux *http.ServeMux, cfg *config.Config) {
 	// init controller
 	branchController = NewController(cfg)
 	// register handler
-	mux.HandleFunc("/api/bff/branch-service/get", handleGetBranch)
+	mux.HandleFunc("/api/bff/branch-service/get-all", handleGetBranch)
+	mux.HandleFunc("/api/bff/branch-service/get", handleGetBranchDetail)
 	mux.HandleFunc("/api/bff/branch-service/add", handleAddBranch)
 	mux.HandleFunc("/api/bff/branch-service/update", handleUpdateBranch)
 	mux.HandleFunc("/api/bff/branch-service/manager/update", handleUpdateBranchManager)
@@ -25,6 +26,29 @@ func RegisterEndpointHandler(mux *http.ServeMux, cfg *config.Config) {
 }
 
 func handleGetBranch(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
+	w.Header().Set("Content-Type", "application/xml")
+	enc := xml.NewEncoder(w)
+	if r.Method == http.MethodPost {
+		branch, err := branchController.GetBranch(ctx)
+		if err != nil {
+			err = enc.Encode(&branch_service.GetResponse{
+				StatusCode: 500,
+				Message:    fmt.Sprintf("BFF-Branch-handleGetBranch-GetBranch err %v", err),
+			})
+		} else {
+			err = enc.Encode(&branch_service.GetResponse{
+				StatusCode: 200,
+				Message:    "OK",
+				Data:       branch,
+			})
+		}
+	} else {
+		http.Error(w, "Method not supported", http.StatusNotFound)
+	}
+}
+
+func handleGetBranchDetail(w http.ResponseWriter, r *http.Request) {
 	ctx := context.Background()
 	w.Header().Set("Content-Type", "application/xml")
 	enc := xml.NewEncoder(w)
@@ -45,7 +69,7 @@ func handleGetBranch(w http.ResponseWriter, r *http.Request) {
 				Message:    fmt.Sprintf("BFF-Branch-handleGetBranch-xml.Unmarshal err %v", err),
 			})
 		}
-		branch, err := branchController.GetBranch(ctx, request.BranchId)
+		branch, err := branchController.GetBranchDetail(ctx, request.BranchId)
 		if err != nil {
 			err = enc.Encode(&branch_service.GetResponse{
 				StatusCode: 500,

@@ -8,7 +8,8 @@ import (
 )
 
 type IBranchBffController interface {
-	GetBranch(ctx context.Context, branchId string) (*branch_schema.GetBranchResponseData, error)
+	GetBranch(ctx context.Context) ([]*branch_schema.GetBranchResponseData, error)
+	GetBranchDetail(ctx context.Context, branchId string) (*branch_schema.GetBranchResponseData, error)
 	AddBranch(ctx context.Context, request *branch_schema.AddBranchRequest) error
 	UpdateBranch(ctx context.Context, request *branch_schema.UpdateBranchRequest) error
 	UpdateBranchManager(ctx context.Context, request *branch_schema.UpdateBranchManagerRequest) error
