@@ -24,3 +24,22 @@ type UpdateBranchRequest struct {
 	Open     string `xml:"Open"`
 	Close    string `xml:"Close"`
 }
+
+type UpdateBranchManagerRequest struct {
+	BranchId string `xml:"BranchId"`
+	StaffId  string `xml:"StaffId"`
+}
+
+type DeleteBranchRequest struct {
+	BranchId string `xml:"BranchId"`
+}
+
+type GetBranchStaffRequest struct {
+	BranchId string `xml:"BranchId"`
+}
+
+type GetBranchStatisticRequest struct {
+	BranchId string `xml:"BranchId"`
+	FromTime string `xml:"FromTime"`
+	ToTime   string `xml:"ToTime"`
+}
