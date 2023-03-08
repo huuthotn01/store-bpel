@@ -19,6 +19,9 @@ func RegisterEndpointHandler(mux *http.ServeMux, cfg *config.Config) {
 	mux.HandleFunc("/api/bff/branch-service/get", handleGetBranch)
 	mux.HandleFunc("/api/bff/branch-service/add", handleAddBranch)
 	mux.HandleFunc("/api/bff/branch-service/update", handleUpdateBranch)
+	mux.HandleFunc("/api/bff/branch-service/manager/update", handleUpdateBranchManager)
+	mux.HandleFunc("/api/bff/branch-service/delete", handleDeleteBranch)
+	mux.HandleFunc("/api/bff/branch-service/staff/get", handleGetBranchStaff)
 }
 
 func handleGetBranch(w http.ResponseWriter, r *http.Request) {
@@ -117,19 +120,137 @@ func handleUpdateBranch(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			err = enc.Encode(&branch_service.UpdateResponse{
 				StatusCode: 500,
-				Message:    fmt.Sprintf("BFF-Branch-handleAddBranch-xml.Unmarshal err %v", err),
+				Message:    fmt.Sprintf("BFF-Branch-handleUpdateBranch-xml.Unmarshal err %v", err),
 			})
 		}
 		err = branchController.UpdateBranch(ctx, request)
 		if err != nil {
 			err = enc.Encode(&branch_service.UpdateResponse{
 				StatusCode: 500,
-				Message:    fmt.Sprintf("BFF-Branch-handleAddBranch-AddBranch err %v", err),
+				Message:    fmt.Sprintf("BFF-Branch-handleUpdateBranch-UpdateBranch err %v", err),
 			})
 		} else {
 			err = enc.Encode(&branch_service.UpdateResponse{
 				StatusCode: 200,
 				Message:    "OK",
+			})
+		}
+	} else {
+		http.Error(w, "Method not supported", http.StatusNotFound)
+	}
+}
+
+func handleUpdateBranchManager(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
+	w.Header().Set("Content-Type", "application/xml")
+	enc := xml.NewEncoder(w)
+	payload, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		err = enc.Encode(&branch_service.UpdateResponse{
+			StatusCode: 500,
+			Message:    fmt.Sprintf("BFF-Branch-handleUpdateBranchManager-ioutil.ReadAll err %v", err),
+		})
+		return
+	}
+
+	if r.Method == http.MethodPost {
+		var request = new(branch_service.UpdateBranchManagerRequest)
+		err = xml.Unmarshal(payload, request)
+		if err != nil {
+			err = enc.Encode(&branch_service.UpdateResponse{
+				StatusCode: 500,
+				Message:    fmt.Sprintf("BFF-Branch-handleUpdateBranchManager-xml.Unmarshal err %v", err),
+			})
+		}
+		err = branchController.UpdateBranchManager(ctx, request)
+		if err != nil {
+			err = enc.Encode(&branch_service.UpdateResponse{
+				StatusCode: 500,
+				Message:    fmt.Sprintf("BFF-Branch-handleUpdateBranchManager-AddBranch err %v", err),
+			})
+		} else {
+			err = enc.Encode(&branch_service.UpdateResponse{
+				StatusCode: 200,
+				Message:    "OK",
+			})
+		}
+	} else {
+		http.Error(w, "Method not supported", http.StatusNotFound)
+	}
+}
+
+func handleDeleteBranch(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
+	w.Header().Set("Content-Type", "application/xml")
+	enc := xml.NewEncoder(w)
+	payload, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		err = enc.Encode(&branch_service.UpdateResponse{
+			StatusCode: 500,
+			Message:    fmt.Sprintf("BFF-Branch-handleDeleteBranch-ioutil.ReadAll err %v", err),
+		})
+		return
+	}
+
+	if r.Method == http.MethodPost {
+		var request = new(branch_service.DeleteBranchRequest)
+		err = xml.Unmarshal(payload, request)
+		if err != nil {
+			err = enc.Encode(&branch_service.UpdateResponse{
+				StatusCode: 500,
+				Message:    fmt.Sprintf("BFF-Branch-handleDeleteBranch-xml.Unmarshal err %v", err),
+			})
+		}
+		err = branchController.DeleteBranch(ctx, request)
+		if err != nil {
+			err = enc.Encode(&branch_service.UpdateResponse{
+				StatusCode: 500,
+				Message:    fmt.Sprintf("BFF-Branch-handleDeleteBranch-AddBranch err %v", err),
+			})
+		} else {
+			err = enc.Encode(&branch_service.UpdateResponse{
+				StatusCode: 200,
+				Message:    "OK",
+			})
+		}
+	} else {
+		http.Error(w, "Method not supported", http.StatusNotFound)
+	}
+}
+
+func handleGetBranchStaff(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
+	w.Header().Set("Content-Type", "application/xml")
+	enc := xml.NewEncoder(w)
+	payload, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		err = enc.Encode(&branch_service.GetResponse{
+			StatusCode: 500,
+			Message:    fmt.Sprintf("BFF-Branch-handleGetBranchStaff-ioutil.ReadAll err %v", err),
+		})
+		return
+	}
+
+	if r.Method == http.MethodPost {
+		var request = new(branch_service.GetBranchStaffRequest)
+		err = xml.Unmarshal(payload, request)
+		if err != nil {
+			err = enc.Encode(&branch_service.GetResponse{
+				StatusCode: 500,
+				Message:    fmt.Sprintf("BFF-Branch-handleGetBranchStaff-xml.Unmarshal err %v", err),
+			})
+		}
+		staffs, err := branchController.GetBranchStaff(ctx, request)
+		if err != nil {
+			err = enc.Encode(&branch_service.GetResponse{
+				StatusCode: 500,
+				Message:    fmt.Sprintf("BFF-Branch-handleGetBranchStaff-AddBranch err %v", err),
+			})
+		} else {
+			err = enc.Encode(&branch_service.GetResponse{
+				StatusCode: 200,
+				Message:    "OK",
+				Data:       staffs,
 			})
 		}
 	} else {
