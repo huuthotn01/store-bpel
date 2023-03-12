@@ -58,12 +58,12 @@ func handleAccount(w http.ResponseWriter, r *http.Request) {
 		)
 		resp, err = ctrl.GetListAccount(ctx, username)
 		if err != nil {
-			err = enc.Encode(&schema.GetResponse{
+			err = enc.Encode(&schema.GetListAccountResponse{
 				StatusCode: 500,
 				Message:    err.Error(),
 			})
 		} else {
-			err = enc.Encode(&schema.GetResponse{
+			err = enc.Encode(&schema.GetListAccountResponse{
 				StatusCode: 200,
 				Message:    "OK",
 				Data:       resp,
@@ -112,7 +112,7 @@ func handleSignIn(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
 		reqBody, err := ioutil.ReadAll(r.Body)
 		if err != nil {
-			err = enc.Encode(&schema.UpdateResponse{
+			err = enc.Encode(&schema.SignInResponse{
 				StatusCode: 500,
 				Message:    err.Error(),
 			})
@@ -121,7 +121,7 @@ func handleSignIn(w http.ResponseWriter, r *http.Request) {
 		var request *schema.SignInRequest
 		err = json.Unmarshal(reqBody, &request)
 		if err != nil {
-			err = enc.Encode(&schema.UpdateResponse{
+			err = enc.Encode(&schema.SignInResponse{
 				StatusCode: 500,
 				Message:    err.Error(),
 			})
@@ -129,12 +129,12 @@ func handleSignIn(w http.ResponseWriter, r *http.Request) {
 		}
 		role, err := ctrl.SignIn(ctx, request)
 		if err != nil {
-			err = enc.Encode(&schema.GetResponse{
+			err = enc.Encode(&schema.SignInResponse{
 				StatusCode: 500,
 				Message:    err.Error(),
 			})
 		} else {
-			err = enc.Encode(&schema.GetResponse{
+			err = enc.Encode(&schema.SignInResponse{
 				StatusCode: 200,
 				Message:    "OK",
 				Data:       role,

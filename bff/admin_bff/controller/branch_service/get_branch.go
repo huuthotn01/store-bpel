@@ -20,8 +20,8 @@ func (b *branchBffController) GetBranchDetail(ctx context.Context, branchId stri
 		BranchStreet:   branch.BranchStreet,
 		CreatedAt:      branch.CreatedAt,
 		Manager:        branch.Manager,
-		Open:           branch.OpenTime,
-		Close:          branch.CloseTime,
+		OpenTime:       branch.OpenTime,
+		CloseTime:      branch.CloseTime,
 	}
 
 	return respData, nil
@@ -44,8 +44,8 @@ func (b *branchBffController) GetBranch(ctx context.Context) ([]*branch_schema.G
 			BranchStreet:   data.BranchStreet,
 			CreatedAt:      data.CreatedAt,
 			Manager:        data.Manager,
-			Open:           data.OpenTime,
-			Close:          data.CloseTime,
+			OpenTime:       data.OpenTime,
+			CloseTime:      data.CloseTime,
 		})
 	}
 

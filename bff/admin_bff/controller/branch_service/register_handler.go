@@ -274,7 +274,7 @@ func handleGetBranchStaff(w http.ResponseWriter, r *http.Request) {
 			err = enc.Encode(&branch_service.GetResponse{
 				StatusCode: 200,
 				Message:    "OK",
-				Data:       staffs,
+				Data:       staffs.Staffs,
 			})
 		}
 	} else {

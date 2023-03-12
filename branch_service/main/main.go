@@ -8,7 +8,6 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"os"
 	"store-bpel/branch_service/config"
 	"store-bpel/branch_service/controller"
 	"store-bpel/branch_service/schema"
@@ -243,8 +242,8 @@ func handleBranchImage(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "multipart/form-data")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	enc := json.NewEncoder(w)
-	vars := mux.Vars(r)
-	branchId := vars["branchId"]
+	// vars := mux.Vars(r)
+	// branchId := vars["branchId"]
 	if r.Method == http.MethodPost {
 		err := r.ParseMultipartForm(10 << 20) // max size 10MB
 		if err != nil {
@@ -264,19 +263,12 @@ func handleBranchImage(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		defer file.Close()
+
 		log.Printf("Filename: %s", handler.Filename)
 		log.Printf("File size: %d", handler.Size)
 		log.Printf("File header: %v", handler.Header)
 
-		// if the directory is not created, create it
-		if _, err := os.Stat("../images"); os.IsNotExist(err) {
-			os.Mkdir("../images", os.ModeTemporary)
-		}
-		if _, err := os.Stat("../images/branch-" + branchId); os.IsNotExist(err) {
-			os.Mkdir("../images/branch-"+branchId, os.ModeTemporary)
-		}
-
-		tempFile, err := ioutil.TempFile("../images/branch-"+branchId, "uploaded-*.png")
+		tempFile, err := ioutil.TempFile("./", "uploaded-*.png")
 		if err != nil {
 			err = enc.Encode(&schema.UpdateResponse{
 				StatusCode: 500,
