@@ -14,16 +14,16 @@ type UpdateResponse struct {
 }
 
 type GetBranchResponseData struct {
-	BranchCode     int32     `xml:"BranchId"`
-	BranchName     string    `xml:"Name"`
-	BranchProvince string    `xml:"Province"`
-	BranchDistrict string    `xml:"District"`
-	BranchWard     string    `xml:"Ward"`
-	BranchStreet   string    `xml:"Street"`
-	CreatedAt      time.Time `xml:"CreatedAt"`
-	Manager        string    `xml:"Manager"`
-	Open           string    `xml:"Open"`
-	Close          string    `xml:"Close"`
+	BranchCode     int32
+	BranchName     string
+	BranchProvince string
+	BranchDistrict string
+	BranchWard     string
+	BranchStreet   string
+	CreatedAt      time.Time
+	Manager        string
+	OpenTime       string
+	CloseTime      string
 }
 
 type GetBranchStaffResponseData struct {

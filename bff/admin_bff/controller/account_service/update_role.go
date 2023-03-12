@@ -1,0 +1,10 @@
+package account_service
+
+import (
+	"context"
+	"store-bpel/bff/admin_bff/schema/account_service"
+)
+
+func (c *accountBffController) UpdateRole(ctx context.Context, request *account_service.UpdateRoleRequest) error {
+	return nil
+}
