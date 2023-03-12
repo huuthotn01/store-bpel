@@ -22,7 +22,7 @@ type SignInResponseData struct {
 type GetListAccountResponse struct {
 	StatusCode int
 	Message    string
-	Data       interface{}
+	Data       []*GetListAccountResponseData
 }
 
 type GetListAccountResponseData struct {
