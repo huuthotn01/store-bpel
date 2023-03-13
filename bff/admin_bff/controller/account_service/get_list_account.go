@@ -3,33 +3,22 @@ package account_service
 import (
 	"context"
 	"store-bpel/bff/admin_bff/schema/account_service"
-	"time"
 )
 
 func (c *accountBffController) GetListAccount(ctx context.Context, request *account_service.GetListAccountRequest) ([]*account_service.GetListAccountResponseData, error) {
-	// TODO call adapter to get real data
-	if request.Username != "" {
-		return []*account_service.GetListAccountResponseData{
-			{
-				Username:    "Name filtered",
-				Role:        1,
-				IsActivated: true,
-				CreatedAt:   time.Now(),
-			},
-		}, nil
+	accounts, err := c.accountAdapter.GetListAccount(ctx, request.Username)
+	if err != nil {
+		return nil, err
 	}
-	return []*account_service.GetListAccountResponseData{
-		{
-			Username:    "LVTN",
-			Role:        3,
-			IsActivated: true,
-			CreatedAt:   time.Now(),
-		},
-		{
-			Username:    "Name filtered",
-			Role:        1,
-			IsActivated: true,
-			CreatedAt:   time.Now(),
-		},
-	}, nil
+
+	resp := make([]*account_service.GetListAccountResponseData, 0, len(accounts))
+	for _, acc := range accounts {
+		resp = append(resp, &account_service.GetListAccountResponseData{
+			Username:    acc.Username,
+			Role:        acc.Role,
+			IsActivated: acc.IsActivated,
+			CreatedAt:   acc.CreatedAt,
+		})
+	}
+	return resp, nil
 }

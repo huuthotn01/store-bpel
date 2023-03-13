@@ -7,6 +7,7 @@ type GetListAccountRequest struct {
 type SignUpRequest struct {
 	Username string
 	Password string
+	Role     int
 }
 
 type SignInRequest struct {
