@@ -5,7 +5,8 @@ import "github.com/spf13/viper"
 type Config struct {
 	HttpPort int `json:"http_port" mapstructure:"http_port"`
 
-	BranchServicePort int `json:"branch_service_port" mapstructure:"branch_service_port"`
+	BranchServicePort  int `json:"branch_service_port" mapstructure:"branch_service_port"`
+	AccountServicePort int `json:"account_service_port" mapstructure:"account_service_port"`
 }
 
 func Load() (config *Config, err error) {

@@ -29,7 +29,7 @@ type accountServiceAdapter struct {
 func NewAccountAdapter(cfg *config.Config) IAccountServiceAdapter {
 	return &accountServiceAdapter{
 		httpClient: &http.Client{},
-		port:       cfg.BranchServicePort,
+		port:       cfg.AccountServicePort,
 	}
 }
 
