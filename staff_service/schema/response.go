@@ -10,10 +10,10 @@ type UpdateResponse struct {
 	Message    string
 }
 
-type GetResponse struct {
+type GetStaffResponse struct {
 	StatusCode int
 	Message    string
-	Data       interface{}
+	Data       []*GetStaffResponseData
 }
 
 type GetStaffResponseData struct {
@@ -36,10 +36,22 @@ type GetStaffResponseData struct {
 	Email       string
 }
 
+type GetStaffAttendanceResponse struct {
+	StatusCode int
+	Message    string
+	Data       []*GetStaffAttendanceResponseData
+}
+
 type GetStaffAttendanceResponseData struct {
 	AttendanceDate string
 	CheckinTime    time.Time
 	CheckoutTime   sql.NullTime
+}
+
+type GetRequestResponse struct {
+	StatusCode int
+	Message    string
+	Data       []*GetRequestResponseData
 }
 
 type GetRequestResponseData struct {

@@ -23,6 +23,7 @@ type accountServiceController struct {
 	cfg        *config.Config
 	repository repository.IAccountServiceRepository
 
+	staffAdapter adapter.IStaffServiceAdapter
 	kafkaAdapter adapter.IKafkaAdapter
 }
 
@@ -33,12 +34,16 @@ func NewController(cfg *config.Config, db *gorm.DB) IAccountServiceController {
 	// init repository
 	repo := repository.NewRepository(db)
 
+	// init staff adapter
+	staffAdapter := adapter.NewStaffAdapter(cfg)
+
 	// init kafka adapter
 	kafkaAdapter := adapter.NewKafkaAdapter()
 
 	return &accountServiceController{
 		cfg:          cfg,
 		repository:   repo,
+		staffAdapter: staffAdapter,
 		kafkaAdapter: kafkaAdapter,
 	}
 }
