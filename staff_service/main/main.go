@@ -63,12 +63,12 @@ func handleStaff(w http.ResponseWriter, r *http.Request) {
 		)
 		resp, err = ctrl.GetStaff(ctx, staffName, staffId)
 		if err != nil {
-			err = enc.Encode(&schema.GetResponse{
+			err = enc.Encode(&schema.GetStaffResponse{
 				StatusCode: 500,
 				Message:    err.Error(),
 			})
 		} else {
-			err = enc.Encode(&schema.GetResponse{
+			err = enc.Encode(&schema.GetStaffResponse{
 				StatusCode: 200,
 				Message:    "OK",
 				Data:       resp,
@@ -119,15 +119,15 @@ func handleDetailStaff(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
 		resp, err := ctrl.GetDetailStaff(ctx, staffId)
 		if err != nil {
-			err = enc.Encode(&schema.GetResponse{
+			err = enc.Encode(&schema.GetStaffResponse{
 				StatusCode: 500,
 				Message:    err.Error(),
 			})
 		} else {
-			err = enc.Encode(&schema.GetResponse{
+			err = enc.Encode(&schema.GetStaffResponse{
 				StatusCode: 200,
 				Message:    "OK",
-				Data:       resp,
+				Data:       []*schema.GetStaffResponseData{resp},
 			})
 		}
 	} else if r.Method == "PUT" {
@@ -188,12 +188,12 @@ func handleStaffAttendance(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
 		resp, err := ctrl.GetStaffAttendance(ctx, staffId)
 		if err != nil {
-			err = enc.Encode(&schema.GetResponse{
+			err = enc.Encode(&schema.GetStaffAttendanceResponse{
 				StatusCode: 500,
 				Message:    err.Error(),
 			})
 		} else {
-			err = enc.Encode(&schema.GetResponse{
+			err = enc.Encode(&schema.GetStaffAttendanceResponse{
 				StatusCode: 200,
 				Message:    "OK",
 				Data:       resp,
@@ -323,23 +323,17 @@ func handleGetRequestList(w http.ResponseWriter, r *http.Request) {
 		)
 		resp, err = ctrl.GetRequest(ctx)
 		if err != nil {
-			err = enc.Encode(&schema.GetResponse{
+			err = enc.Encode(&schema.GetRequestResponse{
 				StatusCode: 500,
 				Message:    err.Error(),
 			})
 		} else {
-			err = enc.Encode(&schema.GetResponse{
+			err = enc.Encode(&schema.GetRequestResponse{
 				StatusCode: 200,
 				Message:    "OK",
 				Data:       resp,
 			})
 		}
-	} else if r.Method == "POST" {
-
-	} else if r.Method == "PUT" {
-
-	} else if r.Method == "DELETE" {
-
 	} else {
 		http.Error(w, "Method not supported", http.StatusNotFound)
 	}
