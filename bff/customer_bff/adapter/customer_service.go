@@ -36,8 +36,8 @@ func (a *customerServiceAdapter) GetCustomer(ctx context.Context, username strin
 		return nil, errors.New("[BFF-Adapter-CustomerServiceAdapter-GetCustomer] username must not be empty")
 	}
 
-	log.Printf("Start to call customer service for GetListAccount, username %s", username)
-	defer log.Println("End call customer service for GetListAccount")
+	log.Printf("Start to call customer service for GetCustomer, username %s", username)
+	defer log.Println("End call customer service for GetCustomer")
 
 	var result *schema.GetCustomerInfoResponse
 
