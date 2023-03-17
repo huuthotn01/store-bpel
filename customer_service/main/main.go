@@ -1,12 +1,16 @@
 package main
 
 import (
-	"github.com/spf13/cast"
-	"log"
+	"context"
+	"encoding/json"
 	"github.com/gorilla/mux"
+	"github.com/spf13/cast"
+	"io/ioutil"
+	"log"
 	"net/http"
 	"store-bpel/customer_service/config"
 	"store-bpel/customer_service/controller"
+	"store-bpel/customer_service/schema"
 )
 
 var ctrl controller.ICustomerServiceController
@@ -28,12 +32,108 @@ func main() {
 	r := mux.NewRouter()
 	registerEndpoint(r)
 
-	if err = http.ListenAndServe(":" + cast.ToString(cfg.HttpPort), r); err != nil {
+	if err = http.ListenAndServe(":"+cast.ToString(cfg.HttpPort), r); err != nil {
 		log.Fatal(err)
 	}
 	log.Printf("Customer Service initialized successfully at port %d", cfg.HttpPort)
 }
 
 func registerEndpoint(r *mux.Router) {
-	// r.HandleFunc({api}, {handleFunc})
+	r.HandleFunc("/api/customer-service/customer/{customerId}", handleCustomerDetail)
+	r.HandleFunc("/api/customer-service/customer", handleCustomer)
+}
+
+func handleCustomer(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	enc := json.NewEncoder(w)
+	if r.Method == http.MethodPost {
+		reqBody, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			err = enc.Encode(&schema.UpdateResponse{
+				StatusCode: 500,
+				Message:    err.Error(),
+			})
+			return
+		}
+		var request *schema.AddCustomerRequest
+		err = json.Unmarshal(reqBody, &request)
+		if err != nil {
+			err = enc.Encode(&schema.UpdateResponse{
+				StatusCode: 500,
+				Message:    err.Error(),
+			})
+			return
+		}
+		err = ctrl.AddCustomer(ctx, request)
+		if err != nil {
+			err = enc.Encode(&schema.UpdateResponse{
+				StatusCode: 500,
+				Message:    err.Error(),
+			})
+		} else {
+			err = enc.Encode(&schema.UpdateResponse{
+				StatusCode: 200,
+				Message:    "OK",
+			})
+		}
+	} else {
+		http.Error(w, "Method not supported", http.StatusNotFound)
+	}
+}
+
+func handleCustomerDetail(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	enc := json.NewEncoder(w)
+	customerId := mux.Vars(r)["customerId"]
+	if r.Method == http.MethodGet {
+		customer, err := ctrl.GetCustomerInfo(ctx, customerId)
+		if err != nil {
+			err = enc.Encode(&schema.GetCustomerInfoResponse{
+				StatusCode: 500,
+				Message:    err.Error(),
+			})
+		} else {
+			err = enc.Encode(&schema.GetCustomerInfoResponse{
+				StatusCode: 200,
+				Message:    "OK",
+				Data:       customer,
+			})
+		}
+	} else if r.Method == http.MethodPut {
+		reqBody, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			err = enc.Encode(&schema.UpdateResponse{
+				StatusCode: 500,
+				Message:    err.Error(),
+			})
+			return
+		}
+		var request *schema.UpdateCustomerInfoRequest
+		err = json.Unmarshal(reqBody, &request)
+		if err != nil {
+			err = enc.Encode(&schema.UpdateResponse{
+				StatusCode: 500,
+				Message:    err.Error(),
+			})
+			return
+		}
+		err = ctrl.UpdateCustomerInfo(ctx, customerId, request)
+		if err != nil {
+			err = enc.Encode(&schema.UpdateResponse{
+				StatusCode: 500,
+				Message:    err.Error(),
+			})
+		} else {
+			err = enc.Encode(&schema.UpdateResponse{
+				StatusCode: 200,
+				Message:    "OK",
+			})
+		}
+	} else {
+		http.Error(w, "Method not supported", http.StatusNotFound)
+	}
 }
