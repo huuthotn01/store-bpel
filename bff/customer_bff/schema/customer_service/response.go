@@ -1,14 +1,14 @@
-package schema
+package customer_service
 
 type UpdateResponse struct {
 	StatusCode int
 	Message    string
 }
 
-type GetCustomerInfoResponse struct {
+type GetResponse struct {
 	StatusCode int
 	Message    string
-	Data       *GetCustomerInfoResponseData
+	Data       interface{}
 }
 
 type GetCustomerInfoResponseData struct {

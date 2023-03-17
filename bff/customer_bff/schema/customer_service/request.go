@@ -1,6 +1,11 @@
-package schema
+package customer_service
+
+type GetCustomerInfoRequest struct {
+	Username string
+}
 
 type UpdateCustomerInfoRequest struct {
+	Username string
 	Email    string
 	Name     string
 	Phone    string
