@@ -2,6 +2,7 @@ package controller
 
 import (
 	"context"
+	"store-bpel/staff_service/adapter"
 	"store-bpel/staff_service/config"
 	repo "store-bpel/staff_service/repository"
 	"store-bpel/staff_service/schema"
@@ -23,18 +24,23 @@ type IStaffServiceController interface {
 }
 
 type staffServiceController struct {
-	db         *gorm.DB
-	config     *config.Config
-	repository repo.IStaffServiceRepository
+	db             *gorm.DB
+	config         *config.Config
+	accountAdapter adapter.IAccountServiceAdapter
+	repository     repo.IStaffServiceRepository
 }
 
 func NewController(config *config.Config, db *gorm.DB) IStaffServiceController {
 	// init repository
 	repository := repo.NewRepository(db)
 
+	// init account adapter
+	accountAdapter := adapter.NewAccountAdapter(config)
+
 	return &staffServiceController{
-		db:         db,
-		config:     config,
-		repository: repository,
+		db:             db,
+		config:         config,
+		accountAdapter: accountAdapter,
+		repository:     repository,
 	}
 }

@@ -6,6 +6,7 @@ import (
 	"gorm.io/gorm"
 	"store-bpel/account_service/repository"
 	"store-bpel/account_service/schema"
+	customer_schema "store-bpel/customer_service/schema"
 )
 
 func (c *accountServiceController) SignUp(ctx context.Context, request *schema.SignUpRequest) error {
@@ -31,7 +32,16 @@ func (c *accountServiceController) SignUp(ctx context.Context, request *schema.S
 		return err
 	}
 
-	// TODO add data to customer service
-
-	return nil
+	return c.customerAdapter.AddCustomer(ctx, &customer_schema.AddCustomerRequest{
+		Username: request.Username,
+		Email:    request.Email,
+		Name:     request.Name,
+		Phone:    request.Phone,
+		Gender:   request.Gender,
+		Age:      request.Age,
+		Street:   request.Street,
+		Ward:     request.Ward,
+		District: request.District,
+		Province: request.Province,
+	})
 }

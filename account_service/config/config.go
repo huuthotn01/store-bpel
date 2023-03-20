@@ -5,15 +5,16 @@ import (
 )
 
 type Config struct {
-	HttpPort int `json:"http_port" mapstructure:"http_port"`
-	MySQL *MySQLConfig `json:"mysql" mapstructure:"mysql"`
+	HttpPort int          `json:"http_port" mapstructure:"http_port"`
+	MySQL    *MySQLConfig `json:"mysql" mapstructure:"mysql"`
 
-	StaffServicePort int `json:"staff_service_port" mapstructure:"staff_service_port"`
+	StaffServicePort    int `json:"staff_service_port" mapstructure:"staff_service_port"`
+	CustomerServicePort int `json:"customer_service_port" mapstructure:"customer_service_port"`
 }
 
 type MySQLConfig struct {
-	Host string `json:"host" mapstructure:"host"`
-	Port int `json:"port" mapstructure:"port"`
+	Host     string `json:"host" mapstructure:"host"`
+	Port     int    `json:"port" mapstructure:"port"`
 	Username string `json:"username" mapstructure:"username"`
 	Password string `json:"password" mapstructure:"password"`
 	Database string `json:"database" mapstructure:"database"`
