@@ -27,11 +27,9 @@ type GetListAccountResponse struct {
 
 type GetListAccountResponseData struct {
 	Username    string
-	StaffId     string
+	Id          string
 	Role        int
 	PhoneNumber string
-	StartDate   time.Time
-	BirthDate   string
 	Street      string
 	Ward        string
 	District    string

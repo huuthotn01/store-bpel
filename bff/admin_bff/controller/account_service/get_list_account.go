@@ -15,7 +15,14 @@ func (c *accountBffController) GetListAccount(ctx context.Context, request *acco
 	for _, acc := range accounts {
 		resp = append(resp, &account_service.GetListAccountResponseData{
 			Username:    acc.Username,
+			Id:          acc.Id,
 			Role:        acc.Role,
+			PhoneNumber: acc.PhoneNumber,
+			Street:      acc.Street,
+			Ward:        acc.Ward,
+			District:    acc.District,
+			Province:    acc.Province,
+			Name:        acc.Name,
 			IsActivated: acc.IsActivated,
 			CreatedAt:   acc.CreatedAt,
 		})
