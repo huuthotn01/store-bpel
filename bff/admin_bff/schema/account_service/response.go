@@ -19,7 +19,16 @@ type SignInResponseData struct {
 
 type GetListAccountResponseData struct {
 	Username    string
+	Id          string
 	Role        int
+	PhoneNumber string
+	StartDate   time.Time
+	BirthDate   string
+	Street      string
+	Ward        string
+	District    string
+	Province    string
+	Name        string
 	IsActivated bool
 	CreatedAt   time.Time
 }
