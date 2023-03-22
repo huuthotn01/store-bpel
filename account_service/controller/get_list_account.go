@@ -15,12 +15,12 @@ func (c *accountServiceController) GetListAccount(ctx context.Context, username 
 	res := make([]*schema.GetListAccountResponseData, 0, len(acc))
 	for _, data := range acc {
 		if data.UserRole == 1 {
-			err = c.appendCustomerData(ctx, data, res)
+			err = c.appendCustomerData(ctx, data, &res)
 			if err != nil {
 				return nil, err
 			}
 		} else {
-			err = c.appendStaffData(ctx, data, res)
+			err = c.appendStaffData(ctx, data, &res)
 			if err != nil {
 				return nil, err
 			}
@@ -29,14 +29,14 @@ func (c *accountServiceController) GetListAccount(ctx context.Context, username 
 	return res, err
 }
 
-func (c *accountServiceController) appendStaffData(ctx context.Context, data *repository.AccountModel, result []*schema.GetListAccountResponseData) error {
+func (c *accountServiceController) appendStaffData(ctx context.Context, data *repository.AccountModel, result *[]*schema.GetListAccountResponseData) error {
 	staffId := strings.Split(data.Username, "@")[0]
 	staffData, err := c.staffAdapter.GetDetailStaff(ctx, staffId)
 	if err != nil {
 		return err
 	}
 
-	result = append(result, &schema.GetListAccountResponseData{
+	*result = append(*result, &schema.GetListAccountResponseData{
 		Username:    data.Username,
 		Id:          staffData.StaffId,
 		Role:        data.UserRole,
@@ -52,13 +52,13 @@ func (c *accountServiceController) appendStaffData(ctx context.Context, data *re
 	return nil
 }
 
-func (c *accountServiceController) appendCustomerData(ctx context.Context, data *repository.AccountModel, result []*schema.GetListAccountResponseData) error {
+func (c *accountServiceController) appendCustomerData(ctx context.Context, data *repository.AccountModel, result *[]*schema.GetListAccountResponseData) error {
 	cust, err := c.customerAdapter.GetCustomer(ctx, data.Username)
 	if err != nil {
 		return err
 	}
 
-	result = append(result, &schema.GetListAccountResponseData{
+	*result = append(*result, &schema.GetListAccountResponseData{
 		Username:    data.Username,
 		Id:          data.Username,
 		Role:        data.UserRole,
