@@ -84,7 +84,7 @@ func (a *customerServiceAdapter) GetCustomer(ctx context.Context, username strin
 
 	var result *schema.GetCustomerInfoResponse
 
-	url := fmt.Sprintf("http://localhost:%d/api/customer-service/%s", a.port, username)
+	url := fmt.Sprintf("http://localhost:%d/api/customer-service/customer/%s", a.port, username)
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
 		log.Printf("AccountService-CustomerServiceAdapter-GetCustomer-NewRequestWithContext error %v", err)

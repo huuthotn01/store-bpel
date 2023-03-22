@@ -11,5 +11,14 @@ func (c *accountBffController) SignUp(ctx context.Context, request *account_serv
 		Username: request.Username,
 		Password: request.Password,
 		Role:     request.Role,
+		Email:    request.Email,
+		Name:     request.Name,
+		Phone:    request.Phone,
+		Gender:   request.Gender,
+		Age:      request.Age,
+		Street:   request.Street,
+		Ward:     request.Ward,
+		District: request.District,
+		Province: request.Province,
 	})
 }
