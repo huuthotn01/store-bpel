@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"store-bpel/bff/customer_bff/config"
 	customer_controller "store-bpel/bff/customer_bff/controller/customer_service"
+	order_controller "store-bpel/bff/customer_bff/controller/order_service"
 )
 
 func main() {
@@ -26,5 +27,6 @@ func main() {
 func newSOAPMux(cfg *config.Config) *http.ServeMux {
 	mux := http.NewServeMux()
 	customer_controller.RegisterEndpointHandler(mux, cfg)
+	order_controller.RegisterEndpointHandler(mux, cfg)
 	return mux
 }
