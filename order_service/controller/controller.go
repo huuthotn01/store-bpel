@@ -1,13 +1,17 @@
 package controller
 
 import (
+	"context"
 	"gorm.io/gorm"
 	"store-bpel/order_service/adapter"
 	"store-bpel/order_service/config"
 	repo "store-bpel/order_service/repository"
+	"store-bpel/order_service/schema"
 )
 
 type IOrderServiceController interface {
+	GetOnlineOrdersStatus(ctx context.Context, orderId int) ([]*schema.GetOnlineOrdersStatusResponseData, error)
+	UpdateOrderState(ctx context.Context, request *schema.UpdateOnlineOrdersStatusRequest) error
 }
 
 type orderServiceController struct {

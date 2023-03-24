@@ -1,11 +1,15 @@
 package order_service
 
 import (
+	"context"
 	"store-bpel/bff/customer_bff/adapter"
 	"store-bpel/bff/customer_bff/config"
+	"store-bpel/bff/customer_bff/schema/order_service"
 )
 
 type IOrderBffController interface {
+	GetOnlineOrdersStatus(ctx context.Context, request *order_service.GetOnlineOrdersStatusRequest) ([]*order_service.GetOnlineOrdersStatusResponseData, error)
+	UpdateOnlineOrdersStatus(ctx context.Context, request *order_service.UpdateOnlineOrdersStatusRequest) error
 }
 
 type orderBffController struct {
