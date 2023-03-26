@@ -11,7 +11,8 @@ func (c *accountServiceController) AddAccount(ctx context.Context, request *sche
 	if request.Password != "" {
 		rawPass = request.Password
 	} else {
-		// in case add staff account, staff service doesnt provide password => account service generate random initial password for account
+		// in case add staff account, staff service doesn't provide password
+		// => account service generate random initial password for account
 		rawPass = c.generateRandomPassword()
 	}
 	hashedPass, err := c.hashPasswordBcrypt(rawPass)

@@ -3,7 +3,6 @@ package schema
 type SignUpRequest struct {
 	Username string
 	Password string
-	Role     int
 	Email    string
 	Name     string
 	Phone    string

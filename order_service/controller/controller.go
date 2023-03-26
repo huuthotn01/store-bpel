@@ -10,6 +10,10 @@ import (
 )
 
 type IOrderServiceController interface {
+	CreateOnlineOrder(ctx context.Context, request *schema.MakeOnlineOrderRequest) error
+	GetListOrderCustomer(ctx context.Context, customerId string) ([]*schema.GetListOrderCustomerResponseData, error)
+	GetOrderDetail(ctx context.Context, orderId int) (*schema.GetOrderDetailCustomerResponseData, error)
+	GetShipFee(ctx context.Context, request *schema.GetShipFeeRequest) (*schema.GetShipFeeResponseData, error)
 	GetOnlineOrdersStatus(ctx context.Context, orderId int) ([]*schema.GetOnlineOrdersStatusResponseData, error)
 	UpdateOrderState(ctx context.Context, request *schema.UpdateOnlineOrdersStatusRequest) error
 }

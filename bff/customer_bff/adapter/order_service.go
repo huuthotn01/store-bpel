@@ -14,6 +14,7 @@ import (
 )
 
 type IOrderServiceAdapter interface {
+	CreateOnlineOrders(ctx context.Context, request *schema.MakeOnlineOrderRequest) error
 	GetOnlineOrdersStatus(ctx context.Context, orderId int) ([]*schema.GetOnlineOrdersStatusResponseData, error)
 	UpdateOnlineOrdersStatus(ctx context.Context, request *schema.UpdateOnlineOrdersStatusRequest) error
 }
@@ -102,6 +103,50 @@ func (a *orderServiceAdapter) UpdateOnlineOrdersStatus(ctx context.Context, requ
 	err = json.Unmarshal(respByteArr, &result)
 	if err != nil {
 		log.Printf("BFF-Adapter-OrderServiceAdapter-UpdateOnlineOrdersStatus-json.Unmarshal error %v", err)
+		return err
+	}
+
+	if result.StatusCode != http.StatusOK {
+		return errors.New(result.Message)
+	}
+
+	return nil
+}
+
+func (a *orderServiceAdapter) CreateOnlineOrders(ctx context.Context, request *schema.MakeOnlineOrderRequest) error {
+	log.Println("Start to call order service for CreateOnlineOrders")
+	defer log.Println("End call order service for CreateOnlineOrders")
+
+	var result *schema.UpdateResponse
+	url := fmt.Sprintf("http://localhost:%d/api/order-service/customer/make-order", a.port)
+	data, err := json.Marshal(request)
+	if err != nil {
+		log.Printf("BFF-Adapter-OrderServiceAdapter-CreateOnlineOrders-Marshal error %v", err)
+		return err
+	}
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, bytes.NewReader(data))
+	if err != nil {
+		log.Printf("BFF-Adapter-OrderServiceAdapter-CreateOnlineOrders-NewRequestWithContext error %v", err)
+		return err
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+	resp, err := a.httpClient.Do(req)
+	if err != nil {
+		log.Printf("BFF-Adapter-OrderServiceAdapter-CreateOnlineOrders-httpClient.Do error %v", err)
+		return err
+	}
+
+	respByteArr, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Printf("BFF-Adapter-OrderServiceAdapter-CreateOnlineOrders-ioutil.ReadAll error %v", err)
+		return err
+	}
+
+	err = json.Unmarshal(respByteArr, &result)
+	if err != nil {
+		log.Printf("BFF-Adapter-OrderServiceAdapter-CreateOnlineOrders-json.Unmarshal error %v", err)
 		return err
 	}
 
