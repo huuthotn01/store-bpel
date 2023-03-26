@@ -16,6 +16,7 @@ func (c *accountBffController) SignIn(ctx context.Context, request *account_serv
 	}
 
 	return &account_service.SignInResponseData{
-		Role: signInResp.Role,
+		UserId: signInResp.UserId,
+		Role:   signInResp.Role,
 	}, nil
 }

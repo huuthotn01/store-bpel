@@ -15,6 +15,7 @@ func (c *accountServiceController) SignIn(ctx context.Context, request *schema.S
 		return nil, err
 	}
 	return &schema.SignInResponseData{
-		Role: account.UserRole,
+		UserId: account.Username,
+		Role:   account.UserRole,
 	}, nil
 }

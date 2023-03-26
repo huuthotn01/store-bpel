@@ -7,6 +7,7 @@ type Config struct {
 
 	BranchServicePort  int `json:"branch_service_port" mapstructure:"branch_service_port"`
 	AccountServicePort int `json:"account_service_port" mapstructure:"account_service_port"`
+	StaffServicePort   int `json:"staff_service_port" mapstructure:"staff_service_port"`
 }
 
 func Load() (config *Config, err error) {
