@@ -26,7 +26,7 @@ func (c *accountServiceController) SignUp(ctx context.Context, request *schema.S
 	err = c.repository.AddAccount(ctx, &repository.AccountModel{
 		Username: request.Username,
 		Password: hashedPass,
-		UserRole: request.Role,
+		UserRole: 1,
 	})
 	if err != nil {
 		return err

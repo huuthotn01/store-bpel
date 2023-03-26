@@ -10,7 +10,6 @@ func (c *accountBffController) SignUp(ctx context.Context, request *account_serv
 	return c.accountAdapter.SignUp(ctx, &schema.SignUpRequest{
 		Username: request.Username,
 		Password: request.Password,
-		Role:     request.Role,
 		Email:    request.Email,
 		Name:     request.Name,
 		Phone:    request.Phone,

@@ -8,7 +8,7 @@ create table if not exists goods (
     total_price int not null,
     tax double,
     image varchar(100),
-    promotion int,
+    promotion double,
     constraint PK_goods primary key (goods_code, goods_size, goods_color, order_code)
 ) engine = InnoDB default charset = utf8mb4 collate = utf8mb4_unicode_ci ;
 
@@ -34,6 +34,7 @@ create table if not exists online_orders (
     customer_name varchar(100),
     customer_phone varchar(100),
     customer_email varchar(100),
+    status int not null,
     constraint PK_online_orders primary key (order_code)
 ) engine = InnoDB default charset = utf8mb4 collate = utf8mb4_unicode_ci ;
 

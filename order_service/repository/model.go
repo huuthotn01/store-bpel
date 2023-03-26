@@ -24,11 +24,11 @@ type GoodsModel struct {
 	TotalPrice int
 	Tax        float32
 	Image      string
-	Promotion  int
+	Promotion  float32
 }
 
 type OrdersModel struct {
-	OrderCode       int
+	OrderCode       int `gorm:"primarykey"`
 	TransactionDate string
 	TotalPrice      int
 	PublicOrderCode string
@@ -47,6 +47,7 @@ type OnlineOrdersModel struct {
 	CustomerName     string
 	CustomerPhone    string
 	CustomerEmail    string
+	Status           int
 }
 
 type StoreOrdersModel struct {
