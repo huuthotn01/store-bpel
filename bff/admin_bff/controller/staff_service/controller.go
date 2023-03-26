@@ -24,7 +24,7 @@ type staffBffController struct {
 }
 
 func NewController(cfg *config.Config) IStaffBffController {
-	// init branch adapter
+	// init staff adapter
 	staffAdapter := adapter.NewStaffAdapter(cfg)
 
 	return &staffBffController{
