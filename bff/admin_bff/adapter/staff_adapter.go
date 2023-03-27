@@ -18,6 +18,7 @@ type IStaffServiceAdapter interface {
 	GetStaffDetail(ctx context.Context, staffId string) ([]*schema.GetStaffResponseData, error)
 	AddStaff(ctx context.Context, request *schema.AddStaffRequest) error
 	UpdateStaff(ctx context.Context, staffId string, request *schema.UpdateStaffRequest) error
+	DeleteStaff(ctx context.Context, staffId string) error
 	CreateAddRequest(ctx context.Context, request *schema.CreateAddRequest) error
 	CreateDeleteRequest(ctx context.Context, staffId string) error
 	GetRequestList(ctx context.Context) ([]*schema.GetRequestResponseData, error)
@@ -201,6 +202,49 @@ func (a *staffServiceAdapter) UpdateStaff(ctx context.Context, staffId string, r
 	err = json.Unmarshal(respByteArr, &result)
 	if err != nil {
 		log.Printf("BFF-Adapter-StaffServiceAdapter-UpdateStaff-json.Unmarshal error %v", err)
+		return err
+	}
+
+	if result.StatusCode != http.StatusOK {
+		return errors.New(result.Message)
+	}
+
+	return nil
+}
+
+func (a *staffServiceAdapter) DeleteStaff(ctx context.Context, staffId string) error {
+	log.Printf("Start to call staff service for DeleteStaff")
+	defer log.Println("End call staff service for DeleteStaff")
+
+	if staffId == "" {
+		return errors.New("[BFF-Adapter-StaffServiceAdapter-DeleteStaff] staffId must not be empty")
+	}
+
+	var result *schema.UpdateResponse
+
+	url := fmt.Sprintf("http://localhost:%d/api/staff-service/staff/%s", a.port, staffId)
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodDelete, url, nil)
+	if err != nil {
+		log.Printf("BFF-Adapter-StaffServiceAdapter-DeleteStaff-NewRequestWithContext error %v", err)
+		return err
+	}
+
+	resp, err := a.httpClient.Do(req)
+	if err != nil {
+		log.Printf("BFF-Adapter-StaffServiceAdapter-DeleteStaff-httpClient.Do error %v", err)
+		return err
+	}
+
+	respByteArr, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Printf("BFF-Adapter-StaffServiceAdapter-DeleteStaff-ioutil.ReadAll error %v", err)
+		return err
+	}
+
+	err = json.Unmarshal(respByteArr, &result)
+	if err != nil {
+		log.Printf("BFF-Adapter-StaffServiceAdapter-DeleteStaff-json.Unmarshal error %v", err)
 		return err
 	}
 

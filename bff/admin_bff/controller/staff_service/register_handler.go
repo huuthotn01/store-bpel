@@ -20,6 +20,7 @@ func RegisterEndpointHandler(mux *http.ServeMux, cfg *config.Config) {
 	mux.HandleFunc("/api/bff/staff-service/get-staff-detail", handleGetStaffDetail)
 	mux.HandleFunc("/api/bff/staff-service/add-staff", handleAddStaff)
 	mux.HandleFunc("/api/bff/staff-service/update-staff", handleUpdateStaff)
+	mux.HandleFunc("/api/bff/staff-service/delete-staff", handleDeleteStaff)
 	mux.HandleFunc("/api/bff/staff-service/get-staff-attendance", handleGetStaffAttendance)
 	mux.HandleFunc("/api/bff/staff-service/create-add-request", handleCreateAddRequest)
 	mux.HandleFunc("/api/bff/staff-service/create-delete-request", handleCreateDeleteRequest)
@@ -169,6 +170,45 @@ func handleUpdateStaff(w http.ResponseWriter, r *http.Request) {
 			err = enc.Encode(&staff_service.UpdateResponse{
 				StatusCode: 500,
 				Message:    fmt.Sprintf("BFF-Staff-handleUpdateStaff-AddStaff err %v", err),
+			})
+		} else {
+			err = enc.Encode(&staff_service.UpdateResponse{
+				StatusCode: 200,
+				Message:    "OK",
+			})
+		}
+	} else {
+		http.Error(w, "Method not supported", http.StatusNotFound)
+	}
+}
+
+func handleDeleteStaff(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
+	w.Header().Set("Content-Type", "application/xml")
+	enc := xml.NewEncoder(w)
+	payload, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		err = enc.Encode(&staff_service.UpdateResponse{
+			StatusCode: 500,
+			Message:    fmt.Sprintf("BFF-Staff-handleDeleteStaff-ioutil.ReadAll err %v", err),
+		})
+		return
+	}
+
+	if r.Method == http.MethodPost {
+		var request = new(staff_service.CreateDeleteRequest)
+		err = xml.Unmarshal(payload, request)
+		if err != nil {
+			err = enc.Encode(&staff_service.UpdateResponse{
+				StatusCode: 500,
+				Message:    fmt.Sprintf("BFF-Staff-handleDeleteStaff-xml.Unmarshal err %v", err),
+			})
+		}
+		err = staffController.DeleteStaff(ctx, request)
+		if err != nil {
+			err = enc.Encode(&staff_service.UpdateResponse{
+				StatusCode: 500,
+				Message:    fmt.Sprintf("BFF-Staff-handleDeleteStaff-CreateDeleteRequest err %v", err),
 			})
 		} else {
 			err = enc.Encode(&staff_service.UpdateResponse{

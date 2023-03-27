@@ -10,6 +10,7 @@ import (
 type IStaffBffController interface {
 	GetStaff(ctx context.Context, request *staff_service.GetStaffRequest) ([]*staff_service.GetStaffResponseData, error)
 	GetStaffDetail(ctx context.Context, request *staff_service.GetStaffRequest) (*staff_service.GetStaffResponseData, error)
+	DeleteStaff(ctx context.Context, request *staff_service.CreateDeleteRequest) error
 	GetStaffAttendance(ctx context.Context, request *staff_service.GetStaffAttendanceRequest) ([]*staff_service.GetStaffAttendanceResponseData, error)
 	AddStaff(ctx context.Context, request *staff_service.AddStaffRequest) error
 	UpdateStaff(ctx context.Context, request *staff_service.UpdateStaffRequest) error

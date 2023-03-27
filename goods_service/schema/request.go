@@ -33,3 +33,10 @@ type CreateGoodsTransactionRequest struct {
 	From       string
 	To         string
 }
+
+type CheckWarehouseRequest struct {
+	GoodsCode  string
+	GoodsColor string
+	GoodsSize  string
+	Quantity   int
+}
