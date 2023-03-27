@@ -16,6 +16,7 @@ import (
 type IOrderServiceAdapter interface {
 	CreateOnlineOrders(ctx context.Context, request *schema.MakeOnlineOrderRequest) error
 	GetOnlineOrdersStatus(ctx context.Context, orderId int) ([]*schema.GetOnlineOrdersStatusResponseData, error)
+	GetShippingFee(ctx context.Context, request *schema.GetShipFeeRequest) (*schema.GetShipFeeResponseData, error)
 	UpdateOnlineOrdersStatus(ctx context.Context, request *schema.UpdateOnlineOrdersStatusRequest) error
 }
 
@@ -59,6 +60,51 @@ func (a *orderServiceAdapter) GetOnlineOrdersStatus(ctx context.Context, orderId
 	err = json.Unmarshal(respByteArr, &result)
 	if err != nil {
 		log.Printf("BFF-Adapter-OrderServiceAdapter-GetOnlineOrdersStatus-json.Unmarshal error %v", err)
+		return nil, err
+	}
+
+	if result.StatusCode != http.StatusOK {
+		return nil, errors.New(result.Message)
+	}
+
+	return result.Data, nil
+}
+
+func (a *orderServiceAdapter) GetShippingFee(ctx context.Context, request *schema.GetShipFeeRequest) (*schema.GetShipFeeResponseData, error) {
+	log.Printf("Start to call order service for GetShippingFee")
+	defer log.Println("End call order service for GetShippingFee")
+
+	var result *schema.GetShipFeeResponse
+
+	url := fmt.Sprintf("http://localhost:%d/api/order-service/ship-fee", a.port)
+
+	data, err := json.Marshal(request)
+	if err != nil {
+		log.Printf("BFF-Adapter-OrderServiceAdapter-GetShippingFee-Marshal error %v", err)
+		return nil, err
+	}
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, bytes.NewReader(data))
+	if err != nil {
+		log.Printf("BFF-Adapter-OrderServiceAdapter-GetShippingFee-NewRequestWithContext error %v", err)
+		return nil, err
+	}
+
+	resp, err := a.httpClient.Do(req)
+	if err != nil {
+		log.Printf("BFF-Adapter-OrderServiceAdapter-GetShippingFee-httpClient.Do error %v", err)
+		return nil, err
+	}
+
+	respByteArr, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Printf("BFF-Adapter-OrderServiceAdapter-GetShippingFee-ioutil.ReadAll error %v", err)
+		return nil, err
+	}
+
+	err = json.Unmarshal(respByteArr, &result)
+	if err != nil {
+		log.Printf("BFF-Adapter-OrderServiceAdapter-GetShippingFee-json.Unmarshal error %v", err)
 		return nil, err
 	}
 

@@ -45,7 +45,7 @@ func (r *staffServiceRepository) GetStaff(ctx context.Context, staffName, staffI
 
 func (r *staffServiceRepository) GetStaffDetail(ctx context.Context, staffId string) (*StaffModel, error) {
 	var result *StaffModel
-	query := r.db.WithContext(ctx).Table(r.staffTableName).Where("staff_id = ?", staffId).Find(&result)
+	query := r.db.WithContext(ctx).Table(r.staffTableName).Where("staff_id = ?", staffId).First(&result)
 	return result, query.Error
 }
 
