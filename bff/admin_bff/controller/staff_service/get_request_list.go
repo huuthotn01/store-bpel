@@ -12,7 +12,7 @@ func (c *staffBffController) GetRequestList(ctx context.Context) ([]*staff_servi
 	}
 
 	respRequests := make([]*staff_service.GetRequestResponseData, 0, len(requests))
-	for _, data := range respRequests {
+	for _, data := range requests {
 		respRequests = append(respRequests, &staff_service.GetRequestResponseData{
 			Id:          data.Id,
 			RequestType: data.RequestType,
