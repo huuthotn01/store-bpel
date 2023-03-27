@@ -1,20 +1,14 @@
 package schema
 
-type GetDetailGoodsResponse struct {
-	StatusCode int
-	Message    string
-	Data       *GetGoodsResponseData
-}
-
 type UpdateResponse struct {
 	StatusCode int
 	Message    string
 }
 
-type GetGoodsResponse struct {
+type GetResponse struct {
 	StatusCode int
 	Message    string
-	Data       []*GetGoodsResponseData
+	Data       interface{}
 }
 
 type GetGoodsResponseData struct {
@@ -31,12 +25,6 @@ type GetGoodsResponseData struct {
 	Description  string
 }
 
-type CheckWarehouseResponse struct {
-	StatusCode int
-	Message    string
-	Data       *CheckWarehouseResponseData
-}
-
 type CheckWarehouseResponseData struct {
 	NeedTransfer     bool
 	WarehouseActions []*WarehouseActions
@@ -49,7 +37,4 @@ type WarehouseActions struct {
 	Quantity   int
 	From       string
 	To         string
-}
-
-type GetGoodsInWarehouseResponseData struct {
 }

@@ -33,7 +33,7 @@ func (r *goodsServiceRepository) GetGoods(ctx context.Context) ([]*GoodsModel, e
 
 func (r *goodsServiceRepository) GetDetailGoods(ctx context.Context, goodsId string) (*GoodsModel, error) {
 	var result *GoodsModel
-	query := r.db.WithContext(ctx).Table(r.goodsTableName).Where("goods_code = ?", goodsId).Find(&result)
+	query := r.db.WithContext(ctx).Table(r.goodsTableName).Where("goods_code = ?", goodsId).First(&result)
 	return result, query.Error
 }
 

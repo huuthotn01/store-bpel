@@ -46,6 +46,48 @@ func registerEndpoint(r *mux.Router) {
 	r.HandleFunc("/api/goods-service/cust-return", handleCustReturn)
 	r.HandleFunc("/api/goods-service/goods/{goodsId}", handleDetailGoods)
 	r.HandleFunc("/api/goods-service/goods", handleGoods)
+	r.HandleFunc("/api/goods-service/check-wh", handleCheckWH)
+}
+
+func handleCheckWH(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	enc := json.NewEncoder(w)
+	if r.Method == http.MethodGet {
+		reqBody, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			err = enc.Encode(&schema.CheckWarehouseResponse{
+				StatusCode: 500,
+				Message:    err.Error(),
+			})
+			return
+		}
+		var request *schema.CheckWarehouseRequest
+		err = json.Unmarshal(reqBody, &request)
+		if err != nil {
+			err = enc.Encode(&schema.CheckWarehouseResponse{
+				StatusCode: 500,
+				Message:    err.Error(),
+			})
+			return
+		}
+		resp, err := ctrl.CheckWarehouse(ctx, request)
+		if err != nil {
+			err = enc.Encode(&schema.CheckWarehouseResponse{
+				StatusCode: 500,
+				Message:    err.Error(),
+			})
+		} else {
+			err = enc.Encode(&schema.CheckWarehouseResponse{
+				StatusCode: 200,
+				Message:    "OK",
+				Data:       resp,
+			})
+		}
+	} else {
+		http.Error(w, "Method not supported", http.StatusNotFound)
+	}
 }
 
 func handleGoods(w http.ResponseWriter, r *http.Request) {
@@ -56,12 +98,12 @@ func handleGoods(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
 		resp, err := ctrl.GetGoods(ctx)
 		if err != nil {
-			err = enc.Encode(&schema.GetResponse{
+			err = enc.Encode(&schema.GetGoodsResponse{
 				StatusCode: 500,
 				Message:    err.Error(),
 			})
 		} else {
-			err = enc.Encode(&schema.GetResponse{
+			err = enc.Encode(&schema.GetGoodsResponse{
 				StatusCode: 200,
 				Message:    "OK",
 				Data:       resp,
@@ -111,12 +153,12 @@ func handleDetailGoods(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
 		resp, err := ctrl.GetDetailGoods(ctx, goodsId)
 		if err != nil {
-			err = enc.Encode(&schema.GetResponse{
+			err = enc.Encode(&schema.GetDetailGoodsResponse{
 				StatusCode: 500,
 				Message:    err.Error(),
 			})
 		} else {
-			err = enc.Encode(&schema.GetResponse{
+			err = enc.Encode(&schema.GetDetailGoodsResponse{
 				StatusCode: 200,
 				Message:    "OK",
 				Data:       resp,
