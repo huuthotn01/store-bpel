@@ -17,6 +17,7 @@ func RegisterEndpointHandler(mux *http.ServeMux, cfg *config.Config) {
 	staffController = NewController(cfg)
 	// register handler
 	mux.HandleFunc("/api/bff/staff-service/get-staff", handleGetStaff)
+	mux.HandleFunc("/api/bff/staff-service/get-staff-detail", handleGetStaffDetail)
 	mux.HandleFunc("/api/bff/staff-service/add-staff", handleAddStaff)
 	mux.HandleFunc("/api/bff/staff-service/update-staff", handleUpdateStaff)
 	mux.HandleFunc("/api/bff/staff-service/get-staff-attendance", handleGetStaffAttendance)
@@ -52,6 +53,45 @@ func handleGetStaff(w http.ResponseWriter, r *http.Request) {
 			err = enc.Encode(&staff_service.GetResponse{
 				StatusCode: 500,
 				Message:    fmt.Sprintf("BFF-Staff-handleGetStaff-GetStaff err %v", err),
+			})
+		} else {
+			err = enc.Encode(&staff_service.GetResponse{
+				StatusCode: 200,
+				Message:    "OK",
+				Data:       staff,
+			})
+		}
+	} else {
+		http.Error(w, "Method not supported", http.StatusNotFound)
+	}
+}
+
+func handleGetStaffDetail(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
+	w.Header().Set("Content-Type", "application/xml")
+	enc := xml.NewEncoder(w)
+	payload, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		err = enc.Encode(&staff_service.GetResponse{
+			StatusCode: 500,
+			Message:    fmt.Sprintf("BFF-Staff-handleGetStaffDetail-ioutil.ReadAll err %v", err),
+		})
+		return
+	}
+	if r.Method == http.MethodPost {
+		var request = new(staff_service.GetStaffRequest)
+		err = xml.Unmarshal(payload, request)
+		if err != nil {
+			err = enc.Encode(&staff_service.GetResponse{
+				StatusCode: 500,
+				Message:    fmt.Sprintf("BFF-Staff-handleGetStaffDetail-xml.Unmarshal err %v", err),
+			})
+		}
+		staff, err := staffController.GetStaffDetail(ctx, request)
+		if err != nil {
+			err = enc.Encode(&staff_service.GetResponse{
+				StatusCode: 500,
+				Message:    fmt.Sprintf("BFF-Staff-handleGetStaffDetail-GetStaff err %v", err),
 			})
 		} else {
 			err = enc.Encode(&staff_service.GetResponse{
