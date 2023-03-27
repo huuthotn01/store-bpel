@@ -15,6 +15,7 @@ import (
 
 type IStaffServiceAdapter interface {
 	GetStaff(ctx context.Context, staffName, staffId string) ([]*schema.GetStaffResponseData, error)
+	GetStaffDetail(ctx context.Context, staffId string) ([]*schema.GetStaffResponseData, error)
 	AddStaff(ctx context.Context, request *schema.AddStaffRequest) error
 	UpdateStaff(ctx context.Context, staffId string, request *schema.UpdateStaffRequest) error
 	CreateAddRequest(ctx context.Context, request *schema.CreateAddRequest) error
@@ -64,6 +65,48 @@ func (a *staffServiceAdapter) GetStaff(ctx context.Context, staffName, staffId s
 	err = json.Unmarshal(respByteArr, &result)
 	if err != nil {
 		log.Printf("BFF-Adapter-StaffServiceAdapter-GetStaff-json.Unmarshal error %v", err)
+		return nil, err
+	}
+
+	if result.StatusCode != http.StatusOK {
+		return nil, errors.New(result.Message)
+	}
+
+	return result.Data, nil
+}
+
+func (a *staffServiceAdapter) GetStaffDetail(ctx context.Context, staffId string) ([]*schema.GetStaffResponseData, error) {
+	log.Printf("Start to call staff service for GetStaffDetail, staffId %s", staffId)
+	defer log.Println("End call staff service for GetStaffDetail")
+
+	if staffId == "" {
+		return nil, errors.New("[BFF-Adapter-StaffServiceAdapter-GetStaffDetail] staffId must not be empty")
+	}
+
+	var result *schema.GetStaffResponse
+
+	url := fmt.Sprintf("http://localhost:%d/api/staff-service/staff/%s", a.port, staffId)
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
+	if err != nil {
+		log.Printf("BFF-Adapter-StaffServiceAdapter-GetStaffDetail-NewRequestWithContext error %v", err)
+		return nil, err
+	}
+
+	resp, err := a.httpClient.Do(req)
+	if err != nil {
+		log.Printf("BFF-Adapter-StaffServiceAdapter-GetStaffDetail-httpClient.Do error %v", err)
+		return nil, err
+	}
+
+	respByteArr, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Printf("BFF-Adapter-StaffServiceAdapter-GetStaffDetail-ioutil.ReadAll error %v", err)
+		return nil, err
+	}
+
+	err = json.Unmarshal(respByteArr, &result)
+	if err != nil {
+		log.Printf("BFF-Adapter-StaffServiceAdapter-GetStaffDetail-json.Unmarshal error %v", err)
 		return nil, err
 	}
 
