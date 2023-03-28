@@ -1,7 +1,5 @@
 package schema
 
-import "time"
-
 type UpdateResponse struct {
 	StatusCode int
 	Message    string
@@ -13,12 +11,18 @@ type GetEventResponse struct {
 	Data       []*GetEventData
 }
 
+type GetEventDetailResponse struct {
+	StatusCode int
+	Message    string
+	Data       *GetEventData
+}
+
 type GetEventData struct {
-	Id        string
+	Id        int
 	Name      string
 	Discount  float32
-	StartTime time.Time
-	EndTime   time.Time
+	StartTime string
+	EndTime   string
 	Image     string
-	Goods     []*string
+	Goods     []string
 }

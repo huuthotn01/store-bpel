@@ -1,8 +1,6 @@
 package repository
 
 import (
-	"time"
-
 	"gorm.io/gorm"
 )
 
@@ -13,15 +11,15 @@ type eventServiceRepository struct {
 }
 
 type EventModel struct {
-	EventId   string
+	EventId   int `gorm:"primarykey"`
 	Name      string
 	Discount  float32
-	StartTime time.Time
-	EndTime   time.Time
+	StartTime string
+	EndTime   string
 	Image     string
 }
 
 type GoodsModel struct {
-	EventId string
+	EventId int
 	GoodsId string
 }

@@ -1,5 +1,5 @@
 create table if not exists event (
-    event_id varchar(100),
+    event_id int auto_increment,
     name varchar(100),
     discount float,
     start_time timestamp default current_timestamp,
@@ -9,7 +9,7 @@ create table if not exists event (
 ) engine = InnoDB default charset = utf8mb4 collate = utf8mb4_unicode_ci ;
 
 create table if not exists goods (
-    event_id varchar(100),
+    event_id int,
     goods_id varchar(100),
     constraint PK_event_with_goods primary key (event_id, goods_id)
 ) engine = InnoDB default charset = utf8mb4 collate = utf8mb4_unicode_ci ;

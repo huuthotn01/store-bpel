@@ -12,6 +12,10 @@ import (
 
 type IEventServiceController interface {
 	GetEvent(ctx context.Context) ([]*schema.GetEventData, error)
+	GetEventDetail(ctx context.Context, eventId int) (*schema.GetEventData, error)
+	AddEvent(ctx context.Context, data *schema.AddEventRequest) error
+	UpdateEvent(ctx context.Context, eventId int, data *schema.UpdateEventRequest) error
+	DeleteEvent(ctx context.Context, eventId int) error
 }
 
 type eventServiceController struct {
