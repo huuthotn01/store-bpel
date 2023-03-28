@@ -2,7 +2,6 @@ package repository
 
 import (
 	"context"
-	"strconv"
 
 	"gorm.io/gorm"
 )
@@ -37,7 +36,7 @@ func (r *eventServiceRepository) GetAllEvent(ctx context.Context) ([]*EventModel
 func (r *eventServiceRepository) GetGoods(ctx context.Context, eventId int) ([]string, error) {
 	var goodsList []*GoodsModel
 
-	query := r.db.WithContext(ctx).Table(r.goodsTableName).Where("event_id = '" + strconv.Itoa(eventId) + "'").Find(&goodsList)
+	query := r.db.WithContext(ctx).Table(r.goodsTableName).Where("event_id = ?", eventId).Find(&goodsList)
 
 	var result []string
 	for _, goods := range goodsList {
@@ -50,7 +49,7 @@ func (r *eventServiceRepository) GetGoods(ctx context.Context, eventId int) ([]s
 func (r *eventServiceRepository) GetEvent(ctx context.Context, eventId int) (*EventModel, error) {
 	var result *EventModel
 
-	query := r.db.WithContext(ctx).Table(r.eventTableName).Where("event_id = '" + strconv.Itoa(eventId) + "'").First(&result)
+	query := r.db.WithContext(ctx).Table(r.eventTableName).Where("event_id = ?", eventId).First(&result)
 
 	return result, query.Error
 }
