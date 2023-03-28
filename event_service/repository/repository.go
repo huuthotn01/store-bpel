@@ -8,6 +8,7 @@ import (
 
 type IEventServiceRepository interface {
 	GetAllEvent(ctx context.Context) ([]*EventModel, error)
+	GetGoods(ctx context.Context, eventId string) ([]*string, error)
 	// GetEvent(ctx context.Context, eventId string) (*EventModel, error)
 	// AddEvent(ctx context.Context, data *EventModel) error
 	// UpdateEvent(ctx context.Context, data *EventModel) error
@@ -25,7 +26,20 @@ func NewRepository(db *gorm.DB) IEventServiceRepository {
 func (r *eventServiceRepository) GetAllEvent(ctx context.Context) ([]*EventModel, error) {
 
 	var result []*EventModel
-	queryContext := r.db.WithContext(ctx).Table(r.eventTableName)
+	query := r.db.WithContext(ctx).Table(r.eventTableName).Find(&result)
 
-	return result, queryContext.Find(&result).Error
+	return result, query.Error
+}
+
+func (r *eventServiceRepository) GetGoods(ctx context.Context, eventId string) ([]*string, error) {
+
+	var goodsList []*GoodsModel
+	query := r.db.WithContext(ctx).Table(r.goodsTableName).Where("event_id = " + eventId).Find(&goodsList)
+
+	var result []*string
+	for _, goods := range goodsList {
+		result = append(result, &goods.GoodsId)
+	}
+
+	return result, query.Error
 }

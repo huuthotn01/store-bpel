@@ -16,9 +16,14 @@ func (s *eventServiceController) GetEvent(ctx context.Context) ([]*schema.GetEve
 
 	// khai báo slice
 	res := make([]*schema.GetEventData, 0, len(events))
-	goods := []*string{}
 
 	for _, event := range events {
+
+		goods, err := s.repository.GetGoods(ctx, event.EventId)
+		if err != nil {
+			return nil, err
+		}
+
 		res = append(res, &schema.GetEventData{
 			Id:        event.EventId,
 			Name:      event.Name,
