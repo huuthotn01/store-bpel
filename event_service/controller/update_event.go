@@ -6,28 +6,20 @@ import (
 	"store-bpel/event_service/schema"
 )
 
-func (s *eventServiceController) UpdateEvent(ctx context.Context, eventId int, data *schema.UpdateEventRequest) error {
+func (s *eventServiceController) UpdateEvent(ctx context.Context, eventId int, request *schema.UpdateEventRequest) error {
 	// call repository
 	eventModel := &repository.EventModel{
-		Name:      data.Name,
-		Discount:  data.Discount,
-		StartTime: data.StartTime,
-		EndTime:   data.EndTime,
-		Image:     data.Image,
+		Name:      request.Name,
+		Discount:  request.Discount,
+		StartTime: request.StartTime,
+		EndTime:   request.EndTime,
+		Image:     request.Image,
 	}
 
-	err := s.repository.UpdateEvent(ctx, eventId, eventModel)
-
-	// check error call repository
-	if err != nil {
-		return err
-	}
-
-	err = s.repository.DeleteGoods(ctx, eventId)
-	if err != nil {
-		return err
-	}
-
-	return s.repository.AddGoods(ctx, eventId, data.Goods)
+	return s.repository.UpdateEvent(ctx, &repository.UpdateEventData{
+		EventModel: eventModel,
+		EventId:    eventId,
+		GoodsList:  request.Goods,
+	})
 
 }
