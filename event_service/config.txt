@@ -1,4 +1,4 @@
-HTTP_PORT: 14000
+HTTP_PORT: 14060
 
 MYSQL:
   HOST: localhost
