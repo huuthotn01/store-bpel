@@ -7,6 +7,7 @@ import (
 	"store-bpel/bff/admin_bff/config"
 	account_controller "store-bpel/bff/admin_bff/controller/account_service"
 	branch_controller "store-bpel/bff/admin_bff/controller/branch_service"
+	goods_controller "store-bpel/bff/admin_bff/controller/goods_service"
 	staff_controller "store-bpel/bff/admin_bff/controller/staff_service"
 )
 
@@ -30,5 +31,6 @@ func newSOAPMux(cfg *config.Config) *http.ServeMux {
 	branch_controller.RegisterEndpointHandler(mux, cfg)
 	account_controller.RegisterEndpointHandler(mux, cfg)
 	staff_controller.RegisterEndpointHandler(mux, cfg)
+	goods_controller.RegisterEndpointHandler(mux, cfg)
 	return mux
 }
