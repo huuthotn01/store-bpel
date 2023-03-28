@@ -1,14 +1,17 @@
 package controller
 
 import (
-	"gorm.io/gorm"
+	"context"
 	"store-bpel/event_service/adapter"
 	"store-bpel/event_service/config"
 	repo "store-bpel/event_service/repository"
-	// "store-bpel/event_service/schema"
+	"store-bpel/event_service/schema"
+
+	"gorm.io/gorm"
 )
 
 type IEventServiceController interface {
+	GetEvent(ctx context.Context) ([]*schema.GetEventData, error)
 }
 
 type eventServiceController struct {
