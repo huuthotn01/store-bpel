@@ -1,3 +1,3 @@
 drop table cart;
 
-drop table goods;
+drop  table goods;
