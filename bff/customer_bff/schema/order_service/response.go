@@ -11,6 +11,11 @@ type GetResponse struct {
 	Data       interface{}
 }
 
+type GetShipFeeResponseData struct {
+	ShipFee      int
+	ExpectedDate string
+}
+
 type GetOnlineOrdersStatusResponseData struct {
 	OrderId   int
 	State     string

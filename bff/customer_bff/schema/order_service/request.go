@@ -16,6 +16,7 @@ type MakeOnlineOrderRequest struct {
 	TotalPrice      int
 	ShipFee         int
 	TransactionDate string
+	ExpectedDate    string
 	NameReceiver    string
 	PhoneReceiver   string
 	EmailReceiver   string
