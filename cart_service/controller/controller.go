@@ -13,6 +13,10 @@ import (
 type ICartServiceController interface {
 	AddCart(ctx context.Context, request string) error
 	GetCart(ctx context.Context, request string) (*schema.CartData, error)
+	AddGoods(ctx context.Context, cartId int, request []*schema.AddGoodsRequest) error
+	DeleteGoods(ctx context.Context, cartId int, request []*schema.DeleteGoodsRequest) error
+	UpdateGoods(ctx context.Context, cartId int, request []*schema.AddGoodsRequest) error
+	DeleteAllGoods(ctx context.Context, cartId int) error
 }
 
 type cartServiceController struct {

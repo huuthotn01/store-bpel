@@ -15,7 +15,6 @@ type DeleteGoodsRequest struct {
 	GoodsId    string
 	GoodsColor string
 	GoodsSize  string
-	Quantity   int
 }
 
 type UpdateGoodsRequest struct {
