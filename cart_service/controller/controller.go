@@ -1,13 +1,18 @@
 package controller
 
 import (
-	"gorm.io/gorm"
+	"context"
 	"store-bpel/cart_service/adapter"
 	"store-bpel/cart_service/config"
 	repo "store-bpel/cart_service/repository"
+	"store-bpel/cart_service/schema"
+
+	"gorm.io/gorm"
 )
 
 type ICartServiceController interface {
+	AddCart(ctx context.Context, request string) error
+	GetCart(ctx context.Context, request string) (*schema.CartData, error)
 }
 
 type cartServiceController struct {

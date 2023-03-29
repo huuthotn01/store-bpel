@@ -2,13 +2,14 @@ package main
 
 import (
 	"fmt"
+	"store-bpel/cart_service/config"
+
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-	"store-bpel/cart_service/config"
 )
 
 func dsn(dbConfig *config.MySQLConfig) string {
-	return fmt.Sprintf("%!s(MISSING):%!s(MISSING)@tcp(%!s(MISSING):%!d(MISSING))/%!s(MISSING)?parseTime=true", dbConfig.Username, dbConfig.Password, dbConfig.Host, dbConfig.Port, dbConfig.Database)
+	return fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?parseTime=true", dbConfig.Username, dbConfig.Password, dbConfig.Host, dbConfig.Port, dbConfig.Database)
 }
 
 func DbConnect(dbConfig *config.MySQLConfig) (*gorm.DB, error) {
