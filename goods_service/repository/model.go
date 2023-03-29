@@ -40,5 +40,5 @@ type GoodsInWh struct {
 	WhCode      string
 	Quantity    int
 	CreatedDate time.Time
-	UpdatedAt   time.Time
+	UpdatedDate time.Time
 }
