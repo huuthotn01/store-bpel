@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"errors"
 	"gorm.io/gorm"
 )
 
@@ -68,9 +69,43 @@ func (r *goodsServiceRepository) GetGoodsInWHData(ctx context.Context, data *Goo
 }
 
 func (r *goodsServiceRepository) UpdateGoodsInWHInOut(ctx context.Context, data *GoodsInWh) error {
-	return r.db.WithContext(ctx).
-		Exec("UPDATE `goods_in_wh` SET `quantity` = `quantity` + ? WHERE `goods_code` = ? AND `goods_size` = ? AND `goods_color` = ? AND `wh_code` = ?",
+	return r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+		var currGoods []*GoodsInWh
+		err := tx.Table(r.goodsInWhTableName).
+			Where("goods_code = ? and goods_size = ? and goods_color = ? and wh_code = ?", data.GoodsCode, data.GoodsSize, data.GoodsColor, data.WhCode).
+			Find(&currGoods).Error
+		if err != nil {
+			return err
+		}
+
+		if len(currGoods) == 0 {
+			if data.Quantity < 0 { // export but not have item => return error
+				return errors.New("not have goods to export")
+			} else { // import but currently not have goods in destination warehouse
+				newData := &GoodsInWh{
+					GoodsCode:  data.GoodsCode,
+					GoodsColor: data.GoodsColor,
+					GoodsSize:  data.GoodsSize,
+					WhCode:     data.WhCode,
+					Quantity:   data.Quantity,
+				}
+				return tx.Table(r.goodsInWhTableName).Select("goods_code", "goods_size", "goods_color", "wh_code", "quantity").Create(newData).Error
+			}
+		}
+
+		if currGoods[0].Quantity+data.Quantity < 0 {
+			// not have enough items to export => return error
+			return errors.New("not have enough goods number to export")
+		}
+
+		err = tx.Exec("UPDATE `goods_in_wh` SET `quantity` = `quantity` + ? WHERE `goods_code` = ? AND `goods_size` = ? AND `goods_color` = ? AND `wh_code` = ?",
 			data.Quantity, data.GoodsCode, data.GoodsSize, data.GoodsColor, data.WhCode).Error
+		if err != nil {
+			return err
+		}
+
+		return nil
+	})
 }
 
 func (r *goodsServiceRepository) UpdateGoodsInWHTransfer(ctx context.Context, data *GoodsInWh, fromWH, toWH string) error {
