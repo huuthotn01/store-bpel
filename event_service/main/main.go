@@ -43,6 +43,7 @@ func main() {
 func registerEndpoint(r *mux.Router) {
 	r.HandleFunc("/api/event-service/event", handleEvent)
 	r.HandleFunc("/api/event-service/event/{eventId}", handleEventDetail)
+	r.HandleFunc("/api/event-service/get-by-goods/{goodsId}", handleEventByGoods)
 }
 
 func handleEvent(w http.ResponseWriter, r *http.Request) {
@@ -191,6 +192,34 @@ func handleEventDetail(w http.ResponseWriter, r *http.Request) {
 			err = enc.Encode(&schema.UpdateResponse{
 				StatusCode: 200,
 				Message:    "OK",
+			})
+		}
+	} else {
+		http.Error(w, "Method not supported", http.StatusNotFound)
+	}
+}
+
+func handleEventByGoods(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	enc := json.NewEncoder(w)
+	vars := mux.Vars(r)
+
+	if r.Method == "GET" {
+		goodsId := vars["goodsId"]
+		resp, err := ctrl.GetEventByGoods(ctx, goodsId)
+		if err != nil {
+			err = enc.Encode(&schema.GetEventByGoodsResponse{
+				StatusCode: 500,
+				Message:    err.Error(),
+			})
+		} else {
+			err = enc.Encode(&schema.GetEventByGoodsResponse{
+				StatusCode: 200,
+				Message:    "OK",
+				Data:       resp,
 			})
 		}
 	} else {

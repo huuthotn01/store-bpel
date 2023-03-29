@@ -16,6 +16,7 @@ type IEventServiceController interface {
 	AddEvent(ctx context.Context, data *schema.AddEventRequest) error
 	UpdateEvent(ctx context.Context, eventId int, data *schema.UpdateEventRequest) error
 	DeleteEvent(ctx context.Context, eventId int) error
+	GetEventByGoods(ctx context.Context, goodsId string) ([]*schema.GetEventByGoodsData, error)
 }
 
 type eventServiceController struct {
