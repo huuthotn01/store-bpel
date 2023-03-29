@@ -35,6 +35,10 @@ type CreateGoodsTransactionRequest struct {
 }
 
 type CheckWarehouseRequest struct {
+	Elements []*CheckWarehouseRequestElement
+}
+
+type CheckWarehouseRequestElement struct {
 	GoodsCode  string
 	GoodsColor string
 	GoodsSize  string

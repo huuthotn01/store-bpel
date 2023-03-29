@@ -7,11 +7,19 @@ import (
 )
 
 func (c *goodsBffController) CheckWarehouse(ctx context.Context, request *schema.CheckWarehouseRequest) (*schema.CheckWarehouseResponseData, error) {
+	checkWHElements := make([]*goods_schema.CheckWarehouseRequestElement, 0, len(request.Elements))
+
+	for _, data := range request.Elements {
+		checkWHElements = append(checkWHElements, &goods_schema.CheckWarehouseRequestElement{
+			GoodsCode:  data.GoodsCode,
+			GoodsColor: data.GoodsColor,
+			GoodsSize:  data.GoodsSize,
+			Quantity:   data.Quantity,
+		})
+	}
+
 	resp, err := c.goodsAdapter.CheckWarehouse(ctx, &goods_schema.CheckWarehouseRequest{
-		GoodsCode:  request.GoodsCode,
-		GoodsColor: request.GoodsColor,
-		GoodsSize:  request.GoodsSize,
-		Quantity:   request.Quantity,
+		Elements: checkWHElements,
 	})
 	if err != nil {
 		return nil, err
