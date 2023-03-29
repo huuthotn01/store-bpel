@@ -90,5 +90,6 @@ type GetShipFeeResponse struct {
 }
 
 type GetShipFeeResponseData struct {
-	ShipFee int
+	ShipFee      int
+	ExpectedDate string
 }

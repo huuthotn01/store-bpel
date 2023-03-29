@@ -6,7 +6,7 @@ import (
 	"store-bpel/order_service/schema"
 )
 
-func (c *orderBffController) GetShippingFee(ctx context.Context, request *order_service.Address) (int, error) {
+func (c *orderBffController) GetShippingFee(ctx context.Context, request *order_service.Address) (*order_service.GetShipFeeResponseData, error) {
 	shipFee, err := c.orderAdapter.GetShippingFee(ctx, &schema.GetShipFeeRequest{
 		Street:   request.Street,
 		Ward:     request.Ward,
@@ -14,8 +14,11 @@ func (c *orderBffController) GetShippingFee(ctx context.Context, request *order_
 		Province: request.Province,
 	})
 	if err != nil {
-		return 0, err
+		return nil, err
 	}
 
-	return shipFee.ShipFee, nil
+	return &order_service.GetShipFeeResponseData{
+		ShipFee:      shipFee.ShipFee,
+		ExpectedDate: shipFee.ExpectedDate,
+	}, nil
 }
