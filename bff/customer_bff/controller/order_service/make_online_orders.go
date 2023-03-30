@@ -28,6 +28,7 @@ func (c *orderBffController) CreateOnlineOrder(ctx context.Context, request *ord
 		TotalPrice:      request.TotalPrice,
 		ShipFee:         request.ShipFee,
 		TransactionDate: request.TransactionDate,
+		ExpectedDate:    request.ExpectedDate,
 		NameReceiver:    request.NameReceiver,
 		PhoneReceiver:   request.PhoneReceiver,
 		EmailReceiver:   request.EmailReceiver,
