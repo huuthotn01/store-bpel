@@ -9,6 +9,8 @@ import (
 
 type IEventBffController interface {
 	GetEventDetail(ctx context.Context, request *event_service.GetEventDetailRequest) (*event_service.GetEventData, error)
+	GetEvent(ctx context.Context) ([]*event_service.GetEventData, error)
+	GetEventByGoods(ctx context.Context, request *event_service.GetEventByGoodsRequest) ([]*event_service.GetEventByGoodsData, error)
 }
 
 type eventBffController struct {
