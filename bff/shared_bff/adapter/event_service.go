@@ -129,7 +129,7 @@ func (a *eventServiceAdapter) GetEventByGoods(ctx context.Context, goodsId strin
 	defer log.Println("End call event service for GetEventDetail")
 
 	if goodsId == "" {
-		return nil, errors.New("[BFF-Adapter-EventServiceAdapter-GetEventByGoods] eventId must not be empty")
+		return nil, errors.New("[BFF-Adapter-EventServiceAdapter-GetEventByGoods] goodsId must not be empty")
 	}
 
 	// call http to event service

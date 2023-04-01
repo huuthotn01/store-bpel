@@ -86,6 +86,10 @@ func (a *eventServiceAdapter) UpdateEvent(ctx context.Context, eventId string, d
 	log.Printf("Start to call event service for UpdateEvent")
 	defer log.Println("End call event service for UpdateEvent")
 
+	if eventId == "" {
+		return errors.New("[BFF-Adapter-EventServiceAdapter-GetEventByGoods] eventId must not be empty")
+	}
+
 	// call http to event service
 	url := fmt.Sprintf("http://localhost:%d/api/event-service/event/%s", a.port, eventId)
 
