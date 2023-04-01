@@ -1,14 +1,16 @@
 package main
 
 import (
-	"github.com/spf13/cast"
 	"log"
 	"net/http"
 	"store-bpel/bff/admin_bff/config"
 	account_controller "store-bpel/bff/admin_bff/controller/account_service"
 	branch_controller "store-bpel/bff/admin_bff/controller/branch_service"
+	event_controller "store-bpel/bff/admin_bff/controller/event_service"
 	goods_controller "store-bpel/bff/admin_bff/controller/goods_service"
 	staff_controller "store-bpel/bff/admin_bff/controller/staff_service"
+
+	"github.com/spf13/cast"
 )
 
 func main() {
@@ -32,5 +34,6 @@ func newSOAPMux(cfg *config.Config) *http.ServeMux {
 	account_controller.RegisterEndpointHandler(mux, cfg)
 	staff_controller.RegisterEndpointHandler(mux, cfg)
 	goods_controller.RegisterEndpointHandler(mux, cfg)
+	event_controller.RegisterEndpointHandler(mux, cfg)
 	return mux
 }
