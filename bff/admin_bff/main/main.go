@@ -41,5 +41,6 @@ func newSOAPMux(cfg *config.Config) *mux.Router {
 	account_controller.RegisterEndpointHandler(r, cfg)
 	staff_controller.RegisterEndpointHandler(r, cfg)
 	goods_controller.RegisterEndpointHandler(r, cfg)
+	event_controller.RegisterEndpointHandler(r, cfg)
 	return r
 }

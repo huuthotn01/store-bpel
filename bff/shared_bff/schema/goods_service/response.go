@@ -1,4 +1,4 @@
-package schema
+package goods_service
 
 type UpdateResponse struct {
 	StatusCode int
