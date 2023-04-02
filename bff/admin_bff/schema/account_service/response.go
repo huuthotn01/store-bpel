@@ -13,12 +13,6 @@ type UpdateResponse struct {
 	Message    string
 }
 
-type SignInResponseData struct {
-	UserId string
-	Role   int
-	Token  string
-}
-
 type GetListAccountResponseData struct {
 	Username    string
 	Id          string

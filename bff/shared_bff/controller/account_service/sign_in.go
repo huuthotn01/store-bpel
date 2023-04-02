@@ -3,7 +3,7 @@ package account_service
 import (
 	"context"
 	"store-bpel/account_service/schema"
-	"store-bpel/bff/admin_bff/schema/account_service"
+	"store-bpel/bff/shared_bff/schema/account_service"
 )
 
 func (c *accountBffController) SignIn(ctx context.Context, request *account_service.SignInRequest) (*account_service.SignInResponseData, error) {
