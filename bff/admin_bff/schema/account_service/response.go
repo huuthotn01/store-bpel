@@ -16,6 +16,7 @@ type UpdateResponse struct {
 type SignInResponseData struct {
 	UserId string
 	Role   int
+	Token  string
 }
 
 type GetListAccountResponseData struct {

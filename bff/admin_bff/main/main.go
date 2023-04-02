@@ -1,9 +1,12 @@
 package main
 
 import (
+	"github.com/gorilla/mux"
+
 	"log"
 	"net/http"
 	"store-bpel/bff/admin_bff/config"
+	"store-bpel/bff/admin_bff/controller"
 	account_controller "store-bpel/bff/admin_bff/controller/account_service"
 	branch_controller "store-bpel/bff/admin_bff/controller/branch_service"
 	event_controller "store-bpel/bff/admin_bff/controller/event_service"
@@ -20,20 +23,23 @@ func main() {
 	}
 	log.Printf("Admin BFF server started at port %d", cfg.HttpPort)
 
-	mux := newSOAPMux(cfg)
+	r := newSOAPMux(cfg)
 
-	if err = http.ListenAndServe(":"+cast.ToString(cfg.HttpPort), mux); err != nil {
+	if err = http.ListenAndServe(":"+cast.ToString(cfg.HttpPort), r); err != nil {
 		log.Fatal(err)
 	}
 	log.Printf("Admin BFF initialized successfully at port %d", cfg.HttpPort)
 }
 
-func newSOAPMux(cfg *config.Config) *http.ServeMux {
-	mux := http.NewServeMux()
-	branch_controller.RegisterEndpointHandler(mux, cfg)
-	account_controller.RegisterEndpointHandler(mux, cfg)
-	staff_controller.RegisterEndpointHandler(mux, cfg)
-	goods_controller.RegisterEndpointHandler(mux, cfg)
-	event_controller.RegisterEndpointHandler(mux, cfg)
-	return mux
+func newSOAPMux(cfg *config.Config) *mux.Router {
+	r := mux.NewRouter()
+
+	// middleware
+	r.Use(controller.AuthMiddleware)
+
+	branch_controller.RegisterEndpointHandler(r, cfg)
+	account_controller.RegisterEndpointHandler(r, cfg)
+	staff_controller.RegisterEndpointHandler(r, cfg)
+	goods_controller.RegisterEndpointHandler(r, cfg)
+	return r
 }

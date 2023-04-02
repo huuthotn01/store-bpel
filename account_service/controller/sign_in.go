@@ -2,7 +2,9 @@ package controller
 
 import (
 	"context"
+	"github.com/golang-jwt/jwt/v4"
 	"store-bpel/account_service/schema"
+	"time"
 )
 
 func (c *accountServiceController) SignIn(ctx context.Context, request *schema.SignInRequest) (*schema.SignInResponseData, error) {
@@ -14,8 +16,33 @@ func (c *accountServiceController) SignIn(ctx context.Context, request *schema.S
 	if err != nil {
 		return nil, err
 	}
+
+	jwtToken, err := c.generateJwtToken(request.Username)
+	if err != nil {
+		return nil, err
+	}
+
 	return &schema.SignInResponseData{
 		UserId: account.Username,
 		Role:   account.UserRole,
+		Token:  jwtToken,
 	}, nil
+}
+
+func (c *accountServiceController) generateJwtToken(username string) (string, error) {
+	var (
+		token  = jwt.New(jwt.SigningMethodHS256)
+		claims = token.Claims.(jwt.MapClaims)
+	)
+
+	// assign username and expiration time
+	claims["username"] = username
+	claims["exp"] = time.Now().UTC().Add(time.Hour * 24).Unix()
+
+	tokenString, err := token.SignedString("secretkey")
+	if err != nil {
+		return "", err
+	}
+
+	return tokenString, nil
 }

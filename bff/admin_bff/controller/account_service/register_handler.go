@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/xml"
 	"fmt"
+	"github.com/gorilla/mux"
 	"io/ioutil"
 	"net/http"
 	"store-bpel/bff/admin_bff/config"
@@ -12,7 +13,7 @@ import (
 
 var accountController IAccountBffController
 
-func RegisterEndpointHandler(mux *http.ServeMux, cfg *config.Config) {
+func RegisterEndpointHandler(mux *mux.Router, cfg *config.Config) {
 	// init controller
 	accountController = NewController(cfg)
 	// register handler
