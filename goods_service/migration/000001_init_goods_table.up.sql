@@ -5,7 +5,7 @@ create table if not exists goods (
     goods_name varchar(100) not null,
     goods_type varchar(100) not null,
     goods_gender int not null,
-    goods_age varchar(50) not null,
+    goods_age ENUM('KID', 'ADULT', 'ALL') not null,
     manufacturer varchar(100) not null,
     is_for_sale tinyint,
     unit_price int,

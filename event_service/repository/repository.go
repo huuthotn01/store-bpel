@@ -98,8 +98,9 @@ func (r *eventServiceRepository) AddGoods(ctx context.Context, eventId int, list
 }
 
 func (r *eventServiceRepository) UpdateEvent(ctx context.Context, data *UpdateEventData) error {
+
 	return r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
-		err := tx.Table(r.eventTableName).Where("event_id = ?", data.EventId).Updates(data).Error
+		err := tx.Table(r.eventTableName).Where("event_id = ?", data.EventId).Updates(data.EventModel).Error
 		if err != nil {
 			return err
 		}

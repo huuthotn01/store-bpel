@@ -2,15 +2,18 @@ package main
 
 import (
 	"github.com/gorilla/mux"
-	"github.com/spf13/cast"
+
 	"log"
 	"net/http"
 	"store-bpel/bff/admin_bff/config"
 	"store-bpel/bff/admin_bff/controller"
 	account_controller "store-bpel/bff/admin_bff/controller/account_service"
 	branch_controller "store-bpel/bff/admin_bff/controller/branch_service"
+	event_controller "store-bpel/bff/admin_bff/controller/event_service"
 	goods_controller "store-bpel/bff/admin_bff/controller/goods_service"
 	staff_controller "store-bpel/bff/admin_bff/controller/staff_service"
+
+	"github.com/spf13/cast"
 )
 
 func main() {
