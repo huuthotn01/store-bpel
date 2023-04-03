@@ -1,8 +1,9 @@
 package repository
 
 import (
-	"gorm.io/gorm"
 	"time"
+
+	"gorm.io/gorm"
 )
 
 type goodsServiceRepository struct {
@@ -23,6 +24,7 @@ type GoodsModel struct {
 	Manufacturer string
 	IsForSale    int
 	UnitPrice    int
+	UnitCost     int
 	Description  string
 }
 

@@ -17,6 +17,7 @@ func (c *goodsServiceController) UpdateGoods(ctx context.Context, request *schem
 		GoodsName:    request.GoodsName,
 		Manufacturer: request.Manufacturer,
 		UnitPrice:    request.UnitPrice,
+		UnitCost:     request.UnitCost,
 		Description:  request.Description,
 	})
 }
