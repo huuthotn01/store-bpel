@@ -22,6 +22,7 @@ func (c *goodsServiceController) AddGoods(ctx context.Context, request *schema.A
 		Manufacturer: request.Manufacturer,
 		IsForSale:    1,
 		UnitPrice:    request.UnitPrice,
+		UnitCost:     request.UnitCost,
 		Description:  request.Description,
 	})
 }

@@ -9,6 +9,7 @@ create table if not exists goods (
     manufacturer varchar(100) not null,
     is_for_sale tinyint,
     unit_price int,
+    unit_cost int not null,
     description varchar(100),
     constraint PK_goods primary key (goods_code, goods_size, goods_color)
 ) engine = InnoDB default charset = utf8mb4 collate = utf8mb4_unicode_ci ;

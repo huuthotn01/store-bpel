@@ -28,6 +28,7 @@ type GetGoodsResponseData struct {
 	Manufacturer string
 	IsForSale    int
 	UnitPrice    int
+	UnitCost     int
 	Description  string
 }
 

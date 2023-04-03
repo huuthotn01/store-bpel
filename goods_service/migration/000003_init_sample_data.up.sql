@@ -1,14 +1,14 @@
 insert into goods values
-    ('1', 35, 'Red', 'Hàng để test', 'Hàng test', 3, 'KID', 'NSX TEST', 1, 10000, 'Hàng để test, xin nhẹ tay'),
-    ('2', 30, 'Blue', 'Hàng để trưng bày', 'Hàng trưng bày', 3, 'ALL', 'NSX TEST', 1, 200000, 'Hàng để trưng'),
-    ('goods-1', 'M', 'Đen', 'Áo khoác gió', 'jacket', 1, 'ADULT', 'Nhà cung cấp Bình Dương', 1, 250000, 'Phù hợp với thời tiết nắng nóng'),
-    ('goods-1', 'S', 'Đen', 'Áo khoác gió', 'jacket', 1, 'ADULT', 'Nhà cung cấp Bình Dương', 1, 250000, 'Phù hợp với thời tiết nắng nóng'),
-    ('goods-2', 'L', 'Vàng', 'Quần tây nữ', 'Trousers', 2, 'ADULT', 'Nhà cung cấp Bình Dương', 1, 150000, 'Kiểu dáng thời thường'),
-    ('goods-2', 'M', 'Vàng', 'Quần tây', 'jacket', 2, 'ADULT', 'Nhà cung cấp Bình Dương', 1, 150000, 'Phù hợp với thời tiết nắng nóng'),
-    ('goods-3', 'L', 'Trắng', 'Quần kaki', 'kaki', 2, 'ADULT', 'Nhà cung cấp Bình Dương', 1, 200000, 'Kiểu dáng thời thường'),
-    ('goods-4', 'XL', 'Trắng', 'Áo thun unisex', 'T-shirt', 3, 'ADULT', 'Nhà cung cấp Bình Dương', 1, 100000, 'Vải Cotton thoáng mát'),
-    ('goods-4', 'XL', 'Xám', 'Áo thun unisex', 'T-shirt', 3, 'ADULT', 'Nhà cung cấp Bình Dương', 1, 100000, 'Vải Cotton thoáng mát'),
-    ('goods-5', 'S', 'Đỏ', 'Áo thun trẻ em', 'T-shirt', 1, 'KID', 'Nhà cung cấp Bình Dương', 1, 120000, 'Vải Cotton thoáng mát');
+    ('1', 35, 'Red', 'Hàng để test', 'Hàng test', 3, 'KID', 'NSX TEST', 1, 10000, 9000, 'Hàng để test, xin nhẹ tay'),
+    ('2', 30, 'Blue', 'Hàng để trưng bày', 'Hàng trưng bày', 3, 'ALL', 'NSX TEST', 1, 200000, 150000, 'Hàng để trưng'),
+    ('goods-1', 'M', 'Đen', 'Áo khoác gió', 'jacket', 1, 'ADULT', 'Nhà cung cấp Bình Dương', 1, 250000, 180000, 'Phù hợp với thời tiết nắng nóng'),
+    ('goods-1', 'S', 'Đen', 'Áo khoác gió', 'jacket', 1, 'ADULT', 'Nhà cung cấp Bình Dương', 1, 250000,  190000,'Phù hợp với thời tiết nắng nóng'),
+    ('goods-2', 'L', 'Vàng', 'Quần tây nữ', 'Trousers', 2, 'ADULT', 'Nhà cung cấp Bình Dương', 1, 150000,  120000,'Kiểu dáng thời thường'),
+    ('goods-2', 'M', 'Vàng', 'Quần tây', 'jacket', 2, 'ADULT', 'Nhà cung cấp Bình Dương', 1, 150000,  120000,'Phù hợp với thời tiết nắng nóng'),
+    ('goods-3', 'L', 'Trắng', 'Quần kaki', 'kaki', 2, 'ADULT', 'Nhà cung cấp Bình Dương', 1, 200000, 180000, 'Kiểu dáng thời thường'),
+    ('goods-4', 'XL', 'Trắng', 'Áo thun unisex', 'T-shirt', 3, 'ADULT', 'Nhà cung cấp Bình Dương', 1, 100000,86000, 'Vải Cotton thoáng mát'),
+    ('goods-4', 'XL', 'Xám', 'Áo thun unisex', 'T-shirt', 3, 'ADULT', 'Nhà cung cấp Bình Dương', 1, 100000,90000, 'Vải Cotton thoáng mát'),
+    ('goods-5', 'S', 'Đỏ', 'Áo thun trẻ em', 'T-shirt', 1, 'KID', 'Nhà cung cấp Bình Dương', 1, 120000, 100000,'Vải Cotton thoáng mát');
 
 
 

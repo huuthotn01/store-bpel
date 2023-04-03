@@ -9,6 +9,7 @@ type UpdateGoodsRequest struct {
 	GoodsAge     string
 	Manufacturer string
 	UnitPrice    int
+	UnitCost     int
 	Description  string
 }
 
@@ -22,6 +23,7 @@ type AddGoodsRequest struct {
 	Manufacturer string
 	IsForSale    bool
 	UnitPrice    int
+	UnitCost     int
 	Description  string
 }
 
