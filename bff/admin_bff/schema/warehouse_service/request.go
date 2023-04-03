@@ -1,4 +1,8 @@
-package schema
+package warehouse_service
+
+type GetWarehouseId struct {
+	WarehouseId string
+}
 
 type AddWarehouseStaffRequest struct {
 	StaffId     string

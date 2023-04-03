@@ -1,4 +1,4 @@
-package schema
+package warehouse_service
 
 import "time"
 
@@ -7,36 +7,10 @@ type UpdateResponse struct {
 	Message    string
 }
 
-type GetWarehouseStaffResponse struct {
+type GetResponse struct {
 	StatusCode int
 	Message    string
-	Data       []*GetWarehouseStaffResponseData
-}
-
-type GetWarehouseStaffResponseData struct {
-	StaffId     string
-	StaffName   string
-	Street      string
-	Ward        string
-	District    string
-	Province    string
-	CitizenId   string
-	Role        string
-	BranchId    string
-	Hometown    string
-	Salary      int
-	Birthdate   string
-	StartDate   time.Time
-	Gender      string
-	PhoneNumber string
-	Status      string
-	Email       string
-}
-
-type GetWarehouseManagerResponse struct {
-	StatusCode int
-	Message    string
-	Data       *GetWarehouseManagerResponseData
+	Data       interface{}
 }
 
 type GetWarehouseManagerResponseData struct {
@@ -58,10 +32,24 @@ type GetWarehouseManagerResponseData struct {
 	Email       string
 }
 
-type GetWarehouseResponse struct {
-	StatusCode int
-	Message    string
-	Data       *GetWarehouseResponseData
+type GetWarehouseStaffResponseData struct {
+	StaffId     string
+	StaffName   string
+	Street      string
+	Ward        string
+	District    string
+	Province    string
+	CitizenId   string
+	Role        string
+	BranchId    string
+	Hometown    string
+	Salary      int
+	Birthdate   string
+	StartDate   time.Time
+	Gender      string
+	PhoneNumber string
+	Status      string
+	Email       string
 }
 
 type GetWarehouseResponseData struct {

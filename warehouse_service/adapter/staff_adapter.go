@@ -3,6 +3,7 @@ package adapter
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -12,7 +13,7 @@ import (
 )
 
 type IStaffServiceAdapter interface {
-	GetStaff(ctx context.Context) ([]*schema.GetStaffResponseData, error)
+	GetDetailStaff(ctx context.Context, staffId string) (*schema.GetStaffResponseData, error)
 }
 
 type staffServiceAdapter struct {
@@ -27,11 +28,14 @@ func NewStaffAdapter(cfg *config.Config) IStaffServiceAdapter {
 	}
 }
 
-func (a *staffServiceAdapter) GetStaff(ctx context.Context) ([]*schema.GetStaffResponseData, error) {
+func (a *staffServiceAdapter) GetDetailStaff(ctx context.Context, staffId string) (*schema.GetStaffResponseData, error) {
+	if staffId == "" {
+		return nil, errors.New("[WarehouseServiceAdapter-StaffAdapter-GetDetailStaff] staffId must not be empty")
+	}
 	log.Println("Start to call staff service for GetStaff")
 	defer log.Println("End call staff service for GetStaff")
 	var result *schema.GetStaffResponse
-	url := fmt.Sprintf("http://localhost:%d/api/staff-service/staff", a.port)
+	url := fmt.Sprintf("http://localhost:%d/api/staff-service/staff/%s", a.port, staffId)
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
@@ -45,5 +49,5 @@ func (a *staffServiceAdapter) GetStaff(ctx context.Context) ([]*schema.GetStaffR
 		return nil, err
 	}
 	err = json.Unmarshal(respByteArr, &result)
-	return result.Data, err
+	return result.Data[0], err
 }
