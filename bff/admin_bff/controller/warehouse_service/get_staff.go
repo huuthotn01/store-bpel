@@ -1,25 +1,19 @@
-package controller
+package warehouse_service
 
 import (
 	"context"
-	"store-bpel/warehouse_service/schema"
+	"store-bpel/bff/admin_bff/schema/warehouse_service"
 )
 
-func (c *warehouseServiceController) GetWarehouseStaff(ctx context.Context, warehouseId string) ([]*schema.GetWarehouseStaffResponseData, error) {
-	staffInWh, err := c.repository.GetStaffByWarehouse(ctx, warehouseId)
+func (c *warehouseBffController) GetStaff(ctx context.Context, request *warehouse_service.GetWarehouseId) ([]*warehouse_service.GetWarehouseStaffResponseData, error) {
+	staffs, err := c.warehouseAdapter.GetStaff(ctx, request.WarehouseId)
 	if err != nil {
 		return nil, err
 	}
 
-	respStaffs := make([]*schema.GetWarehouseStaffResponseData, 0, len(staffInWh))
-
-	for _, staff := range staffInWh {
-		data, err := c.staffAdapter.GetDetailStaff(ctx, staff.StaffCode)
-		if err != nil {
-			return nil, err
-		}
-
-		respStaffs = append(respStaffs, &schema.GetWarehouseStaffResponseData{
+	respStaffs := make([]*warehouse_service.GetWarehouseStaffResponseData, 0, len(staffs))
+	for _, data := range staffs {
+		respStaffs = append(respStaffs, &warehouse_service.GetWarehouseStaffResponseData{
 			StaffId:     data.StaffId,
 			StaffName:   data.StaffName,
 			Street:      data.Street,
