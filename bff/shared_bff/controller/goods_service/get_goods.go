@@ -10,7 +10,6 @@ func (c *goodsBffController) GetGoods(ctx context.Context) ([]*goods_service.Get
 	if err != nil {
 		return nil, err
 	}
-
 	respGoods := make([]*goods_service.GetGoodsResponseData, 0, len(goods))
 	for _, data := range goods {
 		respGoods = append(respGoods, &goods_service.GetGoodsResponseData{

@@ -12,6 +12,7 @@ func (c *warehouseServiceController) GetWarehouse(ctx context.Context, warehouse
 	}
 
 	return &schema.GetWarehouseResponseData{
+		WarehouseCode: warehouseData.WarehouseCode,
 		WarehouseName: warehouseData.WarehouseName,
 		Capacity:      warehouseData.Capacity,
 		CreatedAt:     warehouseData.CreatedAt,

@@ -39,6 +39,12 @@ type GetWarehouseManagerResponse struct {
 	Data       *GetWarehouseManagerResponseData
 }
 
+type GetAllWarehouseManagerResponse struct {
+	StatusCode int
+	Message    string
+	Data       []*GetWarehouseResponseData
+}
+
 type GetWarehouseManagerResponseData struct {
 	StaffId     string
 	StaffName   string
@@ -65,6 +71,7 @@ type GetWarehouseResponse struct {
 }
 
 type GetWarehouseResponseData struct {
+	WarehouseCode string
 	WarehouseName string
 	Capacity      int
 	CreatedAt     time.Time

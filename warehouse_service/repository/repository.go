@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+
 	"gorm.io/gorm"
 )
 
@@ -13,6 +14,7 @@ type IWarehouseServiceRepository interface {
 	GetWarehouseManager(ctx context.Context, warehouseId string) (*StaffInWh, error)
 	UpdateWarehouseManager(ctx context.Context, staffId, warehouseId string) error
 	GetWarehouse(ctx context.Context, warehouseId string) (*WarehouseModel, error)
+	GetAllWarehouse(ctx context.Context) ([]*WarehouseModel, error)
 	AddWarehouse(ctx context.Context, data *WarehouseModel) error
 	UpdateWarehouse(ctx context.Context, data *WarehouseModel) error
 	DeleteWarehouse(ctx context.Context, warehouseId string) error
@@ -59,8 +61,14 @@ func (r *warehouseServiceRepository) UpdateWarehouseManager(ctx context.Context,
 
 func (r *warehouseServiceRepository) GetWarehouse(ctx context.Context, warehouseId string) (*WarehouseModel, error) {
 	var result *WarehouseModel
-	query := r.db.WithContext(ctx).Table(r.StaffInWhTableName).Where("warehouse_code = ?", warehouseId)
+	query := r.db.WithContext(ctx).Table(r.warehouseTableName).Where("warehouse_code = ?", warehouseId)
 	return result, query.First(&result).Error
+}
+
+func (r *warehouseServiceRepository) GetAllWarehouse(ctx context.Context) ([]*WarehouseModel, error) {
+	var result []*WarehouseModel
+	query := r.db.WithContext(ctx).Table(r.warehouseTableName)
+	return result, query.Find(&result).Error
 }
 
 func (r *warehouseServiceRepository) AddWarehouse(ctx context.Context, data *WarehouseModel) error {
