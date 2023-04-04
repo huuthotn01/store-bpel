@@ -1,5 +1,7 @@
 package goods_service
 
+import "time"
+
 type UpdateResponse struct {
 	StatusCode int
 	Message    string
@@ -12,9 +14,11 @@ type GetResponse struct {
 }
 
 type GetWarehouseResponseData struct {
-	GoodsCode  string
-	GoodsSize  string
-	GoodsColor string
-	WhCode     string
-	Quantity   int
+	GoodsCode   string
+	GoodsSize   string
+	GoodsColor  string
+	WhCode      string
+	Quantity    int
+	CreatedDate time.Time
+	UpdatedDate time.Time
 }

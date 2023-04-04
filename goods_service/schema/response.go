@@ -1,5 +1,7 @@
 package schema
 
+import "time"
+
 type GetDetailGoodsResponse struct {
 	StatusCode int
 	Message    string
@@ -59,9 +61,11 @@ type WarehouseActions struct {
 }
 
 type GetGoodsInWarehouseResponseData struct {
-	GoodsCode  string
-	GoodsSize  string
-	GoodsColor string
-	WhCode     string
-	Quantity   int
+	GoodsCode   string
+	GoodsSize   string
+	GoodsColor  string
+	WhCode      string
+	Quantity    int
+	CreatedDate time.Time
+	UpdatedDate time.Time
 }

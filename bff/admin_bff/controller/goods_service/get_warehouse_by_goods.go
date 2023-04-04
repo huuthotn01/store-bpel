@@ -16,11 +16,13 @@ func (c *goodsBffController) GetWarehouseByGoods(ctx context.Context, request *g
 	for _, warehouse := range warehouses {
 		result = append(result, &goods_service.GetWarehouseResponseData{
 
-			GoodsCode:  warehouse.GoodsCode,
-			GoodsSize:  warehouse.GoodsSize,
-			GoodsColor: warehouse.GoodsColor,
-			WhCode:     warehouse.WhCode,
-			Quantity:   warehouse.Quantity,
+			GoodsCode:   warehouse.GoodsCode,
+			GoodsSize:   warehouse.GoodsSize,
+			GoodsColor:  warehouse.GoodsColor,
+			WhCode:      warehouse.WhCode,
+			Quantity:    warehouse.Quantity,
+			CreatedDate: warehouse.CreatedDate,
+			UpdatedDate: warehouse.UpdatedDate,
 		})
 	}
 
