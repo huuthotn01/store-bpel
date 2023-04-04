@@ -13,11 +13,13 @@ func (c *goodsServiceController) GetWarehouseByGoods(ctx context.Context, goodsI
 	result := make([]*schema.GetGoodsInWarehouseResponseData, 0, len(warehouses))
 	for _, warehouse := range warehouses {
 		result = append(result, &schema.GetGoodsInWarehouseResponseData{
-			GoodsCode:  warehouse.GoodsCode,
-			GoodsSize:  warehouse.GoodsSize,
-			GoodsColor: warehouse.GoodsColor,
-			WhCode:     warehouse.WhCode,
-			Quantity:   warehouse.Quantity,
+			GoodsCode:   warehouse.GoodsCode,
+			GoodsSize:   warehouse.GoodsSize,
+			GoodsColor:  warehouse.GoodsColor,
+			WhCode:      warehouse.WhCode,
+			Quantity:    warehouse.Quantity,
+			CreatedDate: warehouse.CreatedDate,
+			UpdatedDate: warehouse.UpdatedDate,
 		})
 	}
 	return result, nil
