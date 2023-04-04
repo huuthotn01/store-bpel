@@ -4,11 +4,12 @@ import (
 	"context"
 	"encoding/xml"
 	"fmt"
-	"github.com/gorilla/mux"
 	"io/ioutil"
 	"net/http"
 	"store-bpel/bff/admin_bff/config"
 	"store-bpel/bff/admin_bff/schema/warehouse_service"
+
+	"github.com/gorilla/mux"
 )
 
 var warehouseController IWarehouseBffController
@@ -24,6 +25,7 @@ func RegisterEndpointHandler(mux *mux.Router, cfg *config.Config) {
 	mux.HandleFunc("/api/bff/warehouse-service/update-staff", handleUpdateStaff)
 	mux.HandleFunc("/api/bff/warehouse-service/delete-staff", handleDeleteStaff)
 	mux.HandleFunc("/api/bff/warehouse-service/get-warehouse", handleGetWarehouse)
+	mux.HandleFunc("/api/bff/warehouse-service/get-all-warehouse", handleGetAllWarehouse)
 	mux.HandleFunc("/api/bff/warehouse-service/add-warehouse", handleAddWarehouse)
 	mux.HandleFunc("/api/bff/warehouse-service/update-warehouse", handleUpdateWarehouse)
 	mux.HandleFunc("/api/bff/warehouse-service/delete-warehouse", handleDeleteWarehouse)
@@ -292,6 +294,29 @@ func handleGetWarehouse(w http.ResponseWriter, r *http.Request) {
 				StatusCode: 200,
 				Message:    "OK",
 				Data:       warehouse,
+			})
+		}
+	} else {
+		http.Error(w, "Method not supported", http.StatusNotFound)
+	}
+}
+
+func handleGetAllWarehouse(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
+	w.Header().Set("Content-Type", "application/xml")
+	enc := xml.NewEncoder(w)
+	if r.Method == http.MethodPost {
+		warehouses, err := warehouseController.GetAllWarehouse(ctx)
+		if err != nil {
+			err = enc.Encode(&warehouse_service.GetResponse{
+				StatusCode: 500,
+				Message:    fmt.Sprintf("BFF-Warehouse-handleGetAllWarehouse-GetWarehouse err %v", err),
+			})
+		} else {
+			err = enc.Encode(&warehouse_service.GetResponse{
+				StatusCode: 200,
+				Message:    "OK",
+				Data:       warehouses,
 			})
 		}
 	} else {

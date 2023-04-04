@@ -23,6 +23,7 @@ func RegisterEndpointHandler(mux *mux.Router, cfg *config.Config) {
 	mux.HandleFunc("/api/bff/goods-service/goods/export", handleExport)
 	mux.HandleFunc("/api/bff/goods-service/goods/return-manufact", handleReturnManufacturer)
 	mux.HandleFunc("/api/bff/goods-service/goods/cust-return", handleCustReturn)
+	mux.HandleFunc("/api/bff/goods-service/goods/get-warehouse", handleGetWarehouse)
 }
 
 func handleAddGoods(w http.ResponseWriter, r *http.Request) {
@@ -208,6 +209,46 @@ func handleCustReturn(w http.ResponseWriter, r *http.Request) {
 			err = enc.Encode(&goods_service.UpdateResponse{
 				StatusCode: 200,
 				Message:    "OK",
+			})
+		}
+	} else {
+		http.Error(w, "Method not supported", http.StatusNotFound)
+	}
+}
+
+func handleGetWarehouse(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
+	w.Header().Set("Content-Type", "application/xml")
+	enc := xml.NewEncoder(w)
+	payload, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		err = enc.Encode(&goods_service.GetResponse{
+			StatusCode: 500,
+			Message:    fmt.Sprintf("BFF-Goods-handleGetWarehouse-ioutil.ReadAll err %v", err),
+		})
+		return
+	}
+	if r.Method == http.MethodPost {
+		var request = new(goods_service.GetWarehouseByGoodsRequest)
+		err = xml.Unmarshal(payload, request)
+		if err != nil {
+			err = enc.Encode(&goods_service.GetResponse{
+				StatusCode: 500,
+				Message:    fmt.Sprintf("BFF-Goods-handleGetWarehouse-xml.Unmarshal err %v", err),
+			})
+			return
+		}
+		resp, err := goodsController.GetWarehouseByGoods(ctx, request)
+		if err != nil {
+			err = enc.Encode(&goods_service.GetResponse{
+				StatusCode: 500,
+				Message:    fmt.Sprintf("BFF-Goods-handleGetWarehouse-GetCustomer err %v", err),
+			})
+		} else {
+			err = enc.Encode(&goods_service.GetResponse{
+				StatusCode: 200,
+				Message:    "OK",
+				Data:       resp,
 			})
 		}
 	} else {

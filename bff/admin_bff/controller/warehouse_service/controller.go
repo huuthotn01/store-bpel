@@ -18,6 +18,7 @@ type IWarehouseBffController interface {
 	AddWarehouse(ctx context.Context, request *warehouse_service.AddWarehouseRequest) error
 	UpdateWarehouse(ctx context.Context, request *warehouse_service.UpdateWarehouseRequest) error
 	DeleteWarehouse(ctx context.Context, request *warehouse_service.DeleteWarehouseRequest) error
+	GetAllWarehouse(ctx context.Context) ([]*warehouse_service.GetWarehouseResponseData, error)
 }
 
 type warehouseBffController struct {

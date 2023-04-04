@@ -3,14 +3,15 @@ package main
 import (
 	"context"
 	"encoding/json"
-	"github.com/gorilla/mux"
-	"github.com/spf13/cast"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"store-bpel/goods_service/config"
 	"store-bpel/goods_service/controller"
 	"store-bpel/goods_service/schema"
+
+	"github.com/gorilla/mux"
+	"github.com/spf13/cast"
 )
 
 var ctrl controller.IGoodsServiceController
@@ -45,6 +46,7 @@ func registerEndpoint(r *mux.Router) {
 	r.HandleFunc("/api/goods-service/return-manufact", handleReturnManufact)
 	r.HandleFunc("/api/goods-service/cust-return", handleCustReturn)
 	r.HandleFunc("/api/goods-service/goods/{goodsId}", handleDetailGoods)
+	r.HandleFunc("/api/goods-service/goods/warehouse/{goodsId}", handleWarehouse)
 	r.HandleFunc("/api/goods-service/goods", handleGoods)
 	r.HandleFunc("/api/goods-service/check-wh", handleCheckWH)
 }
@@ -405,6 +407,31 @@ func handleCustReturn(w http.ResponseWriter, r *http.Request) {
 			err = enc.Encode(&schema.UpdateResponse{
 				StatusCode: 200,
 				Message:    "OK",
+			})
+		}
+	} else {
+		http.Error(w, "Method not supported", http.StatusNotFound)
+	}
+}
+
+func handleWarehouse(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	enc := json.NewEncoder(w)
+	goodsId := mux.Vars(r)["goodsId"]
+	if r.Method == "GET" {
+		resp, err := ctrl.GetWarehouseByGoods(ctx, goodsId)
+		if err != nil {
+			err = enc.Encode(&schema.GetWarehouseByGoodsResponse{
+				StatusCode: 500,
+				Message:    err.Error(),
+			})
+		} else {
+			err = enc.Encode(&schema.GetWarehouseByGoodsResponse{
+				StatusCode: 200,
+				Message:    "OK",
+				Data:       resp,
 			})
 		}
 	} else {

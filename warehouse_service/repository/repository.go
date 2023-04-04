@@ -48,7 +48,7 @@ func (r *warehouseServiceRepository) RemoveWarehouseStaff(ctx context.Context, s
 
 func (r *warehouseServiceRepository) GetWarehouseManager(ctx context.Context, warehouseId string) (*StaffInWh, error) {
 	var result *StaffInWh
-	query := r.db.WithContext(ctx).Table(r.StaffInWhTableName).Where("warehouse_code = ?", warehouseId)
+	query := r.db.WithContext(ctx).Table(r.StaffInWhTableName).Where("warehouse_code = ? and role='MANAGER'", warehouseId)
 	return result, query.First(&result).Error
 }
 

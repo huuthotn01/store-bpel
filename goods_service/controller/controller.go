@@ -2,11 +2,12 @@ package controller
 
 import (
 	"context"
-	"gorm.io/gorm"
 	"store-bpel/goods_service/adapter"
 	"store-bpel/goods_service/config"
 	repo "store-bpel/goods_service/repository"
 	"store-bpel/goods_service/schema"
+
+	"gorm.io/gorm"
 )
 
 type IGoodsServiceController interface {
@@ -17,6 +18,7 @@ type IGoodsServiceController interface {
 	UpdateGoods(ctx context.Context, request *schema.UpdateGoodsRequest, goodsId string) error
 	DeleteGoods(ctx context.Context, goodsId string) error
 	CreateGoodsTransaction(ctx context.Context, request *schema.CreateGoodsTransactionRequest, transactionType string) error
+	GetWarehouseByGoods(ctx context.Context, goodsId string) ([]*schema.GetGoodsInWarehouseResponseData, error)
 }
 
 type goodsServiceController struct {

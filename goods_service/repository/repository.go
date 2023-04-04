@@ -16,6 +16,7 @@ type IGoodsServiceRepository interface {
 	GetGoodsInWHData(ctx context.Context, data *GoodsInWh) ([]*GoodsInWh, error)
 	UpdateGoodsInWHInOut(ctx context.Context, data *GoodsInWh) error
 	UpdateGoodsInWHTransfer(ctx context.Context, data *GoodsInWh, fromWH, toWH string) error
+	GetWarehouseByGoods(ctx context.Context, goodsId string) ([]*GoodsInWh, error)
 }
 
 func NewRepository(db *gorm.DB) IGoodsServiceRepository {
@@ -121,4 +122,10 @@ func (r *goodsServiceRepository) UpdateGoodsInWHTransfer(ctx context.Context, da
 		return tx.Exec("UPDATE `goods_in_wh` SET `quantity` = `quantity` + ? WHERE `goods_code` = ? AND `goods_size` = ? AND `goods_color` = ? AND `wh_code` = ?",
 			data.Quantity, data.GoodsCode, data.GoodsSize, data.GoodsColor, toWH).Error
 	})
+}
+
+func (r *goodsServiceRepository) GetWarehouseByGoods(ctx context.Context, goodsId string) ([]*GoodsInWh, error) {
+	var result []*GoodsInWh
+	query := r.db.WithContext(ctx).Table(r.goodsInWhTableName).Where("goods_code = ?", goodsId).Find(&result)
+	return result, query.Error
 }

@@ -10,3 +10,11 @@ type GetResponse struct {
 	Message    string
 	Data       interface{}
 }
+
+type GetWarehouseResponseData struct {
+	GoodsCode  string
+	GoodsSize  string
+	GoodsColor string
+	WhCode     string
+	Quantity   int
+}
