@@ -35,8 +35,8 @@ func AuthMiddleware(next http.Handler) http.Handler {
 		}
 
 		// validate user role
-		if claims["userrole"] == 1 {
-			http.Error(w, "need admin role to complete this action", http.StatusUnauthorized)
+		if claims["userrole"] != 1 {
+			http.Error(w, "need customer role to complete this action", http.StatusUnauthorized)
 		}
 		// validate claims
 		expirationTime := claims["expired"].(float64)

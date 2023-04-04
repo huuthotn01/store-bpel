@@ -18,7 +18,7 @@ func (c *accountServiceController) SignIn(ctx context.Context, request *schema.S
 		return nil, err
 	}
 
-	jwtToken, err := c.generateJwtToken(request.Username)
+	jwtToken, err := c.generateJwtToken(request.Username, account.UserRole)
 	if err != nil {
 		return nil, err
 	}
@@ -30,14 +30,15 @@ func (c *accountServiceController) SignIn(ctx context.Context, request *schema.S
 	}, nil
 }
 
-func (c *accountServiceController) generateJwtToken(username string) (string, error) {
+func (c *accountServiceController) generateJwtToken(username string, role int) (string, error) {
 	var (
 		token  = jwt.New(jwt.SigningMethodHS256)
 		claims = token.Claims.(jwt.MapClaims)
 	)
 
-	// assign username and expiration time
+	// assign username, role and expiration time
 	claims["username"] = username
+	claims["userrole"] = role
 	claims["expired"] = time.Now().UTC().Add(time.Hour * 24).Unix()
 
 	tokenString, err := token.SignedString([]byte("secretkey"))
