@@ -3,14 +3,15 @@ package main
 import (
 	"context"
 	"encoding/json"
-	"github.com/gorilla/mux"
-	"github.com/spf13/cast"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"store-bpel/warehouse_service/config"
 	"store-bpel/warehouse_service/controller"
 	"store-bpel/warehouse_service/schema"
+
+	"github.com/gorilla/mux"
+	"github.com/spf13/cast"
 )
 
 var ctrl controller.IWarehouseServiceController
@@ -253,7 +254,21 @@ func handleUpdateWarehouse(w http.ResponseWriter, r *http.Request) {
 		})
 		return
 	}
-	if r.Method == http.MethodPost {
+	if r.Method == http.MethodGet {
+		data, err := ctrl.GetAllWarehouse(ctx)
+		if err != nil {
+			err = enc.Encode(&schema.GetAllWarehouseManagerResponse{
+				StatusCode: 500,
+				Message:    err.Error(),
+			})
+		} else {
+			err = enc.Encode(&schema.GetAllWarehouseManagerResponse{
+				StatusCode: 200,
+				Message:    "OK",
+				Data:       data,
+			})
+		}
+	} else if r.Method == http.MethodPost {
 		var request *schema.AddWarehouseRequest
 		err = json.Unmarshal(reqBody, &request)
 		if err != nil {
