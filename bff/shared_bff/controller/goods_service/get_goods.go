@@ -24,6 +24,7 @@ func (c *goodsBffController) GetGoods(ctx context.Context) ([]*goods_service.Get
 			Manufacturer: data.Manufacturer,
 			IsForSale:    data.IsForSale,
 			UnitPrice:    data.UnitPrice,
+			UnitCost:     data.UnitCost,
 			Description:  data.Description,
 		})
 	}
