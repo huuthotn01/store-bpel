@@ -1,8 +1,0 @@
-HTTP_PORT: 14000
-
-MYSQL:
-  HOST: localhost
-  PORT: 3306
-  USERNAME: admin
-  PASSWORD: 'admin'
-  DATABASE: customer_invoice_service
