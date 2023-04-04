@@ -1,0 +1,14 @@
+Account Service: 14083
+Branch Service: 14000
+Cart Service: 14061
+Customer Service: 14050
+Event Service: 14060
+Goods Service: 14080
+Order Service: 14070
+Staff Service: 14082
+Statistic Service: 14090
+Warehouse Service: 14081
+
+BFF Admin: 10000
+BFF Customer: 20000
+BFF Shared: 30000
