@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/xml"
 	"fmt"
+	"github.com/gorilla/mux"
 	"io/ioutil"
 	"net/http"
 	"store-bpel/bff/customer_bff/config"
@@ -12,14 +13,14 @@ import (
 
 var orderController IOrderBffController
 
-func RegisterEndpointHandler(mux *http.ServeMux, cfg *config.Config) {
+func RegisterEndpointHandler(r *mux.Router, cfg *config.Config) {
 	// init controller
 	orderController = NewController(cfg)
 	// register handler
-	mux.HandleFunc("/api/bff/order-service/customer/make-order", handleMakeOnlineOrders)
-	mux.HandleFunc("/api/bff/order-service/get-ship-fee", handleGetShippingFee)
-	mux.HandleFunc("/api/bff/order-service/online-order-status/get", handleGetOnlineOrdersStatus)
-	mux.HandleFunc("/api/bff/order-service/online-order-status/update", handleUpdateOnlineOrdersStatus)
+	r.HandleFunc("/api/bff/order-service/customer/make-order", handleMakeOnlineOrders)
+	r.HandleFunc("/api/bff/order-service/get-ship-fee", handleGetShippingFee)
+	r.HandleFunc("/api/bff/order-service/online-order-status/get", handleGetOnlineOrdersStatus)
+	r.HandleFunc("/api/bff/order-service/online-order-status/update", handleUpdateOnlineOrdersStatus)
 }
 
 func handleMakeOnlineOrders(w http.ResponseWriter, r *http.Request) {

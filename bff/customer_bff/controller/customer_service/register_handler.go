@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/xml"
 	"fmt"
+	"github.com/gorilla/mux"
 	"io/ioutil"
 	"net/http"
 	"store-bpel/bff/customer_bff/config"
@@ -12,13 +13,13 @@ import (
 
 var customerController ICustomerBffController
 
-func RegisterEndpointHandler(mux *http.ServeMux, cfg *config.Config) {
+func RegisterEndpointHandler(r *mux.Router, cfg *config.Config) {
 	// init controller
 	customerController = NewController(cfg)
 	// register handler
-	mux.HandleFunc("/api/bff/customer-service/customer/get", handleGetCustomer)
-	mux.HandleFunc("/api/bff/customer-service/customer/add", handleAddCustomer)
-	mux.HandleFunc("/api/bff/customer-service/customer/update", handleUpdateCustomer)
+	r.HandleFunc("/api/bff/customer-service/customer/get", handleGetCustomer)
+	r.HandleFunc("/api/bff/customer-service/customer/add", handleAddCustomer)
+	r.HandleFunc("/api/bff/customer-service/customer/update", handleUpdateCustomer)
 }
 
 func handleGetCustomer(w http.ResponseWriter, r *http.Request) {
