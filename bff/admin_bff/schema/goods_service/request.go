@@ -21,3 +21,7 @@ type CreateGoodsTransactionRequest struct {
 	From       string
 	To         string
 }
+
+type GetWarehouseByGoodsRequest struct {
+	GoodsCode string
+}

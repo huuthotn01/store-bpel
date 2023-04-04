@@ -24,6 +24,7 @@ type IWarehouseServiceAdapter interface {
 	UpdateWarehouse(ctx context.Context, request *schema.UpdateWarehouseRequest) error
 	DeleteStaff(ctx context.Context, request *schema.DeleteWarehouseStaffRequest) error
 	DeleteWarehouse(ctx context.Context, request *schema.DeleteWarehouseRequest) error
+	GetAllWarehouse(ctx context.Context) ([]*schema.GetWarehouseResponseData, error)
 }
 
 type warehouseServiceAdapter struct {
@@ -157,6 +158,46 @@ func (a *warehouseServiceAdapter) GetWarehouse(ctx context.Context, warehouseId 
 	err = json.Unmarshal(respByteArr, &result)
 	if err != nil {
 		log.Printf("BFF-Adapter-WarehouseServiceAdapter-GetWarehouse-json.Unmarshal error %v", err)
+		return nil, err
+	}
+
+	if result.StatusCode != http.StatusOK {
+		return nil, errors.New(result.Message)
+	}
+
+	return result.Data, nil
+}
+
+func (a *warehouseServiceAdapter) GetAllWarehouse(ctx context.Context) ([]*schema.GetWarehouseResponseData, error) {
+
+	log.Printf("Start to call warehouse service for GetAllWarehouse, warehouseId")
+	defer log.Println("End call warehouse service for GetAllWarehouse")
+
+	var result *schema.GetAllWarehouseResponse
+
+	url := fmt.Sprintf("http://localhost:%d/api/warehouse-service/warehouse", a.port)
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
+	if err != nil {
+		log.Printf("BFF-Adapter-WarehouseServiceAdapter-GetAllWarehouse-NewRequestWithContext error %v", err)
+		return nil, err
+	}
+
+	resp, err := a.httpClient.Do(req)
+	if err != nil {
+		log.Printf("BFF-Adapter-WarehouseServiceAdapter-GetAllWarehouse-httpClient.Do error %v", err)
+		return nil, err
+	}
+
+	respByteArr, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Printf("BFF-Adapter-WarehouseServiceAdapter-GetAllWarehouse-ioutil.ReadAll error %v", err)
+		return nil, err
+	}
+
+	err = json.Unmarshal(respByteArr, &result)
+	if err != nil {
+		log.Printf("BFF-Adapter-WarehouseServiceAdapter-GetAllWarehouse-json.Unmarshal error %v", err)
 		return nil, err
 	}
 

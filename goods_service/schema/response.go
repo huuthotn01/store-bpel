@@ -17,6 +17,12 @@ type GetGoodsResponse struct {
 	Data       []*GetGoodsResponseData
 }
 
+type GetWarehouseByGoodsResponse struct {
+	StatusCode int
+	Message    string
+	Data       []*GetGoodsInWarehouseResponseData
+}
+
 type GetGoodsResponseData struct {
 	GoodsCode    string
 	GoodsSize    string
@@ -53,4 +59,9 @@ type WarehouseActions struct {
 }
 
 type GetGoodsInWarehouseResponseData struct {
+	GoodsCode  string
+	GoodsSize  string
+	GoodsColor string
+	WhCode     string
+	Quantity   int
 }

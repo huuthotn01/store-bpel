@@ -19,6 +19,7 @@ type IGoodsServiceAdapter interface {
 	Export(ctx context.Context, request *schema.CreateGoodsTransactionRequest) error
 	ReturnManufacturer(ctx context.Context, request *schema.CreateGoodsTransactionRequest) error
 	CustomerReturn(ctx context.Context, request *schema.CreateGoodsTransactionRequest) error
+	GetWarehouseByGoods(ctx context.Context, goodsId string) ([]*schema.GetGoodsInWarehouseResponseData, error)
 }
 
 type goodsServiceAdapter struct {
@@ -256,4 +257,47 @@ func (a *goodsServiceAdapter) CustomerReturn(ctx context.Context, request *schem
 	}
 
 	return nil
+}
+
+func (a *goodsServiceAdapter) GetWarehouseByGoods(ctx context.Context, goodsId string) ([]*schema.GetGoodsInWarehouseResponseData, error) {
+	log.Printf("Start to call goods service for GetWarehouseByGoods, goodsId %s", goodsId)
+	defer log.Println("End call goods service for GetWarehouseByGoods")
+
+	if goodsId == "" {
+		return nil, errors.New("[BFF-Adapter-GoodsServiceAdapter-GetWarehouseByGoods] goodsId must not be empty")
+	}
+
+	var result *schema.GetWarehouseByGoodsResponse
+	url := fmt.Sprintf("http://localhost:%d/api/goods-service/goods/warehouse/%s", a.port, goodsId)
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
+	if err != nil {
+		log.Printf("BFF-Adapter-GoodsServiceAdapter-GetWarehouseByGoods-NewRequestWithContext error %v", err)
+		return nil, err
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+	resp, err := a.httpClient.Do(req)
+	if err != nil {
+		log.Printf("BFF-Adapter-GoodsServiceAdapter-GetWarehouseByGoods-httpClient.Do error %v", err)
+		return nil, err
+	}
+
+	respByteArr, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Printf("BFF-Adapter-GoodsServiceAdapter-GetWarehouseByGoods-ioutil.ReadAll error %v", err)
+		return nil, err
+	}
+
+	err = json.Unmarshal(respByteArr, &result)
+	if err != nil {
+		log.Printf("BFF-Adapter-GoodsServiceAdapter-GetWarehouseByGoods-json.Unmarshal error %v", err)
+		return nil, err
+	}
+
+	if result.StatusCode != http.StatusOK {
+		return nil, errors.New(result.Message)
+	}
+
+	return result.Data, nil
 }

@@ -53,6 +53,7 @@ type GetWarehouseStaffResponseData struct {
 }
 
 type GetWarehouseResponseData struct {
+	WarehouseCode string
 	WarehouseName string
 	Capacity      int
 	CreatedAt     time.Time

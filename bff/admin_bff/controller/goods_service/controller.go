@@ -13,6 +13,7 @@ type IGoodsBffController interface {
 	Export(ctx context.Context, request *goods_service.CreateGoodsTransactionRequest) error
 	ReturnManufacturer(ctx context.Context, request *goods_service.CreateGoodsTransactionRequest) error
 	CustomerReturn(ctx context.Context, request *goods_service.CreateGoodsTransactionRequest) error
+	GetWarehouseByGoods(ctx context.Context, request *goods_service.GetWarehouseByGoodsRequest) ([]*goods_service.GetWarehouseResponseData, error)
 }
 
 type goodsBffController struct {

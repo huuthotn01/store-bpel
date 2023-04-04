@@ -70,6 +70,12 @@ type GetWarehouseResponse struct {
 	Data       *GetWarehouseResponseData
 }
 
+type GetAllWarehouseResponse struct {
+	StatusCode int
+	Message    string
+	Data       []*GetWarehouseResponseData
+}
+
 type GetWarehouseResponseData struct {
 	WarehouseCode string
 	WarehouseName string
