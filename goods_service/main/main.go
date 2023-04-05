@@ -120,7 +120,7 @@ func handleGoods(w http.ResponseWriter, r *http.Request) {
 			})
 			return
 		}
-		var request *schema.AddGoodsRequest
+		var request []*schema.AddGoodsRequest
 		err = json.Unmarshal(reqBody, &request)
 		if err != nil {
 			err = enc.Encode(&schema.UpdateResponse{
@@ -188,7 +188,7 @@ func handleDetailGoods(w http.ResponseWriter, r *http.Request) {
 			})
 			return
 		}
-		var request *schema.UpdateGoodsRequest
+		var request []*schema.UpdateGoodsRequest
 		err = json.Unmarshal(reqBody, &request)
 		if err != nil {
 			err = enc.Encode(&schema.UpdateResponse{

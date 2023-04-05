@@ -8,12 +8,13 @@ import (
 )
 
 type IGoodsBffController interface {
-	AddGoods(ctx context.Context, request *goods_service.AddGoodsRequest) error
+	AddGoods(ctx context.Context, request []*goods_service.AddGoodsRequestData) error
 	Import(ctx context.Context, request *goods_service.CreateGoodsTransactionRequest) error
 	Export(ctx context.Context, request *goods_service.CreateGoodsTransactionRequest) error
 	ReturnManufacturer(ctx context.Context, request *goods_service.CreateGoodsTransactionRequest) error
 	CustomerReturn(ctx context.Context, request *goods_service.CreateGoodsTransactionRequest) error
 	GetWarehouseByGoods(ctx context.Context, request *goods_service.GetWarehouseByGoodsRequest) ([]*goods_service.GetWarehouseResponseData, error)
+	UpdateGoods(ctx context.Context, request []*goods_service.UpdateGoodsRequestData) error
 }
 
 type goodsBffController struct {

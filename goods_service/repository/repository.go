@@ -10,8 +10,8 @@ import (
 type IGoodsServiceRepository interface {
 	GetGoods(ctx context.Context) ([]*GoodsModel, error)
 	GetDetailGoods(ctx context.Context, goodsId string) ([]*GoodsModel, error)
-	AddGoods(ctx context.Context, data *GoodsModel) error
-	UpdateGoods(ctx context.Context, data *GoodsModel) error
+	AddGoods(ctx context.Context, data []*GoodsModel) error
+	UpdateGoods(ctx context.Context, data []*GoodsModel) error
 	UpdateGoodsIsForSaleToNo(ctx context.Context, goodsId string) error
 	GetGoodsInWHData(ctx context.Context, data *GoodsInWh) ([]*GoodsInWh, error)
 	UpdateGoodsInWHInOut(ctx context.Context, data *GoodsInWh) error
@@ -40,12 +40,34 @@ func (r *goodsServiceRepository) GetDetailGoods(ctx context.Context, goodsId str
 	return result, query.Error
 }
 
-func (r *goodsServiceRepository) AddGoods(ctx context.Context, data *GoodsModel) error {
-	return r.db.WithContext(ctx).Table(r.goodsTableName).Create(&data).Error
+func (r *goodsServiceRepository) AddGoods(ctx context.Context, data []*GoodsModel) error {
+	return r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+		for _, good := range data {
+			err := r.db.WithContext(ctx).Table(r.goodsTableName).Create(&good).Error
+			if err != nil {
+				return err
+			}
+		}
+		return nil
+	})
+
 }
 
-func (r *goodsServiceRepository) UpdateGoods(ctx context.Context, data *GoodsModel) error {
-	return r.db.WithContext(ctx).Table(r.goodsTableName).Where("goods_code = ?", data.GoodsCode).Updates(&data).Error
+func (r *goodsServiceRepository) UpdateGoods(ctx context.Context, data []*GoodsModel) error {
+	return r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+		goods := data[0]
+		err := r.db.WithContext(ctx).Table(r.goodsTableName).Where("goods_code = ?", goods.GoodsCode).Delete(&goods).Error
+		if err != nil {
+			return err
+		}
+		for _, item := range data {
+			err := r.db.WithContext(ctx).Table(r.goodsTableName).Create(&item).Error
+			if err != nil {
+				return err
+			}
+		}
+		return nil
+	})
 }
 
 func (r *goodsServiceRepository) UpdateGoodsIsForSaleToNo(ctx context.Context, goodsId string) error {

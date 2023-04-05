@@ -6,18 +6,23 @@ import (
 	"store-bpel/goods_service/schema"
 )
 
-func (c *goodsServiceController) UpdateGoods(ctx context.Context, request *schema.UpdateGoodsRequest, goodsId string) error {
-	return c.repository.UpdateGoods(ctx, &repository.GoodsModel{
-		GoodsCode:    goodsId,
-		GoodsAge:     request.GoodsAge,
-		GoodsGender:  request.GoodsGender,
-		GoodsType:    request.GoodsType,
-		GoodsColor:   request.GoodsColor,
-		GoodsSize:    request.GoodsSize,
-		GoodsName:    request.GoodsName,
-		Manufacturer: request.Manufacturer,
-		UnitPrice:    request.UnitPrice,
-		UnitCost:     request.UnitCost,
-		Description:  request.Description,
-	})
+func (c *goodsServiceController) UpdateGoods(ctx context.Context, request []*schema.UpdateGoodsRequest, goodsId string) error {
+	goodsList := make([]*repository.GoodsModel, 0, len(request))
+	for _, item := range request {
+		goodsList = append(goodsList, &repository.GoodsModel{
+			GoodsCode:    goodsId,
+			GoodsAge:     item.GoodsAge,
+			GoodsGender:  item.GoodsGender,
+			GoodsType:    item.GoodsType,
+			GoodsColor:   item.GoodsColor,
+			GoodsSize:    item.GoodsSize,
+			GoodsName:    item.GoodsName,
+			Manufacturer: item.Manufacturer,
+			UnitPrice:    item.UnitPrice,
+			UnitCost:     item.UnitCost,
+			Description:  item.Description,
+		})
+	}
+
+	return c.repository.UpdateGoods(ctx, goodsList)
 }

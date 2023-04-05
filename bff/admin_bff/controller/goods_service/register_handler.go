@@ -24,6 +24,7 @@ func RegisterEndpointHandler(mux *mux.Router, cfg *config.Config) {
 	mux.HandleFunc("/api/bff/goods-service/goods/return-manufact", handleReturnManufacturer)
 	mux.HandleFunc("/api/bff/goods-service/goods/cust-return", handleCustReturn)
 	mux.HandleFunc("/api/bff/goods-service/goods/get-warehouse", handleGetWarehouse)
+	mux.HandleFunc("/api/bff/goods-service/goods/update", handleUpdateGoods)
 }
 
 func handleAddGoods(w http.ResponseWriter, r *http.Request) {
@@ -47,7 +48,8 @@ func handleAddGoods(w http.ResponseWriter, r *http.Request) {
 				Message:    fmt.Sprintf("BFF-Goods-handleAddGoods-xml.Unmarshal err %v", err),
 			})
 		}
-		err = goodsController.AddGoods(ctx, request)
+		fmt.Println("-------", request)
+		err = goodsController.AddGoods(ctx, request.Element)
 		if err != nil {
 			err = enc.Encode(&goods_service.UpdateResponse{
 				StatusCode: 500,
@@ -249,6 +251,44 @@ func handleGetWarehouse(w http.ResponseWriter, r *http.Request) {
 				StatusCode: 200,
 				Message:    "OK",
 				Data:       resp,
+			})
+		}
+	} else {
+		http.Error(w, "Method not supported", http.StatusNotFound)
+	}
+}
+
+func handleUpdateGoods(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
+	w.Header().Set("Content-Type", "application/xml")
+	enc := xml.NewEncoder(w)
+	payload, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		err = enc.Encode(&goods_service.UpdateResponse{
+			StatusCode: 500,
+			Message:    fmt.Sprintf("BFF-Goods-handleUpdateGoods-ioutil.ReadAll err %v", err),
+		})
+		return
+	}
+	if r.Method == http.MethodPost {
+		var request = new(goods_service.UpdateGoodsRequest)
+		err = xml.Unmarshal(payload, request)
+		if err != nil {
+			err = enc.Encode(&goods_service.UpdateResponse{
+				StatusCode: 500,
+				Message:    fmt.Sprintf("BFF-Goods-handleUpdateGoods-xml.Unmarshal err %v", err),
+			})
+		}
+		err = goodsController.UpdateGoods(ctx, request.Element)
+		if err != nil {
+			err = enc.Encode(&goods_service.UpdateResponse{
+				StatusCode: 500,
+				Message:    fmt.Sprintf("BFF-Goods-handleUpdateGoods-AddGoods err %v", err),
+			})
+		} else {
+			err = enc.Encode(&goods_service.UpdateResponse{
+				StatusCode: 200,
+				Message:    "OK",
 			})
 		}
 	} else {
