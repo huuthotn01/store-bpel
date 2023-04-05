@@ -9,6 +9,8 @@ import (
 
 type IGoodsServiceRepository interface {
 	GetGoods(ctx context.Context) ([]*GoodsModel, error)
+	GetGoodsDefault(ctx context.Context, limit, offset int) ([]string, error)
+	GetGoodsImages(ctx context.Context, goodsId string) ([]*GoodsImg, error)
 	GetDetailGoods(ctx context.Context, goodsId string) ([]*GoodsModel, error)
 	AddGoods(ctx context.Context, data []*GoodsModel) error
 	UpdateGoods(ctx context.Context, data []*GoodsModel) error
@@ -26,6 +28,22 @@ func NewRepository(db *gorm.DB) IGoodsServiceRepository {
 		goodsImgTableName:  "goods_img",
 		goodsInWhTableName: "goods_in_wh",
 	}
+}
+
+func (r *goodsServiceRepository) GetGoodsDefault(ctx context.Context, pageSize, pageNum int) ([]string, error) {
+	var (
+		limit         = pageSize
+		offset        = (pageNum - 1) * pageSize
+		goodsCodeList []string
+	)
+	query := r.db.WithContext(ctx).Table(r.goodsTableName).Limit(limit).Offset(offset).Distinct("goods_code").Find(&goodsCodeList)
+	return goodsCodeList, query.Error
+}
+
+func (r *goodsServiceRepository) GetGoodsImages(ctx context.Context, goodsId string) ([]*GoodsImg, error) {
+	var result []*GoodsImg
+	query := r.db.WithContext(ctx).Table(r.goodsImgTableName).Where("goods_code = ?", goodsId).Find(&result)
+	return result, query.Error
 }
 
 func (r *goodsServiceRepository) GetGoods(ctx context.Context) ([]*GoodsModel, error) {

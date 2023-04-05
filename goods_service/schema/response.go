@@ -2,6 +2,32 @@ package schema
 
 import "time"
 
+type GetGoodsDefaultResponse struct {
+	StatusCode int
+	Message    string
+	Data       []*GetGoodsDefaultResponseData
+}
+
+type GetGoodsDefaultResponseData struct {
+	GoodsId      string
+	Name         string
+	UnitPrice    int
+	Price        int
+	Images       []string
+	ListQuantity []*GetGoodsDefault_QuantityList
+	Discount     int
+	GoodsType    string
+	GoodsGender  int
+	GoodsAge     string
+	Description  string
+}
+
+type GetGoodsDefault_QuantityList struct {
+	GoodsSize  string
+	GoodsColor string
+	Quantity   int
+}
+
 type GetDetailGoodsResponse struct {
 	StatusCode int
 	Message    string

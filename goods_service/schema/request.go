@@ -1,5 +1,10 @@
 package schema
 
+type GetGoodsDefaultRequest struct {
+	PageNumber int
+	PageSize   int
+}
+
 type UpdateGoodsRequest struct {
 	GoodsSize    string
 	GoodsColor   string
