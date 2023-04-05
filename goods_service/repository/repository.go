@@ -9,7 +9,7 @@ import (
 
 type IGoodsServiceRepository interface {
 	GetGoods(ctx context.Context) ([]*GoodsModel, error)
-	GetDetailGoods(ctx context.Context, goodsId string) (*GoodsModel, error)
+	GetDetailGoods(ctx context.Context, goodsId string) ([]*GoodsModel, error)
 	AddGoods(ctx context.Context, data *GoodsModel) error
 	UpdateGoods(ctx context.Context, data *GoodsModel) error
 	UpdateGoodsIsForSaleToNo(ctx context.Context, goodsId string) error
@@ -34,9 +34,9 @@ func (r *goodsServiceRepository) GetGoods(ctx context.Context) ([]*GoodsModel, e
 	return result, query.Error
 }
 
-func (r *goodsServiceRepository) GetDetailGoods(ctx context.Context, goodsId string) (*GoodsModel, error) {
-	var result *GoodsModel
-	query := r.db.WithContext(ctx).Table(r.goodsTableName).Where("goods_code = ?", goodsId).First(&result)
+func (r *goodsServiceRepository) GetDetailGoods(ctx context.Context, goodsId string) ([]*GoodsModel, error) {
+	var result []*GoodsModel
+	query := r.db.WithContext(ctx).Table(r.goodsTableName).Where("goods_code = ?", goodsId).Find(&result)
 	return result, query.Error
 }
 
