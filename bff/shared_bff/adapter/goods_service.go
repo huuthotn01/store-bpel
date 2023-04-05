@@ -15,7 +15,7 @@ import (
 
 type IGoodsServiceAdapter interface {
 	GetGoods(ctx context.Context) ([]*schema.GetGoodsResponseData, error)
-	GetGoodsDetail(ctx context.Context, goodsId string) (*schema.GetGoodsResponseData, error)
+	GetGoodsDetail(ctx context.Context, goodsId string) ([]*schema.GetGoodsResponseData, error)
 	CheckWarehouse(ctx context.Context, request *schema.CheckWarehouseRequest) (*schema.CheckWarehouseResponseData, error)
 	CreateWHTransfer(ctx context.Context, request *schema.CreateGoodsTransactionRequest) error
 }
@@ -71,7 +71,7 @@ func (a *goodsServiceAdapter) GetGoods(ctx context.Context) ([]*schema.GetGoodsR
 	return result.Data, nil
 }
 
-func (a *goodsServiceAdapter) GetGoodsDetail(ctx context.Context, goodsId string) (*schema.GetGoodsResponseData, error) {
+func (a *goodsServiceAdapter) GetGoodsDetail(ctx context.Context, goodsId string) ([]*schema.GetGoodsResponseData, error) {
 	log.Printf("Start to call goods service for GetGoodsDetail, goodsId %s", goodsId)
 	defer log.Println("End call goods service for GetGoodsDetail")
 
@@ -79,7 +79,7 @@ func (a *goodsServiceAdapter) GetGoodsDetail(ctx context.Context, goodsId string
 		return nil, errors.New("[BFF-Adapter-GoodsServiceAdapter-GetGoodsDetail] goodsId must not be empty")
 	}
 
-	var result *schema.GetDetailGoodsResponse
+	var result *schema.GetGoodsResponse
 	url := fmt.Sprintf("http://localhost:%d/api/goods-service/goods/%s", a.port, goodsId)
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)

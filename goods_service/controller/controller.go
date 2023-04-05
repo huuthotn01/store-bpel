@@ -13,7 +13,7 @@ import (
 type IGoodsServiceController interface {
 	GetGoods(ctx context.Context) ([]*schema.GetGoodsResponseData, error)
 	CheckWarehouse(ctx context.Context, request *schema.CheckWarehouseRequest) (*schema.CheckWarehouseResponseData, error)
-	GetDetailGoods(ctx context.Context, goodsId string) (*schema.GetGoodsResponseData, error)
+	GetDetailGoods(ctx context.Context, goodsId string) ([]*schema.GetGoodsResponseData, error)
 	AddGoods(ctx context.Context, request *schema.AddGoodsRequest) error
 	UpdateGoods(ctx context.Context, request *schema.UpdateGoodsRequest, goodsId string) error
 	DeleteGoods(ctx context.Context, goodsId string) error
