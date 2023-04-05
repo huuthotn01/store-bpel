@@ -14,12 +14,13 @@ import (
 )
 
 type IGoodsServiceAdapter interface {
-	AddGoods(ctx context.Context, request *schema.AddGoodsRequest) error
+	AddGoods(ctx context.Context, request []*schema.AddGoodsRequest) error
 	Import(ctx context.Context, request *schema.CreateGoodsTransactionRequest) error
 	Export(ctx context.Context, request *schema.CreateGoodsTransactionRequest) error
 	ReturnManufacturer(ctx context.Context, request *schema.CreateGoodsTransactionRequest) error
 	CustomerReturn(ctx context.Context, request *schema.CreateGoodsTransactionRequest) error
 	GetWarehouseByGoods(ctx context.Context, goodsId string) ([]*schema.GetGoodsInWarehouseResponseData, error)
+	UpdateGoods(ctx context.Context, goodsId string, request []*schema.UpdateGoodsRequest) error
 }
 
 type goodsServiceAdapter struct {
@@ -34,7 +35,7 @@ func NewGoodsAdapter(cfg *config.Config) IGoodsServiceAdapter {
 	}
 }
 
-func (a *goodsServiceAdapter) AddGoods(ctx context.Context, request *schema.AddGoodsRequest) error {
+func (a *goodsServiceAdapter) AddGoods(ctx context.Context, request []*schema.AddGoodsRequest) error {
 	log.Printf("Start to call goods service for AddGoods")
 	defer log.Println("End call goods service for AddGoods")
 
@@ -300,4 +301,53 @@ func (a *goodsServiceAdapter) GetWarehouseByGoods(ctx context.Context, goodsId s
 	}
 
 	return result.Data, nil
+}
+
+func (a *goodsServiceAdapter) UpdateGoods(ctx context.Context, goodsId string, request []*schema.UpdateGoodsRequest) error {
+	log.Printf("Start to call goods service for UpdateGoods goodsId = %s", goodsId)
+	defer log.Println("End call goods service for UpdateGoods")
+
+	if goodsId == "" {
+		return errors.New("[BFF-Adapter-GoodsServiceAdapter-UpdateGoods] goodsId must not be empty")
+	}
+
+	var result *schema.UpdateResponse
+
+	url := fmt.Sprintf("http://localhost:%d/api/goods-service/goods/%s", a.port, goodsId)
+
+	data, err := json.Marshal(request)
+	if err != nil {
+		log.Printf("BFF-Adapter-GoodsServiceAdapter-UpdateGoods-Marshal error %v", err)
+		return err
+	}
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodPut, url, bytes.NewReader(data))
+	if err != nil {
+		log.Printf("BFF-Adapter-GoodsServiceAdapter-UpdateGoods-NewRequestWithContext error %v", err)
+		return err
+	}
+
+	resp, err := a.httpClient.Do(req)
+	if err != nil {
+		log.Printf("BFF-Adapter-GoodsServiceAdapter-UpdateGoods-httpClient.Do error %v", err)
+		return err
+	}
+
+	respByteArr, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Printf("BFF-Adapter-GoodsServiceAdapter-UpdateGoods-ioutil.ReadAll error %v", err)
+		return err
+	}
+
+	err = json.Unmarshal(respByteArr, &result)
+	if err != nil {
+		log.Printf("BFF-Adapter-GoodsServiceAdapter-UpdateGoods-json.Unmarshal error %v", err)
+		return err
+	}
+
+	if result.StatusCode != http.StatusOK {
+		return errors.New(result.Message)
+	}
+
+	return nil
 }

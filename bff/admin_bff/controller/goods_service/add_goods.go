@@ -6,17 +6,22 @@ import (
 	"store-bpel/goods_service/schema"
 )
 
-func (c *goodsBffController) AddGoods(ctx context.Context, request *goods_service.AddGoodsRequest) error {
-	return c.goodsAdapter.AddGoods(ctx, &schema.AddGoodsRequest{
-		GoodsSize:    request.GoodsSize,
-		GoodsColor:   request.GoodsColor,
-		GoodsName:    request.GoodsName,
-		GoodsGender:  request.GoodsGender,
-		GoodsType:    request.GoodsType,
-		GoodsAge:     request.GoodsAge,
-		Manufacturer: request.Manufacturer,
-		IsForSale:    request.IsForSale,
-		UnitPrice:    request.UnitPrice,
-		Description:  request.Description,
-	})
+func (c *goodsBffController) AddGoods(ctx context.Context, request []*goods_service.AddGoodsRequestData) error {
+	goodsList := make([]*schema.AddGoodsRequest, 0, len(request))
+	for _, goods := range request {
+		goodsList = append(goodsList, &schema.AddGoodsRequest{
+			GoodsSize:    goods.GoodsSize,
+			GoodsColor:   goods.GoodsColor,
+			GoodsName:    goods.GoodsName,
+			GoodsGender:  goods.GoodsGender,
+			GoodsType:    goods.GoodsType,
+			GoodsAge:     goods.GoodsAge,
+			Manufacturer: goods.Manufacturer,
+			IsForSale:    goods.IsForSale,
+			UnitPrice:    goods.UnitPrice,
+			Description:  goods.Description,
+		})
+	}
+
+	return c.goodsAdapter.AddGoods(ctx, goodsList)
 }
