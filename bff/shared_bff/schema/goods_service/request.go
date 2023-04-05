@@ -1,5 +1,14 @@
 package goods_service
 
+type GetGoodsDefaultRequest struct {
+	PageNumber int
+	PageSize   int
+}
+
+type GetProductsDetailRequest struct {
+	GoodsId string
+}
+
 type GetGoodsDetailRequest struct {
 	GoodsCode string
 }

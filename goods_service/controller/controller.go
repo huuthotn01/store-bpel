@@ -12,6 +12,8 @@ import (
 
 type IGoodsServiceController interface {
 	GetGoods(ctx context.Context) ([]*schema.GetGoodsResponseData, error)
+	GetGoodsDefault(ctx context.Context, request *schema.GetGoodsDefaultRequest) ([]*schema.GetGoodsDefaultResponseData, error)
+	GetProductDetail(ctx context.Context, goodsId string) ([]*schema.GetGoodsDefaultResponseData, error)
 	CheckWarehouse(ctx context.Context, request *schema.CheckWarehouseRequest) (*schema.CheckWarehouseResponseData, error)
 	GetDetailGoods(ctx context.Context, goodsId string) ([]*schema.GetGoodsResponseData, error)
 	AddGoods(ctx context.Context, request []*schema.AddGoodsRequest) error
@@ -26,6 +28,7 @@ type goodsServiceController struct {
 	repository repo.IGoodsServiceRepository
 
 	warehouseServiceAdapter adapter.IWarehouseServiceAdapter
+	eventServiceAdapter     adapter.IEventServiceAdapter
 	kafkaAdapter            adapter.IKafkaAdapter
 }
 
@@ -36,6 +39,9 @@ func NewController(cfg *config.Config, db *gorm.DB) IGoodsServiceController {
 	// init warehouse service adapter
 	whAdapter := adapter.NewWarehouseAdapter(cfg)
 
+	// init event service adapter
+	eventAdapter := adapter.NewEventAdapter(cfg)
+
 	// init kafka adapter
 	kafkaAdapter := adapter.NewKafkaAdapter(cfg)
 
@@ -44,5 +50,6 @@ func NewController(cfg *config.Config, db *gorm.DB) IGoodsServiceController {
 		repository:              repository,
 		warehouseServiceAdapter: whAdapter,
 		kafkaAdapter:            kafkaAdapter,
+		eventServiceAdapter:     eventAdapter,
 	}
 }
