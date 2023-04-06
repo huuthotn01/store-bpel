@@ -158,9 +158,18 @@ func (r *goodsServiceRepository) UpdateGoodsInWHTransfer(ctx context.Context, da
 		if err != nil {
 			return err
 		}
+		var goodsModel *GoodsModel
+		err = tx.Table(r.goodsInWhTableName).Where("goods_code = ? and goods_size = ? and goods_color = ? and wh_code = ?", data.GoodsCode, data.GoodsSize, data.GoodsColor, toWH).First(&goodsModel).Error
+
+		if err != nil {
+			// create in WH
+			return tx.Exec("INSERT `goods_in_wh` (`goods_code`, `goods_size`, `goods_color`, `wh_code`, `quantity`) VALUE (?, ?, ?, ?, ?)",
+				data.GoodsCode, data.GoodsSize, data.GoodsColor, toWH, data.Quantity).Error
+		}
 		// increase to WH
 		return tx.Exec("UPDATE `goods_in_wh` SET `quantity` = `quantity` + ? WHERE `goods_code` = ? AND `goods_size` = ? AND `goods_color` = ? AND `wh_code` = ?",
 			data.Quantity, data.GoodsCode, data.GoodsSize, data.GoodsColor, toWH).Error
+
 	})
 }
 
