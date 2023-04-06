@@ -54,9 +54,10 @@ func (c *goodsServiceController) processCheckWarehouse(ctx context.Context, data
 	if quantities[0] >= requestQuantity {
 		return []*schema.WarehouseActions{}, nil
 	}
-	destWarehouse := mapIntWhData[quantities[0]].WhCode
+	destWarehouse := mapIntWhData[quantities[0]][0].WhCode
 	requestQuantity -= quantities[0]
 	quantities = quantities[1:]
+	mapIntWhData[quantities[0]] = mapIntWhData[quantities[0]][1:]
 
 	whActions := make([]*schema.WarehouseActions, 0)
 	for requestQuantity > 0 {
@@ -68,7 +69,7 @@ func (c *goodsServiceController) processCheckWarehouse(ctx context.Context, data
 				GoodsCode:  data.GoodsCode,
 				GoodsColor: data.GoodsColor,
 				GoodsSize:  data.GoodsSize,
-				From:       mapIntWhData[quantities[0]].WhCode,
+				From:       mapIntWhData[quantities[0]][0].WhCode,
 				To:         destWarehouse,
 				Quantity:   requestQuantity,
 			})
@@ -79,10 +80,11 @@ func (c *goodsServiceController) processCheckWarehouse(ctx context.Context, data
 				GoodsCode:  data.GoodsCode,
 				GoodsColor: data.GoodsColor,
 				GoodsSize:  data.GoodsSize,
-				From:       mapIntWhData[quantities[0]].WhCode,
+				From:       mapIntWhData[quantities[0]][0].WhCode,
 				To:         destWarehouse,
 				Quantity:   quantities[0],
 			})
+			mapIntWhData[quantities[0]] = mapIntWhData[quantities[0]][1:]
 			quantities = quantities[1:]
 		}
 	}
@@ -90,12 +92,12 @@ func (c *goodsServiceController) processCheckWarehouse(ctx context.Context, data
 	return whActions, nil
 }
 
-func (c *goodsServiceController) convertWHDataToMap(data []*repository.GoodsInWh) (map[int]*repository.GoodsInWh, []int) {
-	resp := make(map[int]*repository.GoodsInWh, 0)
+func (c *goodsServiceController) convertWHDataToMap(data []*repository.GoodsInWh) (map[int][]*repository.GoodsInWh, []int) {
+	resp := make(map[int][]*repository.GoodsInWh, 0)
 	quantities := make([]int, 0, len(data))
 	for _, d := range data {
 		quantities = append(quantities, d.Quantity)
-		resp[d.Quantity] = d
+		resp[d.Quantity] = append(resp[d.Quantity], d)
 	}
 
 	// sort quantity in descending order
