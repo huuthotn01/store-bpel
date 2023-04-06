@@ -139,8 +139,7 @@ func (r *eventServiceRepository) DeleteEvent(ctx context.Context, eventId int) e
 
 func (r *eventServiceRepository) GetEventByGoods(ctx context.Context, goodsId string) ([]*EventModel, error) {
 	var eventIdList []string
-	err := r.db.WithContext(ctx).Table(r.goodsTableName).Select("event_id").Where("goods_id = ?", goodsId).
-		Order("discount desc").Find(&eventIdList).Error
+	err := r.db.WithContext(ctx).Table(r.goodsTableName).Select("event_id").Where("goods_id = ?", goodsId).Find(&eventIdList).Error
 	if err != nil {
 		return nil, err
 	}
@@ -148,7 +147,7 @@ func (r *eventServiceRepository) GetEventByGoods(ctx context.Context, goodsId st
 	var result []*EventModel
 	for _, eventId := range eventIdList {
 		var event *EventModel
-		err = r.db.WithContext(ctx).Table(r.eventTableName).Where("event_id = ?", eventId).First(&event).Error
+		err = r.db.WithContext(ctx).Table(r.eventTableName).Where("event_id = ?", eventId).Order("discount desc").First(&event).Error
 		if err != nil {
 			return nil, err
 		}
