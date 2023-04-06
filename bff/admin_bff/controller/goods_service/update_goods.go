@@ -18,6 +18,7 @@ func (c *goodsBffController) UpdateGoods(ctx context.Context, request []*goods_s
 			GoodsAge:     goods.GoodsAge,
 			Manufacturer: goods.Manufacturer,
 			UnitPrice:    goods.UnitPrice,
+			UnitCost:     goods.UnitCost,
 			Description:  goods.Description,
 		})
 	}
