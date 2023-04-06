@@ -45,16 +45,19 @@ func (c *goodsServiceController) getEachProductDetail(ctx context.Context, goods
 		return nil, err
 	}
 
-	salePrice := 0
-	if goodsDetail[0].UnitPrice-int(promo[0].Discount) > 0 {
-		salePrice = goodsDetail[0].UnitPrice - int(promo[0].Discount)
+	salePrice, discount := goodsDetail[0].UnitPrice, 0
+	if len(promo) > 0 {
+		discount = int(float32(goodsDetail[0].UnitPrice) * promo[0].Discount)
+		if goodsDetail[0].UnitPrice-discount > 0 {
+			salePrice = goodsDetail[0].UnitPrice - discount
+		}
 	}
 
 	return &schema.GetGoodsDefaultResponseData{
 		GoodsId:      goodsId,
 		Name:         goodsDetail[0].GoodsName,
 		UnitPrice:    goodsDetail[0].UnitPrice,
-		Discount:     int(promo[0].Discount),
+		Discount:     discount,
 		Price:        salePrice,
 		GoodsType:    goodsDetail[0].GoodsType,
 		GoodsAge:     goodsDetail[0].GoodsAge,
