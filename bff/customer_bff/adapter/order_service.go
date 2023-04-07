@@ -16,6 +16,8 @@ import (
 type IOrderServiceAdapter interface {
 	CreateOnlineOrders(ctx context.Context, request *schema.MakeOnlineOrderRequest) error
 	GetOnlineOrdersStatus(ctx context.Context, orderId int) ([]*schema.GetOnlineOrdersStatusResponseData, error)
+	GetListOrderCustomer(ctx context.Context, customerId string) ([]*schema.GetListOrderCustomerResponseData, error)
+	GetOrderCustomerDetail(ctx context.Context, orderId string) (*schema.GetOrderDetailCustomerResponseData, error)
 	GetShippingFee(ctx context.Context, request *schema.GetShipFeeRequest) (*schema.GetShipFeeResponseData, error)
 	UpdateOnlineOrdersStatus(ctx context.Context, request *schema.UpdateOnlineOrdersStatusRequest) error
 }
@@ -105,6 +107,90 @@ func (a *orderServiceAdapter) GetShippingFee(ctx context.Context, request *schem
 	err = json.Unmarshal(respByteArr, &result)
 	if err != nil {
 		log.Printf("BFF-Adapter-OrderServiceAdapter-GetShippingFee-json.Unmarshal error %v", err)
+		return nil, err
+	}
+
+	if result.StatusCode != http.StatusOK {
+		return nil, errors.New(result.Message)
+	}
+
+	return result.Data, nil
+}
+
+func (a *orderServiceAdapter) GetListOrderCustomer(ctx context.Context, customerId string) ([]*schema.GetListOrderCustomerResponseData, error) {
+	if customerId == "" {
+		return nil, errors.New("[BFF-Adapter-OrderServiceAdapter-GetListOrderCustomer] customerId must not be empty")
+	}
+
+	log.Printf("Start to call order service for GetListOrderCustomer, customerId %s", customerId)
+	defer log.Println("End call order service for GetListOrderCustomer")
+
+	var result *schema.GetListOrderCustomerResponse
+
+	url := fmt.Sprintf("http://localhost:%d/api/order-service/customer/%s", a.port, customerId)
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
+	if err != nil {
+		log.Printf("BFF-Adapter-OrderServiceAdapter-GetOnlineOrdersStatus-NewRequestWithContext error %v", err)
+		return nil, err
+	}
+
+	resp, err := a.httpClient.Do(req)
+	if err != nil {
+		log.Printf("BFF-Adapter-OrderServiceAdapter-GetListOrderCustomer-httpClient.Do error %v", err)
+		return nil, err
+	}
+
+	respByteArr, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Printf("BFF-Adapter-OrderServiceAdapter-GetListOrderCustomer-ioutil.ReadAll error %v", err)
+		return nil, err
+	}
+
+	err = json.Unmarshal(respByteArr, &result)
+	if err != nil {
+		log.Printf("BFF-Adapter-OrderServiceAdapter-GetListOrderCustomer-json.Unmarshal error %v", err)
+		return nil, err
+	}
+
+	if result.StatusCode != http.StatusOK {
+		return nil, errors.New(result.Message)
+	}
+
+	return result.Data, nil
+}
+
+func (a *orderServiceAdapter) GetOrderCustomerDetail(ctx context.Context, orderId string) (*schema.GetOrderDetailCustomerResponseData, error) {
+	if orderId == "" {
+		return nil, errors.New("[BFF-Adapter-OrderServiceAdapter-GetOrderCustomerDetail] orderId must not be empty")
+	}
+
+	log.Printf("Start to call order service for GetOrderCustomerDetail, orderId %s", orderId)
+	defer log.Println("End call order service for GetOrderCustomerDetail")
+
+	var result *schema.GetOrderDetailCustomerResponse
+
+	url := fmt.Sprintf("http://localhost:%d/api/order-service/customer/order-detail/%s", a.port, orderId)
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
+	if err != nil {
+		log.Printf("BFF-Adapter-OrderServiceAdapter-GetOrderCustomerDetail-NewRequestWithContext error %v", err)
+		return nil, err
+	}
+
+	resp, err := a.httpClient.Do(req)
+	if err != nil {
+		log.Printf("BFF-Adapter-OrderServiceAdapter-GetOrderCustomerDetail-httpClient.Do error %v", err)
+		return nil, err
+	}
+
+	respByteArr, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Printf("BFF-Adapter-OrderServiceAdapter-GetOrderCustomerDetail-ioutil.ReadAll error %v", err)
+		return nil, err
+	}
+
+	err = json.Unmarshal(respByteArr, &result)
+	if err != nil {
+		log.Printf("BFF-Adapter-OrderServiceAdapter-GetOrderCustomerDetail-json.Unmarshal error %v", err)
 		return nil, err
 	}
 

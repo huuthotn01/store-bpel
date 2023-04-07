@@ -2,6 +2,7 @@ create table if not exists goods (
     goods_code varchar(100) not null,
     goods_size varchar(5) not null,
     goods_color varchar(10) not null,
+    goods_name varchar(100) not null,
     order_code int not null,
     quantity int not null,
     unit_price int not null,

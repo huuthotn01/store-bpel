@@ -13,11 +13,22 @@ func (c *orderServiceController) GetListOrderCustomer(ctx context.Context, custo
 
 	respOrders := make([]*schema.GetListOrderCustomerResponseData, 0, len(orders))
 	for _, data := range orders {
+		mappingData := c.mapOrderDetailData(data)
+
 		respOrders = append(respOrders, &schema.GetListOrderCustomerResponseData{
-			OrderId:       data.OrderData.OrderCode,
-			OrderCode:     data.OrderData.PublicOrderCode,
-			PaymentMethod: data.OnlineOrderData.PaymentMethod,
-			TotalPrice:    data.OrderData.TotalPrice,
+			// OrderId is private information => not return for customer
+			OrderCode:       data.OrderData.PublicOrderCode,
+			PaymentMethod:   data.OnlineOrderData.PaymentMethod,
+			ListGoods:       mappingData.ListGoods,
+			TotalPrice:      data.OrderData.TotalPrice,
+			TotalGoods:      mappingData.GoodsNum,
+			TotalDiscount:   mappingData.TotalDiscount,
+			TotalOrder:      mappingData.TotalOrder,
+			IsCompleted:     data.OnlineOrderData.Status == 4,
+			ShipFee:         data.OnlineOrderData.ShippingFee,
+			StatusShip:      mappingData.StatusShip,
+			TransactionDate: data.OrderData.TransactionDate,
+			ExpectDate:      data.OnlineOrderData.ExpectedDelivery,
 		})
 	}
 
