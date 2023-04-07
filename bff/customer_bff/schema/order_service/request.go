@@ -4,6 +4,14 @@ type GetOnlineOrdersStatusRequest struct {
 	OrderId int
 }
 
+type GetListOrderCustomerRequest struct {
+	CustomerId string
+}
+
+type GetOrderDetailCustomerRequest struct {
+	OrderId string
+}
+
 type UpdateOnlineOrdersStatusRequest struct {
 	OrderId int
 	State   string

@@ -18,6 +18,8 @@ func RegisterEndpointHandler(r *mux.Router, cfg *config.Config) {
 	orderController = NewController(cfg)
 	// register handler
 	r.HandleFunc("/api/bff/order-service/customer/make-order", handleMakeOnlineOrders)
+	r.HandleFunc("/api/bff/order-service/customer/get-list", handleGetListOrderCustomer)
+	r.HandleFunc("/api/bff/order-service/customer/get-detail", handleGetOrderCustomerDetail)
 	r.HandleFunc("/api/bff/order-service/get-ship-fee", handleGetShippingFee)
 	r.HandleFunc("/api/bff/order-service/online-order-status/get", handleGetOnlineOrdersStatus)
 	r.HandleFunc("/api/bff/order-service/online-order-status/update", handleUpdateOnlineOrdersStatus)
@@ -135,6 +137,86 @@ func handleGetOnlineOrdersStatus(w http.ResponseWriter, r *http.Request) {
 				StatusCode: 200,
 				Message:    "OK",
 				Data:       status,
+			})
+		}
+	} else {
+		http.Error(w, "Method not supported", http.StatusNotFound)
+	}
+}
+
+func handleGetListOrderCustomer(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
+	w.Header().Set("Content-Type", "application/xml")
+	enc := xml.NewEncoder(w)
+	payload, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		err = enc.Encode(&order_service.GetResponse{
+			StatusCode: 500,
+			Message:    fmt.Sprintf("BFF-Order-handleGetListOrderCustomer-ioutil.ReadAll err %v", err),
+		})
+		return
+	}
+	if r.Method == http.MethodPost {
+		var request = new(order_service.GetListOrderCustomerRequest)
+		err = xml.Unmarshal(payload, request)
+		if err != nil {
+			err = enc.Encode(&order_service.GetResponse{
+				StatusCode: 500,
+				Message:    fmt.Sprintf("BFF-Order-handleGetListOrderCustomer-xml.Unmarshal err %v", err),
+			})
+			return
+		}
+		status, err := orderController.GetListOrderCustomer(ctx, request)
+		if err != nil {
+			err = enc.Encode(&order_service.GetResponse{
+				StatusCode: 500,
+				Message:    fmt.Sprintf("BFF-Order-handleGetListOrderCustomer-GetCustomer err %v", err),
+			})
+		} else {
+			err = enc.Encode(&order_service.GetResponse{
+				StatusCode: 200,
+				Message:    "OK",
+				Data:       status,
+			})
+		}
+	} else {
+		http.Error(w, "Method not supported", http.StatusNotFound)
+	}
+}
+
+func handleGetOrderCustomerDetail(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
+	w.Header().Set("Content-Type", "application/xml")
+	enc := xml.NewEncoder(w)
+	payload, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		err = enc.Encode(&order_service.GetResponse{
+			StatusCode: 500,
+			Message:    fmt.Sprintf("BFF-Order-handleGetOrderCustomerDetail-ioutil.ReadAll err %v", err),
+		})
+		return
+	}
+	if r.Method == http.MethodPost {
+		var request = new(order_service.GetOrderDetailCustomerRequest)
+		err = xml.Unmarshal(payload, request)
+		if err != nil {
+			err = enc.Encode(&order_service.GetResponse{
+				StatusCode: 500,
+				Message:    fmt.Sprintf("BFF-Order-handleGetOrderCustomerDetail-xml.Unmarshal err %v", err),
+			})
+			return
+		}
+		order, err := orderController.GetOrderCustomerDetail(ctx, request)
+		if err != nil {
+			err = enc.Encode(&order_service.GetResponse{
+				StatusCode: 500,
+				Message:    fmt.Sprintf("BFF-Order-handleGetOrderCustomerDetail-GetCustomer err %v", err),
+			})
+		} else {
+			err = enc.Encode(&order_service.GetResponse{
+				StatusCode: 200,
+				Message:    "OK",
+				Data:       order,
 			})
 		}
 	} else {
