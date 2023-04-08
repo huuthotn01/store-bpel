@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"errors"
 
 	"gorm.io/gorm"
 )
@@ -17,10 +18,11 @@ type ICartServiceRepository interface {
 
 type (
 	AddGoodsData struct {
-		GoodsId    string
-		GoodsSize  string
-		GoodsColor string
-		Quantity   int
+		GoodsId     string
+		GoodsSize   string
+		GoodsColor  string
+		Quantity    int
+		MaxQuantity int
 	}
 	DeleteGoodsData struct {
 		GoodsId    string
@@ -72,20 +74,32 @@ func (r *cartServiceRepository) AddGoods(ctx context.Context, cartId string, dat
 	return r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
 		var err error
 		for _, goods := range data {
-			err = r.db.WithContext(ctx).Table(r.goodsTableName).Create(&GoodsModel{
-				CartId:     cartId,
-				GoodsId:    goods.GoodsId,
-				GoodsSize:  goods.GoodsSize,
-				GoodsColor: goods.GoodsColor,
-				Quantity:   goods.Quantity,
-			}).Error
+			var goodsModel *GoodsModel
+			err = tx.WithContext(ctx).Table(r.goodsTableName).Where("goods_id = ? AND goods_size = ? AND goods_color = ?",
+				goods.GoodsId, goods.GoodsSize, goods.GoodsColor).First(&goodsModel).Error
+
 			if err != nil {
+				err = tx.WithContext(ctx).Table(r.goodsTableName).Create(&GoodsModel{
+					CartId:     cartId,
+					GoodsId:    goods.GoodsId,
+					GoodsSize:  goods.GoodsSize,
+					GoodsColor: goods.GoodsColor,
+					Quantity:   goods.Quantity,
+				}).Error
+				if err != nil {
+					return err
+				}
+			} else {
+				if (goodsModel.Quantity + goods.Quantity) > goods.MaxQuantity {
+					return errors.New("quantity limit exceeded")
+				}
 				err = tx.Exec("UPDATE `goods` SET `quantity` = `quantity` + ? WHERE `cart_id` =? AND `goods_id` = ? AND `goods_size` = ? AND `goods_color` = ?",
 					goods.Quantity, cartId, goods.GoodsId, goods.GoodsSize, goods.GoodsColor).Error
 				if err != nil {
 					return err
 				}
 			}
+
 		}
 		return nil
 	})
@@ -96,7 +110,7 @@ func (r *cartServiceRepository) DeleteGoods(ctx context.Context, cartId string, 
 		var err error
 		for _, goods := range data {
 
-			err = r.db.WithContext(ctx).Table(r.goodsTableName).
+			err = tx.WithContext(ctx).Table(r.goodsTableName).
 				Where("cart_id = ? and goods_id= ? and goods_color = ? and goods_size = ?", cartId, goods.GoodsId,
 					goods.GoodsColor, goods.GoodsSize).Delete(cartId).Error
 
@@ -111,13 +125,13 @@ func (r *cartServiceRepository) DeleteGoods(ctx context.Context, cartId string, 
 
 func (r *cartServiceRepository) UpdateGoods(ctx context.Context, cartId string, data []*AddGoodsData) error {
 	return r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
-		err := r.db.WithContext(ctx).Table(r.goodsTableName).Where("cart_id = ? ", cartId).Delete(cartId).Error
+		err := tx.WithContext(ctx).Table(r.goodsTableName).Where("cart_id = ? ", cartId).Delete(cartId).Error
 		if err != nil {
 			return err
 		}
 
 		for _, goods := range data {
-			err = r.db.WithContext(ctx).Table(r.goodsTableName).Create(&GoodsModel{
+			err = tx.WithContext(ctx).Table(r.goodsTableName).Create(&GoodsModel{
 				CartId:     cartId,
 				GoodsId:    goods.GoodsId,
 				GoodsSize:  goods.GoodsSize,
