@@ -2,11 +2,12 @@ package controller
 
 import (
 	"context"
-	"gorm.io/gorm"
 	"store-bpel/customer_service/adapter"
 	"store-bpel/customer_service/config"
 	repo "store-bpel/customer_service/repository"
 	"store-bpel/customer_service/schema"
+
+	"gorm.io/gorm"
 )
 
 type ICustomerServiceController interface {
@@ -20,6 +21,7 @@ type customerServiceController struct {
 	repository repo.ICustomerServiceRepository
 
 	accountAdapter adapter.IAccountServiceAdapter
+	cartAdapter    adapter.ICartServiceAdapter
 	kafkaAdapter   adapter.IKafkaAdapter
 }
 
@@ -30,6 +32,9 @@ func NewController(cfg *config.Config, db *gorm.DB) ICustomerServiceController {
 	// init account adapter
 	accountAdapter := adapter.NewAccountAdapter(cfg)
 
+	// init cart adapter
+	cartAdapter := adapter.NewCartAdapter(cfg)
+
 	// init kafka adapter
 	kafkaAdapter := adapter.NewKafkaAdapter()
 
@@ -37,6 +42,7 @@ func NewController(cfg *config.Config, db *gorm.DB) ICustomerServiceController {
 		cfg:            cfg,
 		repository:     repository,
 		accountAdapter: accountAdapter,
+		cartAdapter:    cartAdapter,
 		kafkaAdapter:   kafkaAdapter,
 	}
 }

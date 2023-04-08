@@ -10,6 +10,7 @@ type Config struct {
 
 	StaffServicePort   int `json:"staff_service_port" mapstructure:"staff_service_port"`
 	AccountServicePort int `json:"account_service_port" mapstructure:"account_service_port"`
+	CartServicePort    int `json:"cart_service_port" mapstructure:"cart_service_port"`
 }
 
 type MySQLConfig struct {

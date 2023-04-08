@@ -1,14 +1,14 @@
-package schema
+package cart_service
 
 type UpdateResponse struct {
 	StatusCode int
 	Message    string
 }
 
-type GetCartResponse struct {
+type GetResponse struct {
 	StatusCode int
 	Message    string
-	Data       *CartData
+	Data       interface{}
 }
 
 type CartData struct {
