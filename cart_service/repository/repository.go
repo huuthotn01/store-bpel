@@ -80,7 +80,11 @@ func (r *cartServiceRepository) AddGoods(ctx context.Context, cartId string, dat
 				Quantity:   goods.Quantity,
 			}).Error
 			if err != nil {
-				return err
+				err = tx.Exec("UPDATE `goods` SET `quantity` = `quantity` + ? WHERE `cart_id` =? AND `goods_id` = ? AND `goods_size` = ? AND `goods_color` = ?",
+					goods.Quantity, cartId, goods.GoodsId, goods.GoodsSize, goods.GoodsColor).Error
+				if err != nil {
+					return err
+				}
 			}
 		}
 		return nil

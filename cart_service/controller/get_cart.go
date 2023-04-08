@@ -3,6 +3,7 @@ package controller
 import (
 	"context"
 	"store-bpel/cart_service/schema"
+	goodsSchema "store-bpel/goods_service/schema"
 )
 
 type GoodsClassify struct {
@@ -53,20 +54,26 @@ func (s *cartServiceController) GetCart(ctx context.Context, request string) (*s
 		if err != nil {
 			return nil, err
 		}
+
+		listQuantity := setListQuantity(ctx, goodsInCart.ListQuantity, productDetail)
+
+		if len(listQuantity) == 0 {
+			continue
+		}
+
 		goodsList = append(goodsList, &schema.GoodsData{
 			GoodsId:      goodsInCart.GoodsId,
 			Name:         productDetail.Name,
 			UnitPrice:    productDetail.UnitPrice,
 			Price:        productDetail.Price,
 			Images:       productDetail.Images,
-			ListQuantity: goodsInCart.ListQuantity,
+			ListQuantity: listQuantity,
 			Discount:     productDetail.Discount,
 			GoodsType:    productDetail.GoodsType,
 			GoodsGender:  productDetail.GoodsGender,
 			GoodsAge:     productDetail.GoodsAge,
 			Description:  productDetail.Description,
 		})
-
 	}
 
 	result := &schema.CartData{
@@ -74,4 +81,22 @@ func (s *cartServiceController) GetCart(ctx context.Context, request string) (*s
 		Goods:  goodsList,
 	}
 	return result, nil
+}
+
+func setListQuantity(ctx context.Context, quantityData []*schema.QuantityData, productDetail *goodsSchema.GetGoodsDefaultResponseData) []*schema.QuantityData {
+	result := make([]*schema.QuantityData, 0, len(quantityData))
+	for _, quantity := range quantityData {
+		for _, productQuantity := range productDetail.ListQuantity {
+			if quantity.GoodsSize == productQuantity.GoodsSize && quantity.GoodsColor == productQuantity.GoodsColor {
+				result = append(result, &schema.QuantityData{
+					GoodsSize:   quantity.GoodsSize,
+					GoodsColor:  quantity.GoodsColor,
+					Quantity:    quantity.Quantity,
+					MaxQuantity: productQuantity.Quantity,
+				})
+				break
+			}
+		}
+	}
+	return result
 }
