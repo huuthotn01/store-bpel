@@ -18,9 +18,10 @@ func (c *cartBffController) GetCart(ctx context.Context, userId string) (*cart_s
 
 		for _, quantity := range good.ListQuantity {
 			listQuantity = append(listQuantity, &cart_service.QuantityData{
-				GoodsSize:  quantity.GoodsSize,
-				GoodsColor: quantity.GoodsColor,
-				Quantity:   quantity.Quantity,
+				GoodsSize:   quantity.GoodsSize,
+				GoodsColor:  quantity.GoodsColor,
+				Quantity:    quantity.Quantity,
+				MaxQuantity: quantity.MaxQuantity,
 			})
 		}
 

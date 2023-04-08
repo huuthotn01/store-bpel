@@ -31,7 +31,8 @@ type GoodsData struct {
 }
 
 type QuantityData struct {
-	GoodsSize  string
-	GoodsColor string
-	Quantity   int
+	GoodsSize   string
+	GoodsColor  string
+	Quantity    int
+	MaxQuantity int
 }
