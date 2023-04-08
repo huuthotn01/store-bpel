@@ -1,14 +1,16 @@
 package main
 
 import (
-	"github.com/gorilla/mux"
-	"github.com/spf13/cast"
 	"log"
 	"net/http"
 	"store-bpel/bff/customer_bff/config"
 	"store-bpel/bff/customer_bff/controller"
+	cart_controller "store-bpel/bff/customer_bff/controller/cart_service"
 	customer_controller "store-bpel/bff/customer_bff/controller/customer_service"
 	order_controller "store-bpel/bff/customer_bff/controller/order_service"
+
+	"github.com/gorilla/mux"
+	"github.com/spf13/cast"
 )
 
 func main() {
@@ -34,5 +36,6 @@ func newSOAPMux(cfg *config.Config) *mux.Router {
 
 	customer_controller.RegisterEndpointHandler(r, cfg)
 	order_controller.RegisterEndpointHandler(r, cfg)
+	cart_controller.RegisterEndpointHandler(r, cfg)
 	return r
 }
