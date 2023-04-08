@@ -20,6 +20,9 @@ func RegisterEndpointHandler(r *mux.Router, cfg *config.Config) {
 	// register handler
 	r.HandleFunc("/api/bff/cart-service/get-cart", handleGetCart)
 	r.HandleFunc("/api/bff/cart-service/add-goods", handleAddGoods)
+	r.HandleFunc("/api/bff/cart-service/update-goods", handleUpdateGoods)
+	r.HandleFunc("/api/bff/cart-service/delete-goods", handleDeleteGoods)
+	r.HandleFunc("/api/bff/cart-service/delete-all-goods", handleDeleteAllGoods)
 }
 
 func handleGetCart(w http.ResponseWriter, r *http.Request) {
@@ -89,6 +92,123 @@ func handleAddGoods(w http.ResponseWriter, r *http.Request) {
 			err = enc.Encode(&cart_service.UpdateResponse{
 				StatusCode: 500,
 				Message:    fmt.Sprintf("BFF-CartBFF-handleAddGoods-GetCustomer err %v", err),
+			})
+		} else {
+			err = enc.Encode(&cart_service.UpdateResponse{
+				StatusCode: 200,
+				Message:    "OK",
+			})
+		}
+	} else {
+		http.Error(w, "Method not supported", http.StatusNotFound)
+	}
+}
+
+func handleUpdateGoods(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
+	w.Header().Set("Content-Type", "application/xml")
+	enc := xml.NewEncoder(w)
+	payload, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		err = enc.Encode(&cart_service.UpdateResponse{
+			StatusCode: 500,
+			Message:    fmt.Sprintf("BFF-CartBFF-handleUpdateGoods-ioutil.ReadAll err %v", err),
+		})
+		return
+	}
+	if r.Method == http.MethodPost {
+		var request = new(cart_service.UpdateGoodsRequest)
+		err = xml.Unmarshal(payload, request)
+		if err != nil {
+			err = enc.Encode(&cart_service.UpdateResponse{
+				StatusCode: 500,
+				Message:    fmt.Sprintf("BFF-CartBFF-handleUpdateGoods-xml.Unmarshal err %v", err),
+			})
+			return
+		}
+		err := cartController.UpdateGoods(ctx, request)
+		if err != nil {
+			err = enc.Encode(&cart_service.UpdateResponse{
+				StatusCode: 500,
+				Message:    fmt.Sprintf("BFF-CartBFF-handleUpdateGoods-GetCustomer err %v", err),
+			})
+		} else {
+			err = enc.Encode(&cart_service.UpdateResponse{
+				StatusCode: 200,
+				Message:    "OK",
+			})
+		}
+	} else {
+		http.Error(w, "Method not supported", http.StatusNotFound)
+	}
+}
+
+func handleDeleteGoods(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
+	w.Header().Set("Content-Type", "application/xml")
+	enc := xml.NewEncoder(w)
+	payload, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		err = enc.Encode(&cart_service.UpdateResponse{
+			StatusCode: 500,
+			Message:    fmt.Sprintf("BFF-CartBFF-handleDeleteGoods-ioutil.ReadAll err %v", err),
+		})
+		return
+	}
+	if r.Method == http.MethodPost {
+		var request = new(cart_service.DeleteGoodsRequest)
+		err = xml.Unmarshal(payload, request)
+		if err != nil {
+			err = enc.Encode(&cart_service.UpdateResponse{
+				StatusCode: 500,
+				Message:    fmt.Sprintf("BFF-CartBFF-handleDeleteGoods-xml.Unmarshal err %v", err),
+			})
+			return
+		}
+		err := cartController.DeleteGoods(ctx, request)
+		if err != nil {
+			err = enc.Encode(&cart_service.UpdateResponse{
+				StatusCode: 500,
+				Message:    fmt.Sprintf("BFF-CartBFF-handleDeleteGoods-GetCustomer err %v", err),
+			})
+		} else {
+			err = enc.Encode(&cart_service.UpdateResponse{
+				StatusCode: 200,
+				Message:    "OK",
+			})
+		}
+	} else {
+		http.Error(w, "Method not supported", http.StatusNotFound)
+	}
+}
+
+func handleDeleteAllGoods(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
+	w.Header().Set("Content-Type", "application/xml")
+	enc := xml.NewEncoder(w)
+	payload, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		err = enc.Encode(&cart_service.UpdateResponse{
+			StatusCode: 500,
+			Message:    fmt.Sprintf("BFF-CartBFF-handleDeleteAllGoods-ioutil.ReadAll err %v", err),
+		})
+		return
+	}
+	if r.Method == http.MethodPost {
+		var request = new(cart_service.DeleteAllGoodsRequest)
+		err = xml.Unmarshal(payload, request)
+		if err != nil {
+			err = enc.Encode(&cart_service.UpdateResponse{
+				StatusCode: 500,
+				Message:    fmt.Sprintf("BFF-CartBFF-handleDeleteAllGoods-xml.Unmarshal err %v", err),
+			})
+			return
+		}
+		err := cartController.DeleteAllGoods(ctx, request.CartId)
+		if err != nil {
+			err = enc.Encode(&cart_service.UpdateResponse{
+				StatusCode: 500,
+				Message:    fmt.Sprintf("BFF-CartBFF-handleDeleteAllGoods-GetCustomer err %v", err),
 			})
 		} else {
 			err = enc.Encode(&cart_service.UpdateResponse{

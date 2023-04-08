@@ -6,23 +6,30 @@ type GetCartRequest struct {
 
 type AddGoodsRequest struct {
 	CartId string
-	Goods  []AddGoodsRequestData
-}
-
-type DeleteGoodsRequest struct {
-	GoodsId    string
-	GoodsColor string
-	GoodsSize  string
+	Goods  []*GoodsRequestData
 }
 
 type UpdateGoodsRequest struct {
+	CartId string
+	Goods  []*GoodsRequestData
+}
+
+type DeleteGoodsRequest struct {
+	CartId string
+	Goods  []*DeleteGoodsData
+}
+
+type DeleteAllGoodsRequest struct {
+	CartId string
+}
+
+type DeleteGoodsData struct {
 	GoodsId    string
 	GoodsColor string
 	GoodsSize  string
-	Quantity   int
 }
 
-type AddGoodsRequestData struct {
+type GoodsRequestData struct {
 	GoodsId    string
 	GoodsColor string
 	GoodsSize  string

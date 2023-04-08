@@ -10,6 +10,9 @@ import (
 type ICartBffController interface {
 	GetCart(ctx context.Context, userId string) (*cart_service.CartData, error)
 	AddGoods(ctx context.Context, request *cart_service.AddGoodsRequest) error
+	UpdateGoods(ctx context.Context, request *cart_service.UpdateGoodsRequest) error
+	DeleteGoods(ctx context.Context, request *cart_service.DeleteGoodsRequest) error
+	DeleteAllGoods(ctx context.Context, cartId string) error
 }
 
 type cartBffController struct {
