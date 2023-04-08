@@ -6,7 +6,7 @@ import (
 	"store-bpel/cart_service/schema"
 )
 
-func (s *cartServiceController) DeleteGoods(ctx context.Context, cartId int, request []*schema.DeleteGoodsRequest) error {
+func (s *cartServiceController) DeleteGoods(ctx context.Context, cartId string, request []*schema.DeleteGoodsRequest) error {
 	var goodsList []*repository.DeleteGoodsData
 	for _, goods := range request {
 		goodsList = append(goodsList, &repository.DeleteGoodsData{
