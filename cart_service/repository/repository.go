@@ -9,10 +9,10 @@ import (
 type ICartServiceRepository interface {
 	AddCart(ctx context.Context, customerId string) error
 	GetCart(ctx context.Context, customerId string) (*GetCartModel, error)
-	AddGoods(ctx context.Context, cartId int, data []*AddGoodsData) error
-	DeleteGoods(ctx context.Context, cartId int, data []*DeleteGoodsData) error
-	UpdateGoods(ctx context.Context, cartId int, data []*AddGoodsData) error
-	DeleteAllGoods(ctx context.Context, cartId int) error
+	AddGoods(ctx context.Context, cartId string, data []*AddGoodsData) error
+	DeleteGoods(ctx context.Context, cartId string, data []*DeleteGoodsData) error
+	UpdateGoods(ctx context.Context, cartId string, data []*AddGoodsData) error
+	DeleteAllGoods(ctx context.Context, cartId string) error
 }
 
 type (
@@ -39,6 +39,7 @@ func NewRepository(db *gorm.DB) ICartServiceRepository {
 
 func (r *cartServiceRepository) AddCart(ctx context.Context, customerId string) error {
 	cartModel := &CartModel{
+		CartId:     customerId,
 		CustomerId: customerId,
 	}
 	err := r.db.WithContext(ctx).Table(r.cartTableName).Create(cartModel).Error
@@ -67,7 +68,7 @@ func (r *cartServiceRepository) GetCart(ctx context.Context, customerId string) 
 	return result, nil
 }
 
-func (r *cartServiceRepository) AddGoods(ctx context.Context, cartId int, data []*AddGoodsData) error {
+func (r *cartServiceRepository) AddGoods(ctx context.Context, cartId string, data []*AddGoodsData) error {
 	return r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
 		var err error
 		for _, goods := range data {
@@ -86,7 +87,7 @@ func (r *cartServiceRepository) AddGoods(ctx context.Context, cartId int, data [
 	})
 }
 
-func (r *cartServiceRepository) DeleteGoods(ctx context.Context, cartId int, data []*DeleteGoodsData) error {
+func (r *cartServiceRepository) DeleteGoods(ctx context.Context, cartId string, data []*DeleteGoodsData) error {
 	return r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
 		var err error
 		for _, goods := range data {
@@ -104,7 +105,7 @@ func (r *cartServiceRepository) DeleteGoods(ctx context.Context, cartId int, dat
 
 }
 
-func (r *cartServiceRepository) UpdateGoods(ctx context.Context, cartId int, data []*AddGoodsData) error {
+func (r *cartServiceRepository) UpdateGoods(ctx context.Context, cartId string, data []*AddGoodsData) error {
 	return r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
 		err := r.db.WithContext(ctx).Table(r.goodsTableName).Where("cart_id = ? ", cartId).Delete(cartId).Error
 		if err != nil {
@@ -127,6 +128,6 @@ func (r *cartServiceRepository) UpdateGoods(ctx context.Context, cartId int, dat
 	})
 }
 
-func (r *cartServiceRepository) DeleteAllGoods(ctx context.Context, cartId int) error {
+func (r *cartServiceRepository) DeleteAllGoods(ctx context.Context, cartId string) error {
 	return r.db.WithContext(ctx).Table(r.goodsTableName).Where("cart_id = ? ", cartId).Delete(cartId).Error
 }

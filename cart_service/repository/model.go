@@ -11,17 +11,17 @@ type cartServiceRepository struct {
 }
 
 type CartModel struct {
-	CartId     int
+	CartId     string
 	CustomerId string
 }
 
 type GetCartModel struct {
-	CartId int
+	CartId string
 	Goods  []*GoodsModel
 }
 
 type GoodsModel struct {
-	CartId     int
+	CartId     string
 	GoodsId    string
 	GoodsSize  string
 	GoodsColor string

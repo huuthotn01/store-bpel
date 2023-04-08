@@ -1,6 +1,6 @@
 INSERT INTO `cart` (`cart_id`, `customer_id`) VALUES
-(1, 'user1'),
-(2, 'user2');
+('user1', 'user1'),
+('user2', 'user2');
 
 
 INSERT INTO `goods` (`cart_id`, `goods_id`, `goods_size`, `goods_color`, `quantity`) VALUES
