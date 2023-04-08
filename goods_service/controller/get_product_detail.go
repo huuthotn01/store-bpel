@@ -51,6 +51,7 @@ func (c *goodsServiceController) getEachProductDetail(ctx context.Context, goods
 		if goodsDetail[0].UnitPrice-discount > 0 {
 			salePrice = goodsDetail[0].UnitPrice - discount
 		}
+		discount = int(promo[0].Discount*100)
 	}
 
 	return &schema.GetGoodsDefaultResponseData{
