@@ -1,5 +1,5 @@
 create table if not exists cart (
-    cart_id int not null auto_increment ,
+    cart_id varchar(100) not null ,
     customer_id varchar(100) not null,
     constraint PK_cart primary key (cart_id)
 ) engine = InnoDB default charset = utf8mb4 collate = utf8mb4_unicode_ci ;
