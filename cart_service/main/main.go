@@ -9,7 +9,6 @@ import (
 	"store-bpel/cart_service/config"
 	"store-bpel/cart_service/controller"
 	"store-bpel/cart_service/schema"
-	"strconv"
 
 	"github.com/gorilla/mux"
 	"github.com/spf13/cast"
@@ -146,15 +145,8 @@ func handleGoods(w http.ResponseWriter, r *http.Request) {
 			})
 			return
 		}
-		cartId, err := strconv.Atoi(vars["cartId"])
-		if err != nil {
-			err = enc.Encode(&schema.UpdateResponse{
-				StatusCode: 500,
-				Message:    err.Error(),
-			})
-			return
-		}
-		err = ctrl.AddGoods(ctx, cartId, request)
+
+		err = ctrl.AddGoods(ctx, vars["cartId"], request)
 		if err != nil {
 			err = enc.Encode(&schema.UpdateResponse{
 				StatusCode: 500,
@@ -185,15 +177,8 @@ func handleGoods(w http.ResponseWriter, r *http.Request) {
 			})
 			return
 		}
-		cartId, err := strconv.Atoi(vars["cartId"])
-		if err != nil {
-			err = enc.Encode(&schema.UpdateResponse{
-				StatusCode: 500,
-				Message:    err.Error(),
-			})
-			return
-		}
-		err = ctrl.DeleteGoods(ctx, cartId, request)
+
+		err = ctrl.DeleteGoods(ctx, vars["cartId"], request)
 		if err != nil {
 			err = enc.Encode(&schema.UpdateResponse{
 				StatusCode: 500,
@@ -223,15 +208,8 @@ func handleGoods(w http.ResponseWriter, r *http.Request) {
 			})
 			return
 		}
-		cartId, err := strconv.Atoi(vars["cartId"])
-		if err != nil {
-			err = enc.Encode(&schema.UpdateResponse{
-				StatusCode: 500,
-				Message:    err.Error(),
-			})
-			return
-		}
-		err = ctrl.UpdateGoods(ctx, cartId, request)
+
+		err = ctrl.UpdateGoods(ctx, vars["cartId"], request)
 		if err != nil {
 			err = enc.Encode(&schema.UpdateResponse{
 				StatusCode: 500,
@@ -258,15 +236,7 @@ func handleAllGoods(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 
 	if r.Method == "DELETE" {
-		cartId, err := strconv.Atoi(vars["cartId"])
-		if err != nil {
-			err = enc.Encode(&schema.UpdateResponse{
-				StatusCode: 500,
-				Message:    err.Error(),
-			})
-			return
-		}
-		err = ctrl.DeleteAllGoods(ctx, cartId)
+		err := ctrl.DeleteAllGoods(ctx, vars["cartId"])
 		if err != nil {
 			err = enc.Encode(&schema.UpdateResponse{
 				StatusCode: 500,

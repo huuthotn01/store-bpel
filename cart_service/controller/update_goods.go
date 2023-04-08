@@ -6,7 +6,7 @@ import (
 	"store-bpel/cart_service/schema"
 )
 
-func (s *cartServiceController) UpdateGoods(ctx context.Context, cartId int, request []*schema.AddGoodsRequest) error {
+func (s *cartServiceController) UpdateGoods(ctx context.Context, cartId string, request []*schema.AddGoodsRequest) error {
 	var goodsList []*repository.AddGoodsData
 	for _, goods := range request {
 		goodsList = append(goodsList, &repository.AddGoodsData{
