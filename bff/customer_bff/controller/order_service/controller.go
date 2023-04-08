@@ -10,6 +10,8 @@ import (
 type IOrderBffController interface {
 	CreateOnlineOrder(ctx context.Context, request *order_service.MakeOnlineOrderRequest) error
 	GetShippingFee(ctx context.Context, request *order_service.Address) (*order_service.GetShipFeeResponseData, error)
+	GetListOrderCustomer(ctx context.Context, request *order_service.GetListOrderCustomerRequest) ([]*order_service.GetListOrderCustomerResponseData, error)
+	GetOrderCustomerDetail(ctx context.Context, request *order_service.GetOrderDetailCustomerRequest) (*order_service.GetOrderDetailCustomerResponseData, error)
 	GetOnlineOrdersStatus(ctx context.Context, request *order_service.GetOnlineOrdersStatusRequest) ([]*order_service.GetOnlineOrdersStatusResponseData, error)
 	UpdateOnlineOrdersStatus(ctx context.Context, request *order_service.UpdateOnlineOrdersStatusRequest) error
 }

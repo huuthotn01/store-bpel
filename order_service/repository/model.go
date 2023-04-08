@@ -18,6 +18,7 @@ type GoodsModel struct {
 	GoodsCode  string
 	GoodsSize  string
 	GoodsColor string
+	GoodsName  string
 	OrderCode  int
 	Quantity   int
 	UnitPrice  int

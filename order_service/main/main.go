@@ -126,14 +126,7 @@ func handleCustomerGetOrderDetail(w http.ResponseWriter, r *http.Request) {
 	enc := json.NewEncoder(w)
 	if r.Method == http.MethodGet {
 		orderId := mux.Vars(r)["orderId"]
-		orderIdInt, err := strconv.Atoi(orderId)
-		if err != nil {
-			err = enc.Encode(&schema.GetOrderDetailCustomerResponse{
-				StatusCode: 500,
-				Message:    err.Error(),
-			})
-		}
-		order, err := ctrl.GetOrderDetail(ctx, orderIdInt)
+		order, err := ctrl.GetOrderDetail(ctx, orderId)
 		if err != nil {
 			err = enc.Encode(&schema.GetOrderDetailCustomerResponse{
 				StatusCode: 500,
