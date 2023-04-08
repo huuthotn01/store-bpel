@@ -4,9 +4,10 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"gorm.io/gorm"
 	"store-bpel/customer_service/repository"
 	"store-bpel/customer_service/schema"
+
+	"gorm.io/gorm"
 )
 
 func (c *customerServiceController) AddCustomer(ctx context.Context, request *schema.AddCustomerRequest) error {
@@ -17,6 +18,16 @@ func (c *customerServiceController) AddCustomer(ctx context.Context, request *sc
 	if err != gorm.ErrRecordNotFound {
 		return err
 	}
+
+	err = c.cartAdapter.AddCart(ctx, request.Username)
+	if err != nil {
+		return err
+	}
+
+	if err != nil {
+		return err
+	}
+
 	return c.repository.AddCustomer(ctx, &repository.CustomerModel{
 		Username:       request.Username,
 		CustomerEmail:  request.Email,

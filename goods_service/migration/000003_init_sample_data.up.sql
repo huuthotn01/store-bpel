@@ -28,3 +28,9 @@ INSERT INTO `goods_in_wh` (`goods_code`, `goods_size`, `goods_color`, `wh_code`,
 ('goods-1', 'S', 'Đen', 'warehouse-2', 12, '2023-04-01 04:47:35', NULL),
 ('goods-2', 'L', 'Vàng', 'warehouse-3', 20, '2023-04-01 04:48:37', NULL),
 ('goods-4', 'XL', 'Trắng', 'warehouse-3', 5, '2023-04-01 04:48:38', NULL);
+
+
+INSERT INTO `goods_img` (`goods_code`, `goods_color`, `goods_img`, `is_default`) VALUES
+('1', 'Red', 'https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png', 0),
+('1', 'Yellow', 'https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png', 1),
+('2', 'Blue', 'https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png', 1);
