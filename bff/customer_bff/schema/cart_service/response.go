@@ -12,7 +12,7 @@ type GetResponse struct {
 }
 
 type CartData struct {
-	CartId int
+	CartId string
 	Goods  []*GoodsData
 }
 
