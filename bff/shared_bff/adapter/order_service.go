@@ -9,15 +9,13 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"store-bpel/bff/customer_bff/config"
+	"store-bpel/bff/shared_bff/config"
 	"store-bpel/order_service/schema"
 )
 
 type IOrderServiceAdapter interface {
-	CreateOnlineOrders(ctx context.Context, request *schema.MakeOnlineOrderRequest) error
-	GetOnlineOrdersStatus(ctx context.Context, orderId int) ([]*schema.GetOnlineOrdersStatusResponseData, error)
-	GetListOrderCustomer(ctx context.Context, customerId string) ([]*schema.GetListOrderCustomerResponseData, error)
-	GetOrderCustomerDetail(ctx context.Context, orderId string) (*schema.GetOrderDetailCustomerResponseData, error)
+	GetShippingFee(ctx context.Context, request *schema.GetShipFeeRequest) (*schema.GetShipFeeResponseData, error)
+	UpdateOnlineOrdersStatus(ctx context.Context, request *schema.UpdateOnlineOrdersStatusRequest) error
 }
 
 type orderServiceAdapter struct {
@@ -60,6 +58,51 @@ func (a *orderServiceAdapter) GetOnlineOrdersStatus(ctx context.Context, orderId
 	err = json.Unmarshal(respByteArr, &result)
 	if err != nil {
 		log.Printf("BFF-Adapter-OrderServiceAdapter-GetOnlineOrdersStatus-json.Unmarshal error %v", err)
+		return nil, err
+	}
+
+	if result.StatusCode != http.StatusOK {
+		return nil, errors.New(result.Message)
+	}
+
+	return result.Data, nil
+}
+
+func (a *orderServiceAdapter) GetShippingFee(ctx context.Context, request *schema.GetShipFeeRequest) (*schema.GetShipFeeResponseData, error) {
+	log.Printf("Start to call order service for GetShippingFee")
+	defer log.Println("End call order service for GetShippingFee")
+
+	var result *schema.GetShipFeeResponse
+
+	url := fmt.Sprintf("http://localhost:%d/api/order-service/ship-fee", a.port)
+
+	data, err := json.Marshal(request)
+	if err != nil {
+		log.Printf("BFF-Adapter-OrderServiceAdapter-GetShippingFee-Marshal error %v", err)
+		return nil, err
+	}
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, bytes.NewReader(data))
+	if err != nil {
+		log.Printf("BFF-Adapter-OrderServiceAdapter-GetShippingFee-NewRequestWithContext error %v", err)
+		return nil, err
+	}
+
+	resp, err := a.httpClient.Do(req)
+	if err != nil {
+		log.Printf("BFF-Adapter-OrderServiceAdapter-GetShippingFee-httpClient.Do error %v", err)
+		return nil, err
+	}
+
+	respByteArr, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Printf("BFF-Adapter-OrderServiceAdapter-GetShippingFee-ioutil.ReadAll error %v", err)
+		return nil, err
+	}
+
+	err = json.Unmarshal(respByteArr, &result)
+	if err != nil {
+		log.Printf("BFF-Adapter-OrderServiceAdapter-GetShippingFee-json.Unmarshal error %v", err)
 		return nil, err
 	}
 
@@ -152,6 +195,50 @@ func (a *orderServiceAdapter) GetOrderCustomerDetail(ctx context.Context, orderI
 	}
 
 	return result.Data, nil
+}
+
+func (a *orderServiceAdapter) UpdateOnlineOrdersStatus(ctx context.Context, request *schema.UpdateOnlineOrdersStatusRequest) error {
+	log.Println("Start to call order service for UpdateOnlineOrdersStatus")
+	defer log.Println("End call order service for UpdateOnlineOrdersStatus")
+
+	var result *schema.UpdateResponse
+	url := fmt.Sprintf("http://localhost:%d/api/order-service/online-order-status", a.port)
+	data, err := json.Marshal(request)
+	if err != nil {
+		log.Printf("BFF-Adapter-OrderServiceAdapter-UpdateOnlineOrdersStatus-Marshal error %v", err)
+		return err
+	}
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodPut, url, bytes.NewReader(data))
+	if err != nil {
+		log.Printf("BFF-Adapter-OrderServiceAdapter-UpdateOnlineOrdersStatus-NewRequestWithContext error %v", err)
+		return err
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+	resp, err := a.httpClient.Do(req)
+	if err != nil {
+		log.Printf("BFF-Adapter-OrderServiceAdapter-UpdateOnlineOrdersStatus-httpClient.Do error %v", err)
+		return err
+	}
+
+	respByteArr, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Printf("BFF-Adapter-OrderServiceAdapter-UpdateOnlineOrdersStatus-ioutil.ReadAll error %v", err)
+		return err
+	}
+
+	err = json.Unmarshal(respByteArr, &result)
+	if err != nil {
+		log.Printf("BFF-Adapter-OrderServiceAdapter-UpdateOnlineOrdersStatus-json.Unmarshal error %v", err)
+		return err
+	}
+
+	if result.StatusCode != http.StatusOK {
+		return errors.New(result.Message)
+	}
+
+	return nil
 }
 
 func (a *orderServiceAdapter) CreateOnlineOrders(ctx context.Context, request *schema.MakeOnlineOrderRequest) error {

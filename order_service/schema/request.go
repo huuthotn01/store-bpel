@@ -1,8 +1,9 @@
 package schema
 
 type UpdateOnlineOrdersStatusRequest struct {
-	OrderId int
-	State   string
+	OrderId      int
+	State        string
+	StatusNumber int
 }
 
 type MakeOnlineOrderRequest struct {
@@ -19,10 +20,20 @@ type MakeOnlineOrderRequest struct {
 	Address         *Address
 }
 
+type MakeOfflineOrderRequest struct {
+	GoodsList       []*OrderGoodsRequest
+	TotalPrice      int
+	TransactionDate string
+	StaffId         string
+	BranchId        string
+}
+
 type OrderGoodsRequest struct {
 	GoodsId   string
 	UnitPrice int
 	Price     int
+	Name      string
+	Image     string
 	Quantity  int
 	Size      string
 	Color     string

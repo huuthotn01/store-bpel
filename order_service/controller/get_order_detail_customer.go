@@ -20,7 +20,7 @@ func (c *orderServiceController) GetOrderDetail(ctx context.Context, orderId str
 		return nil, err
 	}
 
-	order, err := c.repository.GetOrderDetail(ctx, privateOrderId)
+	order, err := c.repository.GetOnlineOrderDetail(ctx, privateOrderId)
 	if err != nil {
 		return nil, err
 	}
@@ -74,7 +74,7 @@ func (c *orderServiceController) mapOrderDetailData(order *repository.OnlineOrde
 			Quantity:  goods.Quantity,
 			Size:      goods.GoodsSize,
 			Color:     goods.GoodsColor,
-			Discount:  float32(goods.TotalPrice) * goods.Promotion,
+			Discount:  goods.Promotion,
 		})
 		goodsNum += goods.Quantity
 		totalDiscount += int(float32(goods.TotalPrice) * goods.Promotion)

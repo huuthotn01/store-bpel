@@ -45,6 +45,7 @@ type OrderGoodsResponse struct {
 	Name      string
 	UnitPrice int
 	Price     int
+	Tax       float32
 	Quantity  int
 	Size      string
 	Color     string
@@ -83,6 +84,26 @@ type GetOrderDetailCustomerResponseData struct {
 	ExpectDate      string
 }
 
+type GetOrderDetailAdminResponse struct {
+	StatusCode int
+	Message    string
+	Data       *GetOrderDetailAdminResponseData
+}
+
+type GetOrderDetailAdminResponseData struct {
+	OrderId          int
+	OrderCode        string
+	ListGoods        []*OrderGoodsResponse
+	TotalPrice       int
+	TotalGoods       int
+	TotalDiscount    int
+	TotalOrder       int
+	TransactionDate  string
+	IsOnline         bool
+	OnlineOrderData  *OnlineOrderData
+	OfflineOrderData *OfflineOrderData
+}
+
 type GetShipFeeResponse struct {
 	StatusCode int
 	Message    string
@@ -92,4 +113,58 @@ type GetShipFeeResponse struct {
 type GetShipFeeResponseData struct {
 	ShipFee      int
 	ExpectedDate string
+}
+
+type GetOnlineOrdersResponse struct {
+	StatusCode int
+	Message    string
+	Data       []*GetOnlineOrdersResponseData
+}
+
+type GetOnlineOrdersResponseData struct {
+	OrderId         int
+	OrderCode       string
+	ListGoods       []*OrderGoodsResponse
+	TotalPrice      int
+	TotalGoods      int
+	TotalDiscount   int
+	TotalOrder      int
+	TransactionDate string
+	OnlineOrderData *OnlineOrderData
+}
+
+type GetOfflineOrdersResponse struct {
+	StatusCode int
+	Message    string
+	Data       []*GetOfflineOrdersResponseData
+}
+
+type GetOfflineOrdersResponseData struct {
+	OrderId          int
+	OrderCode        string
+	ListGoods        []*OrderGoodsResponse
+	TotalPrice       int
+	TotalGoods       int
+	TotalDiscount    int
+	TotalOrder       int
+	TransactionDate  string
+	OfflineOrderData *OfflineOrderData
+}
+
+type OnlineOrderData struct {
+	PaymentMethod string
+	CustomerId    string
+	IsCompleted   bool
+	ShipFee       int
+	ExpectDate    string
+	Status        int
+	NameReceiver  string
+	PhoneReceiver string
+	EmailReceiver string
+	Address       *Address
+}
+
+type OfflineOrderData struct {
+	StaffId  string
+	BranchId string
 }
