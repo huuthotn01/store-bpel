@@ -12,6 +12,7 @@ type Config struct {
 	EventServicePort     int `json:"event_service_port" mapstructure:"event_service_port"`
 	WarehouseServicePort int `json:"warehouse_service_port" mapstructure:"warehouse_service_port"`
 	OrderServicePort     int `json:"order_service_port" mapstructure:"order_service_port"`
+	StatisticServicePort int `json:"statistic_service_port" mapstructure:"statistic_service_port"`
 }
 
 func Load() (config *Config, err error) {
