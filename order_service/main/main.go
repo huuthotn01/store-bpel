@@ -315,14 +315,7 @@ func handleGetOnlineOrdersState(w http.ResponseWriter, r *http.Request) {
 	enc := json.NewEncoder(w)
 	if r.Method == http.MethodGet {
 		orderId := mux.Vars(r)["orderId"]
-		orderIdInt, err := strconv.Atoi(orderId)
-		if err != nil {
-			err = enc.Encode(&schema.GetOnlineOrdersStatusResponse{
-				StatusCode: 500,
-				Message:    err.Error(),
-			})
-		}
-		status, err := ctrl.GetOnlineOrdersStatus(ctx, orderIdInt)
+		status, err := ctrl.GetOnlineOrdersStatus(ctx, orderId)
 		if err != nil {
 			err = enc.Encode(&schema.GetOnlineOrdersStatusResponse{
 				StatusCode: 500,

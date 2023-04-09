@@ -1,7 +1,7 @@
 package order_service
 
 type GetOnlineOrdersStatusRequest struct {
-	OrderId int
+	OrderId string
 }
 
 type GetListOrderCustomerRequest struct {
@@ -10,11 +10,6 @@ type GetListOrderCustomerRequest struct {
 
 type GetOrderDetailCustomerRequest struct {
 	OrderId string
-}
-
-type UpdateOnlineOrdersStatusRequest struct {
-	OrderId int
-	State   string
 }
 
 type MakeOnlineOrderRequest struct {

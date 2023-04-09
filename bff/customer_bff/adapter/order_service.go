@@ -15,7 +15,7 @@ import (
 
 type IOrderServiceAdapter interface {
 	CreateOnlineOrders(ctx context.Context, request *schema.MakeOnlineOrderRequest) error
-	GetOnlineOrdersStatus(ctx context.Context, orderId int) ([]*schema.GetOnlineOrdersStatusResponseData, error)
+	GetOnlineOrdersStatus(ctx context.Context, orderId string) ([]*schema.GetOnlineOrdersStatusResponseData, error)
 	GetListOrderCustomer(ctx context.Context, customerId string) ([]*schema.GetListOrderCustomerResponseData, error)
 	GetOrderCustomerDetail(ctx context.Context, orderId string) (*schema.GetOrderDetailCustomerResponseData, error)
 }
@@ -32,13 +32,17 @@ func NewOrderAdapter(cfg *config.Config) IOrderServiceAdapter {
 	}
 }
 
-func (a *orderServiceAdapter) GetOnlineOrdersStatus(ctx context.Context, orderId int) ([]*schema.GetOnlineOrdersStatusResponseData, error) {
+func (a *orderServiceAdapter) GetOnlineOrdersStatus(ctx context.Context, orderId string) ([]*schema.GetOnlineOrdersStatusResponseData, error) {
+	if orderId == "" {
+		return nil, errors.New("[BFF-Adapter-OrderServiceAdapter-GetOnlineOrdersStatus] orderId must not be empty")
+	}
+
 	log.Printf("Start to call order service for GetOnlineOrdersStatus, orderId %s", orderId)
 	defer log.Println("End call order service for GetOnlineOrdersStatus")
 
 	var result *schema.GetOnlineOrdersStatusResponse
 
-	url := fmt.Sprintf("http://localhost:%d/api/order-service/online-order-status/%d", a.port, orderId)
+	url := fmt.Sprintf("http://localhost:%d/api/order-service/online-order-status/%s", a.port, orderId)
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
 		log.Printf("BFF-Adapter-OrderServiceAdapter-GetOnlineOrdersStatus-NewRequestWithContext error %v", err)
