@@ -35,6 +35,8 @@ type OrderGoodsRequest struct {
 	GoodsId   string
 	UnitPrice int
 	Price     int
+	Name      string
+	Image     string
 	Quantity  int
 	Size      string
 	Color     string

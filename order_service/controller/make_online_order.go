@@ -20,7 +20,8 @@ func (c *orderServiceController) CreateOnlineOrder(ctx context.Context, request 
 			UnitPrice:  data.UnitPrice,
 			TotalPrice: data.Price,
 			Tax:        data.Tax,
-			Image:      "", // TODO add image link
+			Image:      data.Image,
+			GoodsName:  data.Name,
 			Promotion:  data.Discount,
 		})
 	}

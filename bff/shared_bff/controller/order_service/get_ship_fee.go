@@ -2,7 +2,7 @@ package order_service
 
 import (
 	"context"
-	"store-bpel/bff/customer_bff/schema/order_service"
+	"store-bpel/bff/shared_bff/schema/order_service"
 	"store-bpel/order_service/schema"
 )
 

@@ -14,6 +14,8 @@ func (c *orderBffController) CreateOnlineOrder(ctx context.Context, request *ord
 			GoodsId:   data.GoodsId,
 			UnitPrice: data.UnitPrice,
 			Price:     data.Price,
+			Name:      data.Name,
+			Image:     data.Image,
 			Quantity:  data.Quantity,
 			Size:      data.Size,
 			Color:     data.Color,

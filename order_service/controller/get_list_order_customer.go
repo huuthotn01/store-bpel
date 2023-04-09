@@ -6,7 +6,7 @@ import (
 )
 
 func (c *orderServiceController) GetListOrderCustomer(ctx context.Context, customerId string) ([]*schema.GetListOrderCustomerResponseData, error) {
-	orders, err := c.repository.GetOnlineOrders(ctx, customerId)
+	orders, err := c.repository.GetOnlineOrdersByCustomer(ctx, customerId)
 	if err != nil {
 		return nil, err
 	}

@@ -11,6 +11,7 @@ import (
 	branch_controller "store-bpel/bff/admin_bff/controller/branch_service"
 	event_controller "store-bpel/bff/admin_bff/controller/event_service"
 	goods_controller "store-bpel/bff/admin_bff/controller/goods_service"
+	order_controller "store-bpel/bff/admin_bff/controller/order_service"
 	staff_controller "store-bpel/bff/admin_bff/controller/staff_service"
 	warehouse_controller "store-bpel/bff/admin_bff/controller/warehouse_service"
 
@@ -44,5 +45,6 @@ func newSOAPMux(cfg *config.Config) *mux.Router {
 	goods_controller.RegisterEndpointHandler(r, cfg)
 	event_controller.RegisterEndpointHandler(r, cfg)
 	warehouse_controller.RegisterEndpointHandler(r, cfg)
+	order_controller.RegisterEndpointHandler(r, cfg)
 	return r
 }
