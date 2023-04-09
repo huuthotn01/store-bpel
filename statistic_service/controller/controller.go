@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"context"
 	"gorm.io/gorm"
 	"store-bpel/statistic_service/adapter"
 	"store-bpel/statistic_service/config"
@@ -9,11 +10,15 @@ import (
 )
 
 type IStatisticServiceController interface {
-	
+	GetOverallStat(ctx context.Context, request *schema.CommonGetStatisticRequest) ([]*schema.GetOverallStatisticResponseData, error)
+	GetRevenue(ctx context.Context, request *schema.FilterGetStatisticRequest) ([]*schema.GetRevenueResponseData, error)
+	GetRevenueOneGoods(ctx context.Context, request *schema.CommonGetStatisticRequest, goodsId string) ([]*schema.GetRevenueResponseData, error)
+	GetProfit(ctx context.Context, request *schema.FilterGetStatisticRequest) ([]*schema.GetProfitResponseData, error)
+	GetProfitOneGoods(ctx context.Context, request *schema.CommonGetStatisticRequest, goodsId string) ([]*schema.GetProfitResponseData, error)
 }
 
-type statisticServiceController struct{
-	cfg *config.Config
+type statisticServiceController struct {
+	cfg        *config.Config
 	repository repo.IStatisticServiceRepository
 
 	kafkaAdapter adapter.IKafkaAdapter
@@ -27,8 +32,8 @@ func NewController(cfg *config.Config, db *gorm.DB) IStatisticServiceController 
 	kafkaAdapter := adapter.NewKafkaAdapter()
 
 	return &statisticServiceController{
-		cfg: cfg,
-		repository: repository,
+		cfg:          cfg,
+		repository:   repository,
 		kafkaAdapter: kafkaAdapter,
 	}
 }
