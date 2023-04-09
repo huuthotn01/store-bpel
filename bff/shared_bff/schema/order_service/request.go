@@ -1,7 +1,7 @@
 package order_service
 
 type UpdateOnlineOrdersStatusRequest struct {
-	OrderId      int
+	OrderId      string
 	State        string
 	StatusNumber int
 }

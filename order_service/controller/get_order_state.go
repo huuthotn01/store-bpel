@@ -5,8 +5,13 @@ import (
 	"store-bpel/order_service/schema"
 )
 
-func (c *orderServiceController) GetOnlineOrdersStatus(ctx context.Context, orderId int) ([]*schema.GetOnlineOrdersStatusResponseData, error) {
-	status, err := c.repository.GetOrderState(ctx, orderId)
+func (c *orderServiceController) GetOnlineOrdersStatus(ctx context.Context, orderId string) ([]*schema.GetOnlineOrdersStatusResponseData, error) {
+	privateOrderId, err := c.repository.GetPrivateOrderCode(ctx, orderId)
+	if err != nil {
+		return nil, err
+	}
+
+	status, err := c.repository.GetOrderState(ctx, privateOrderId)
 	if err != nil {
 		return nil, err
 	}

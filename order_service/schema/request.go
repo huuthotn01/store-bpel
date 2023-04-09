@@ -1,7 +1,7 @@
 package schema
 
 type UpdateOnlineOrdersStatusRequest struct {
-	OrderId      int
+	OrderId      string
 	State        string
 	StatusNumber int
 }
