@@ -238,7 +238,7 @@ func (r *orderServiceRepository) GetOrdersByCustomer(ctx context.Context, custom
 func (r *orderServiceRepository) GetPrivateOrderCode(ctx context.Context, orderId string) (int, error) {
 	var result int
 	query := r.db.WithContext(ctx).Table(r.ordersTableName).Where("public_order_code = ?", orderId).Select("order_code")
-	return result, query.First(&result).Error
+	return result, query.Take(&result).Error
 }
 
 func (r *orderServiceRepository) GetOrderGoodsByOrderId(ctx context.Context, orderId int) ([]*GoodsModel, error) {
