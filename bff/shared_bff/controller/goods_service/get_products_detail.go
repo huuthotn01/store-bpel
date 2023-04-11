@@ -21,15 +21,15 @@ func (c *goodsBffController) GetProductsDetail(ctx context.Context, request *goo
 	}
 
 	return &goods_service.GetGoodsDefaultResponseData{
-		GoodsId:      product.GoodsId,
-		Name:         product.Name,
-		UnitPrice:    product.UnitPrice,
-		Price:        product.Price,
+		GoodsId:   product.GoodsId,
+		Name:      product.Name,
+		UnitPrice: product.UnitPrice,
+		// Price:        product.Price,
 		Images:       append([]string{}, product.Images...),
 		ListQuantity: quantityList,
-		Discount:     product.Discount,
-		GoodsType:    product.GoodsType,
-		GoodsGender:  product.GoodsGender,
-		GoodsAge:     product.GoodsAge,
+		// Discount:     product.Discount,
+		GoodsType:   product.GoodsType,
+		GoodsGender: product.GoodsGender,
+		GoodsAge:    product.GoodsAge,
 	}, nil
 }
