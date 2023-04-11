@@ -1,7 +1,7 @@
 create table if not exists goods_img (
     goods_code varchar(100) not null,
     goods_color varchar(10) not null,
-    goods_img varchar(100),
+    goods_img varchar(500),
     is_default tinyint,
     constraint PK_goods_img primary key (goods_code, goods_color, goods_img)
 ) engine = InnoDB default charset = utf8mb4 collate = utf8mb4_unicode_ci ;
