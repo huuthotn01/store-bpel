@@ -3,15 +3,14 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"github.com/gorilla/mux"
+	"github.com/spf13/cast"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"store-bpel/goods_service/config"
 	"store-bpel/goods_service/controller"
 	"store-bpel/goods_service/schema"
-
-	"github.com/gorilla/mux"
-	"github.com/spf13/cast"
 )
 
 var ctrl controller.IGoodsServiceController
@@ -51,6 +50,7 @@ func registerEndpoint(r *mux.Router) {
 	r.HandleFunc("/api/goods-service/default-goods", handleGoodsDefault)
 	r.HandleFunc("/api/goods-service/product/{productId}", handleProductDetail)
 	r.HandleFunc("/api/goods-service/check-wh", handleCheckWH)
+	r.HandleFunc("/api/goods-service/image", handleUploadImage)
 }
 
 func handleCheckWH(w http.ResponseWriter, r *http.Request) {
@@ -502,6 +502,114 @@ func handleWarehouse(w http.ResponseWriter, r *http.Request) {
 				Data:       resp,
 			})
 		}
+	} else {
+		http.Error(w, "Method not supported", http.StatusNotFound)
+	}
+}
+
+// use for debugging internal service
+//func handleUploadImage(w http.ResponseWriter, r *http.Request) {
+//	ctx := context.Background()
+//	w.Header().Set("Content-Type", "application/json")
+//	w.Header().Set("Access-Control-Allow-Origin", "*")
+//	enc := json.NewEncoder(w)
+//	if r.Method == "POST" {
+//		var (
+//			goodsId    = r.FormValue("goodsId")
+//			goodsColor = r.FormValue("goodsColor")
+//			isDefault  = r.FormValue("isDefault")
+//		)
+//		r.Body = http.MaxBytesReader(w, r.Body, common.MAX_UPLOAD_SIZE) // max size 1MB
+//		if err := r.ParseMultipartForm(common.MAX_UPLOAD_SIZE); err != nil {
+//			http.Error(w, "Max upload size is 1MB", http.StatusBadRequest)
+//			return
+//		}
+//
+//		file, fileHeader, err := r.FormFile("images")
+//		if err != nil {
+//			http.Error(w, err.Error(), http.StatusBadRequest)
+//			return
+//		}
+//		defer file.Close()
+//
+//		// Create the uploads folder if it doesn't
+//		// already exist
+//		err = os.MkdirAll(fmt.Sprintf("../uploads/%s", goodsId), os.ModePerm)
+//		if err != nil {
+//			http.Error(w, err.Error(), http.StatusInternalServerError)
+//			return
+//		}
+//
+//		// Create a new file in the uploads directory
+//		relativePath := fmt.Sprintf("../uploads/%s/%s", goodsId, fileHeader.Filename)
+//		dst, err := os.Create(relativePath)
+//		if err != nil {
+//			http.Error(w, err.Error(), http.StatusInternalServerError)
+//			return
+//		}
+//
+//		defer dst.Close()
+//
+//		// Copy the uploaded file to the filesystem
+//		// at the specified destination
+//		_, err = io.Copy(dst, file)
+//		if err != nil {
+//			http.Error(w, err.Error(), http.StatusInternalServerError)
+//			return
+//		}
+//
+//		absPath, err := filepath.Abs(relativePath)
+//		if err != nil {
+//			http.Error(w, err.Error(), http.StatusInternalServerError)
+//			return
+//		}
+//
+//		err = ctrl.UploadGoodsImage(ctx, goodsId, goodsColor, absPath, isDefault == "true")
+//		if err != nil {
+//			http.Error(w, err.Error(), http.StatusInternalServerError)
+//			return
+//		}
+//		_ = enc.Encode(&schema.UpdateResponse{
+//			StatusCode: 200,
+//			Message:    "OK",
+//		})
+//	} else {
+//		http.Error(w, "Method not supported", http.StatusNotFound)
+//	}
+//}
+
+func handleUploadImage(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	enc := json.NewEncoder(w)
+	if r.Method == "POST" {
+		reqBody, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			err = enc.Encode(&schema.UpdateResponse{
+				StatusCode: 500,
+				Message:    err.Error(),
+			})
+			return
+		}
+		var request *schema.UploadImageRequest
+		err = json.Unmarshal(reqBody, &request)
+		if err != nil {
+			err = enc.Encode(&schema.UpdateResponse{
+				StatusCode: 500,
+				Message:    err.Error(),
+			})
+			return
+		}
+		err = ctrl.UploadGoodsImage(ctx, request)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		_ = enc.Encode(&schema.UpdateResponse{
+			StatusCode: 200,
+			Message:    "OK",
+		})
 	} else {
 		http.Error(w, "Method not supported", http.StatusNotFound)
 	}

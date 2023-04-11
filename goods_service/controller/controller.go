@@ -21,6 +21,7 @@ type IGoodsServiceController interface {
 	DeleteGoods(ctx context.Context, goodsId string) error
 	CreateGoodsTransaction(ctx context.Context, request *schema.CreateGoodsTransactionRequest, transactionType string) error
 	GetWarehouseByGoods(ctx context.Context, goodsId string) ([]*schema.GetGoodsInWarehouseResponseData, error)
+	UploadGoodsImage(ctx context.Context, request *schema.UploadImageRequest) error
 }
 
 type goodsServiceController struct {
