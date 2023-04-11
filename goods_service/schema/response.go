@@ -28,10 +28,10 @@ type GetGoodsDefault_QuantityList struct {
 	Quantity   int
 }
 
-type GetDetailGoodsResponse struct {
+type GetDetailProductsResponse struct {
 	StatusCode int
 	Message    string
-	Data       *GetGoodsResponseData
+	Data       *GetGoodsDefaultResponseData
 }
 
 type UpdateResponse struct {

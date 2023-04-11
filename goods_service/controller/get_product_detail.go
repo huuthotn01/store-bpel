@@ -5,13 +5,13 @@ import (
 	"store-bpel/goods_service/schema"
 )
 
-func (c *goodsServiceController) GetProductDetail(ctx context.Context, goodsId string) ([]*schema.GetGoodsDefaultResponseData, error) {
+func (c *goodsServiceController) GetProductDetail(ctx context.Context, goodsId string) (*schema.GetGoodsDefaultResponseData, error) {
 	detail, err := c.getEachProductDetail(ctx, goodsId)
 	if err != nil {
 		return nil, err
 	}
 
-	return []*schema.GetGoodsDefaultResponseData{detail}, nil
+	return detail, nil
 }
 
 func (c *goodsServiceController) getEachProductDetail(ctx context.Context, goodsId string) (*schema.GetGoodsDefaultResponseData, error) {
