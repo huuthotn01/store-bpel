@@ -39,27 +39,12 @@ func (c *goodsServiceController) getEachProductDetail(ctx context.Context, goods
 		imgList = append(imgList, data.GoodsImg)
 	}
 
-	// get promotion
-	promo, err := c.eventServiceAdapter.GetEventByGoods(ctx, goodsId)
-	if err != nil {
-		return nil, err
-	}
-
-	salePrice, discount := goodsDetail[0].UnitPrice, 0
-	if len(promo) > 0 {
-		discount = int(float32(goodsDetail[0].UnitPrice) * promo[0].Discount)
-		if goodsDetail[0].UnitPrice-discount > 0 {
-			salePrice = goodsDetail[0].UnitPrice - discount
-		}
-		discount = int(promo[0].Discount*100)
-	}
-
 	return &schema.GetGoodsDefaultResponseData{
-		GoodsId:      goodsId,
-		Name:         goodsDetail[0].GoodsName,
-		UnitPrice:    goodsDetail[0].UnitPrice,
-		Discount:     discount,
-		Price:        salePrice,
+		GoodsId:   goodsId,
+		Name:      goodsDetail[0].GoodsName,
+		UnitPrice: goodsDetail[0].UnitPrice,
+		// Discount:     discount,
+		// Price:        salePrice,
 		GoodsType:    goodsDetail[0].GoodsType,
 		GoodsAge:     goodsDetail[0].GoodsAge,
 		GoodsGender:  goodsDetail[0].GoodsGender,

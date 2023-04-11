@@ -26,16 +26,18 @@ func (c *goodsBffController) GetGoodsDefault(ctx context.Context, request *goods
 			})
 		}
 		respGoods = append(respGoods, &goods_service.GetGoodsDefaultResponseData{
-			GoodsId:      data.GoodsId,
-			Name:         data.Name,
-			UnitPrice:    data.UnitPrice,
-			Price:        data.Price,
+			GoodsId:   data.GoodsId,
+			Name:      data.Name,
+			UnitPrice: data.UnitPrice,
+			// Price:        data.Price,
+			Price:        data.UnitPrice,
 			Images:       append([]string{}, data.Images...),
 			ListQuantity: quantityList,
-			Discount:     data.Discount,
-			GoodsType:    data.GoodsType,
-			GoodsGender:  data.GoodsGender,
-			GoodsAge:     data.GoodsAge,
+			// Discount:     data.Discount,
+			Discount:    0,
+			GoodsType:   data.GoodsType,
+			GoodsGender: data.GoodsGender,
+			GoodsAge:    data.GoodsAge,
 		})
 	}
 
