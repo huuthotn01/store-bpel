@@ -144,12 +144,12 @@ func handleProductDetail(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
 		resp, err := ctrl.GetProductDetail(ctx, productId)
 		if err != nil {
-			err = enc.Encode(&schema.GetGoodsDefaultResponse{
+			err = enc.Encode(&schema.GetDetailProductsResponse{
 				StatusCode: 500,
 				Message:    err.Error(),
 			})
 		} else {
-			err = enc.Encode(&schema.GetGoodsDefaultResponse{
+			err = enc.Encode(&schema.GetDetailProductsResponse{
 				StatusCode: 200,
 				Message:    "OK",
 				Data:       resp,

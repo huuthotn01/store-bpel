@@ -126,7 +126,7 @@ func (a *goodsServiceAdapter) GetProductDetail(ctx context.Context, productId st
 	log.Println("Start to call goods service for GetProductDetail")
 	defer log.Println("End call goods service for GetProductDetail")
 
-	var result *schema.GetGoodsDefaultResponse
+	var result *schema.GetDetailProductsResponse
 	url := fmt.Sprintf("http://localhost:%d/api/goods-service/product/%s", a.port, productId)
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
@@ -158,7 +158,7 @@ func (a *goodsServiceAdapter) GetProductDetail(ctx context.Context, productId st
 		return nil, errors.New(result.Message)
 	}
 
-	return result.Data[0], nil
+	return result.Data, nil
 }
 
 func (a *goodsServiceAdapter) GetGoodsDetail(ctx context.Context, goodsId string) ([]*schema.GetGoodsResponseData, error) {
