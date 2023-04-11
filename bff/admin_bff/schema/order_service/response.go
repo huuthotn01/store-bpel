@@ -31,7 +31,7 @@ type OrderGoodsResponse struct {
 	Name      string
 	UnitPrice int
 	Price     int
-	Tax       int
+	Tax       float32
 	Quantity  int
 	Size      string
 	Color     string

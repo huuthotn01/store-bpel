@@ -11,7 +11,6 @@ type OrderGoodsAndMoneyData struct {
 	ListGoods     []*schema.OrderGoodsResponse
 	TotalGoods    int
 	TotalDiscount int
-	TotalOrder    int
 }
 
 func (c *orderServiceController) GetOrderDetailAdmin(ctx context.Context, orderId int) (*schema.GetOrderDetailAdminResponseData, error) {
@@ -27,7 +26,7 @@ func (c *orderServiceController) GetOrderDetailAdmin(ctx context.Context, orderI
 			TotalGoods:    orderGoodsMoneyData.TotalGoods,
 			TotalDiscount: orderGoodsMoneyData.TotalDiscount,
 			// total order = total price of orders' items + shipping fee - discount
-			TotalOrder:      orderGoodsMoneyData.TotalOrder + onlineOrder.OnlineOrderData.ShippingFee,
+			TotalOrder:      onlineOrder.OrderData.TotalPrice + onlineOrder.OnlineOrderData.ShippingFee,
 			TransactionDate: onlineOrder.OrderData.TransactionDate,
 			IsOnline:        true,
 			OnlineOrderData: &schema.OnlineOrderData{
@@ -69,7 +68,7 @@ func (c *orderServiceController) GetOrderDetailAdmin(ctx context.Context, orderI
 		TotalPrice:      offlineOrder.OrderData.TotalPrice,
 		TotalGoods:      orderGoodsMoneyData.TotalGoods,
 		TotalDiscount:   orderGoodsMoneyData.TotalDiscount,
-		TotalOrder:      orderGoodsMoneyData.TotalOrder,
+		TotalOrder:      offlineOrder.OrderData.TotalPrice,
 		TransactionDate: offlineOrder.OrderData.TransactionDate,
 		IsOnline:        false,
 		OfflineOrderData: &schema.OfflineOrderData{
@@ -84,7 +83,6 @@ func (c *orderServiceController) mapListGoods(data []*repository.GoodsModel) *Or
 		listGoods     = make([]*schema.OrderGoodsResponse, 0, len(data))
 		goodsNum      = 0
 		totalDiscount = 0 // total discount of an order
-		totalOrder    = 0 // total price after add shipping fee and minus discount
 	)
 	for _, goods := range data {
 		listGoods = append(listGoods, &schema.OrderGoodsResponse{
@@ -99,14 +97,11 @@ func (c *orderServiceController) mapListGoods(data []*repository.GoodsModel) *Or
 			Discount:  goods.Promotion,
 		})
 		goodsNum += goods.Quantity
-		totalDiscount += int(float32(goods.TotalPrice) * goods.Promotion)
-		totalOrder += goods.TotalPrice * goods.Quantity
+		totalDiscount += int(float32(goods.TotalPrice)*goods.Promotion) * goods.Quantity
 	}
-	totalOrder -= totalDiscount
 
 	return &OrderGoodsAndMoneyData{
 		ListGoods:     listGoods,
-		TotalOrder:    totalOrder,
 		TotalGoods:    goodsNum,
 		TotalDiscount: totalDiscount,
 	}

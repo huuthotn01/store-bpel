@@ -49,7 +49,7 @@ func handleMakeOnlineOrders(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			err = enc.Encode(&order_service.UpdateResponse{
 				StatusCode: 500,
-				Message:    fmt.Sprintf("BFF-Order-handleMakeOnlineOrders-GetCustomer err %v", err),
+				Message:    fmt.Sprintf("BFF-Order-handleMakeOnlineOrders-CreateOnlineOrder err %v", err),
 			})
 		} else {
 			err = enc.Encode(&order_service.UpdateResponse{
@@ -88,7 +88,7 @@ func handleGetOnlineOrdersStatus(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			err = enc.Encode(&order_service.GetResponse{
 				StatusCode: 500,
-				Message:    fmt.Sprintf("BFF-Order-handleGetOnlineOrdersStatus-GetCustomer err %v", err),
+				Message:    fmt.Sprintf("BFF-Order-handleGetOnlineOrdersStatus-GetOnlineOrdersStatus err %v", err),
 			})
 		} else {
 			err = enc.Encode(&order_service.GetResponse{
@@ -128,7 +128,7 @@ func handleGetListOrderCustomer(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			err = enc.Encode(&order_service.GetResponse{
 				StatusCode: 500,
-				Message:    fmt.Sprintf("BFF-Order-handleGetListOrderCustomer-GetCustomer err %v", err),
+				Message:    fmt.Sprintf("BFF-Order-handleGetListOrderCustomer-GetListOrderCustomer err %v", err),
 			})
 		} else {
 			err = enc.Encode(&order_service.GetResponse{
@@ -168,7 +168,7 @@ func handleGetOrderCustomerDetail(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			err = enc.Encode(&order_service.GetResponse{
 				StatusCode: 500,
-				Message:    fmt.Sprintf("BFF-Order-handleGetOrderCustomerDetail-GetCustomer err %v", err),
+				Message:    fmt.Sprintf("BFF-Order-handleGetOrderCustomerDetail-GetOrderCustomerDetail err %v", err),
 			})
 		} else {
 			err = enc.Encode(&order_service.GetResponse{

@@ -25,6 +25,7 @@ func (c *orderServiceController) GetOfflineOrders(ctx context.Context) ([]*schem
 				OrderId:         order.OrderCode,
 				OrderCode:       order.PublicOrderCode,
 				TotalPrice:      order.TotalPrice,
+				TotalOrder:      order.TotalPrice, // offline order doesn't have shipping fee
 				TransactionDate: order.TransactionDate,
 				OfflineOrderData: &schema.OfflineOrderData{
 					StaffId:  order.StaffId,
@@ -76,7 +77,6 @@ func (c *orderServiceController) GetOfflineOrders(ctx context.Context) ([]*schem
 		mapOrderIdToOrdersData[orderId].ListGoods = res.ListGoods
 		mapOrderIdToOrdersData[orderId].TotalDiscount = res.TotalDiscount
 		mapOrderIdToOrdersData[orderId].TotalGoods = res.TotalGoods
-		mapOrderIdToOrdersData[orderId].TotalOrder = res.TotalOrder
 	}
 
 	for _, data := range mapOrderIdToOrdersData {
