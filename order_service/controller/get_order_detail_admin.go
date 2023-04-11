@@ -97,7 +97,7 @@ func (c *orderServiceController) mapListGoods(data []*repository.GoodsModel) *Or
 			Discount:  goods.Promotion,
 		})
 		goodsNum += goods.Quantity
-		totalDiscount += int(float32(goods.TotalPrice) * goods.Promotion)
+		totalDiscount += int(float32(goods.TotalPrice)*goods.Promotion) * goods.Quantity
 	}
 
 	return &OrderGoodsAndMoneyData{
