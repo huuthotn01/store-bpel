@@ -21,6 +21,7 @@ type IGoodsServiceAdapter interface {
 	CustomerReturn(ctx context.Context, request *schema.CreateGoodsTransactionRequest) error
 	GetWarehouseByGoods(ctx context.Context, goodsId string) ([]*schema.GetGoodsInWarehouseResponseData, error)
 	UpdateGoods(ctx context.Context, goodsId string, request []*schema.UpdateGoodsRequest) error
+	UploadImage(ctx context.Context, request *schema.UploadImageRequest) error
 }
 
 type goodsServiceAdapter struct {
@@ -342,6 +343,51 @@ func (a *goodsServiceAdapter) UpdateGoods(ctx context.Context, goodsId string, r
 	err = json.Unmarshal(respByteArr, &result)
 	if err != nil {
 		log.Printf("BFF-Adapter-GoodsServiceAdapter-UpdateGoods-json.Unmarshal error %v", err)
+		return err
+	}
+
+	if result.StatusCode != http.StatusOK {
+		return errors.New(result.Message)
+	}
+
+	return nil
+}
+
+func (a *goodsServiceAdapter) UploadImage(ctx context.Context, request *schema.UploadImageRequest) error {
+	log.Printf("Start to call goods service for UploadImage")
+	defer log.Println("End call goods service for UploadImage")
+
+	var result *schema.UpdateResponse
+
+	url := fmt.Sprintf("http://localhost:%d/api/goods-service/image", a.port)
+
+	data, err := json.Marshal(request)
+	if err != nil {
+		log.Printf("BFF-Adapter-GoodsServiceAdapter-UploadImage-Marshal error %v", err)
+		return err
+	}
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, bytes.NewReader(data))
+	if err != nil {
+		log.Printf("BFF-Adapter-GoodsServiceAdapter-UploadImage-NewRequestWithContext error %v", err)
+		return err
+	}
+
+	resp, err := a.httpClient.Do(req)
+	if err != nil {
+		log.Printf("BFF-Adapter-GoodsServiceAdapter-UploadImage-httpClient.Do error %v", err)
+		return err
+	}
+
+	respByteArr, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Printf("BFF-Adapter-GoodsServiceAdapter-UploadImage-ioutil.ReadAll error %v", err)
+		return err
+	}
+
+	err = json.Unmarshal(respByteArr, &result)
+	if err != nil {
+		log.Printf("BFF-Adapter-GoodsServiceAdapter-UploadImage-json.Unmarshal error %v", err)
 		return err
 	}
 

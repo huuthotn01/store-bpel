@@ -19,6 +19,7 @@ type IGoodsServiceRepository interface {
 	UpdateGoodsInWHInOut(ctx context.Context, data *GoodsInWh) error
 	UpdateGoodsInWHTransfer(ctx context.Context, data *GoodsInWh, fromWH, toWH string) error
 	GetWarehouseByGoods(ctx context.Context, goodsId string) ([]*GoodsInWh, error)
+	AddGoodsImage(ctx context.Context, data *GoodsImg) error
 }
 
 func NewRepository(db *gorm.DB) IGoodsServiceRepository {
@@ -177,4 +178,8 @@ func (r *goodsServiceRepository) GetWarehouseByGoods(ctx context.Context, goodsI
 	var result []*GoodsInWh
 	query := r.db.WithContext(ctx).Table(r.goodsInWhTableName).Where("goods_code = ?", goodsId).Find(&result)
 	return result, query.Error
+}
+
+func (r *goodsServiceRepository) AddGoodsImage(ctx context.Context, data *GoodsImg) error {
+	return r.db.WithContext(ctx).Table(r.goodsImgTableName).Create(&data).Error
 }

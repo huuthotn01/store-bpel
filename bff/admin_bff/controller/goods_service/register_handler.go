@@ -2,12 +2,17 @@ package goods_service
 
 import (
 	"context"
+	"encoding/json"
 	"encoding/xml"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net/http"
+	"os"
+	"path/filepath"
 	"store-bpel/bff/admin_bff/config"
 	"store-bpel/bff/admin_bff/schema/goods_service"
+	"store-bpel/goods_service/common"
 
 	"github.com/gorilla/mux"
 )
@@ -25,6 +30,76 @@ func RegisterEndpointHandler(mux *mux.Router, cfg *config.Config) {
 	mux.HandleFunc("/api/bff/goods-service/goods/cust-return", handleCustReturn)
 	mux.HandleFunc("/api/bff/goods-service/goods/get-warehouse", handleGetWarehouse)
 	mux.HandleFunc("/api/bff/goods-service/goods/update", handleUpdateGoods)
+	mux.HandleFunc("/api/bff/goods-service/goods/image", handleUploadImage)
+}
+
+func handleUploadImage(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
+	w.Header().Set("Content-Type", "application/json")
+	enc := json.NewEncoder(w)
+	if r.Method == "POST" {
+		var (
+			goodsId    = r.FormValue("goodsId")
+			goodsColor = r.FormValue("goodsColor")
+			isDefault  = r.FormValue("isDefault")
+		)
+		r.Body = http.MaxBytesReader(w, r.Body, common.MAX_UPLOAD_SIZE) // max size 1MB
+		if err := r.ParseMultipartForm(common.MAX_UPLOAD_SIZE); err != nil {
+			http.Error(w, "Max upload size is 1MB", http.StatusBadRequest)
+			return
+		}
+
+		file, fileHeader, err := r.FormFile("images")
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+		defer file.Close()
+
+		// Create the uploads folder if it doesn't
+		// already exist
+		err = os.MkdirAll(fmt.Sprintf("../uploads/%s", goodsId), os.ModePerm)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		// Create a new file in the uploads directory
+		relativePath := fmt.Sprintf("../uploads/%s/%s", goodsId, fileHeader.Filename)
+		dst, err := os.Create(relativePath)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		defer dst.Close()
+
+		// Copy the uploaded file to the filesystem
+		// at the specified destination
+		_, err = io.Copy(dst, file)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		absPath, err := filepath.Abs(relativePath)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		err = goodsController.UploadImage(ctx, goodsId, goodsColor, absPath, isDefault == "true")
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		_ = enc.Encode(&goods_service.UpdateResponse{
+			StatusCode: 200,
+			Message:    "OK",
+		})
+	} else {
+		http.Error(w, "Method not supported", http.StatusNotFound)
+	}
 }
 
 func handleAddGoods(w http.ResponseWriter, r *http.Request) {

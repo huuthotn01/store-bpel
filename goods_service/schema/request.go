@@ -1,5 +1,12 @@
 package schema
 
+type UploadImageRequest struct {
+	GoodsId    string
+	GoodsColor string
+	Url        string
+	IsDefault  bool
+}
+
 type GetGoodsDefaultRequest struct {
 	PageNumber int
 	PageSize   int
