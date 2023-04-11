@@ -10,7 +10,6 @@ type OrderDetailMappingData struct {
 	ListGoods     []*schema.OrderGoodsResponse
 	GoodsNum      int
 	TotalDiscount int
-	TotalOrder    int
 	StatusShip    []*schema.GetListOrderStateResponse
 }
 
@@ -35,7 +34,7 @@ func (c *orderServiceController) GetOrderDetail(ctx context.Context, orderId str
 		TotalPrice:      order.OrderData.TotalPrice,
 		TotalGoods:      mappingData.GoodsNum,
 		TotalDiscount:   mappingData.TotalDiscount,
-		TotalOrder:      mappingData.TotalOrder,
+		TotalOrder:      order.OrderData.TotalPrice + order.OnlineOrderData.ShippingFee,
 		IsCompleted:     order.OnlineOrderData.Status == 4,
 		ShipFee:         order.OnlineOrderData.ShippingFee,
 		StatusShip:      mappingData.StatusShip,
@@ -59,7 +58,6 @@ func (c *orderServiceController) mapOrderDetailData(order *repository.OnlineOrde
 		listGoods     = make([]*schema.OrderGoodsResponse, 0, len(order.OrderGoods))
 		goodsNum      = 0
 		totalDiscount = 0 // total discount of an order
-		totalOrder    = 0 // total price after add shipping fee and minus discount
 		statusShip    = make([]*schema.GetListOrderStateResponse, 0, len(order.ShippingState))
 	)
 
@@ -77,11 +75,8 @@ func (c *orderServiceController) mapOrderDetailData(order *repository.OnlineOrde
 			Discount:  goods.Promotion,
 		})
 		goodsNum += goods.Quantity
-		totalDiscount += int(float32(goods.TotalPrice) * goods.Promotion)
-		totalOrder += goods.TotalPrice * goods.Quantity
+		totalDiscount += int(float32(goods.UnitPrice)*goods.Promotion) * goods.Quantity
 	}
-	// total order = total price of orders' items + shipping fee - discount
-	totalOrder += order.OnlineOrderData.ShippingFee - totalDiscount
 
 	// map status ship
 	for _, state := range order.ShippingState {
@@ -95,7 +90,6 @@ func (c *orderServiceController) mapOrderDetailData(order *repository.OnlineOrde
 		ListGoods:     listGoods,
 		GoodsNum:      goodsNum,
 		TotalDiscount: totalDiscount,
-		TotalOrder:    totalOrder,
 		StatusShip:    statusShip,
 	}
 }

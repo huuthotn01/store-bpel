@@ -23,7 +23,7 @@ func (c *orderServiceController) GetListOrderCustomer(ctx context.Context, custo
 			TotalPrice:      data.OrderData.TotalPrice,
 			TotalGoods:      mappingData.GoodsNum,
 			TotalDiscount:   mappingData.TotalDiscount,
-			TotalOrder:      mappingData.TotalOrder,
+			TotalOrder:      data.OrderData.TotalPrice + data.OnlineOrderData.ShippingFee,
 			IsCompleted:     data.OnlineOrderData.Status == 4,
 			ShipFee:         data.OnlineOrderData.ShippingFee,
 			StatusShip:      mappingData.StatusShip,

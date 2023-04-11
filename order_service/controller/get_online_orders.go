@@ -25,6 +25,7 @@ func (c *orderServiceController) GetOnlineOrders(ctx context.Context) ([]*schema
 				OrderId:         order.OrderCode,
 				OrderCode:       order.PublicOrderCode,
 				TotalPrice:      order.TotalPrice,
+				TotalOrder:      order.TotalPrice, // add shipping fee later
 				TransactionDate: order.TransactionDate,
 				OnlineOrderData: &schema.OnlineOrderData{
 					PaymentMethod: order.PaymentMethod,
@@ -89,7 +90,7 @@ func (c *orderServiceController) GetOnlineOrders(ctx context.Context) ([]*schema
 		mapOrderIdToOrdersData[orderId].ListGoods = res.ListGoods
 		mapOrderIdToOrdersData[orderId].TotalDiscount = res.TotalDiscount
 		mapOrderIdToOrdersData[orderId].TotalGoods = res.TotalGoods
-		mapOrderIdToOrdersData[orderId].TotalOrder = res.TotalOrder + mapOrderIdToOrdersData[orderId].OnlineOrderData.ShipFee
+		mapOrderIdToOrdersData[orderId].TotalOrder = mapOrderIdToOrdersData[orderId].TotalOrder + mapOrderIdToOrdersData[orderId].OnlineOrderData.ShipFee
 	}
 
 	for _, data := range mapOrderIdToOrdersData {
