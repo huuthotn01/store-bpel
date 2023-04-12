@@ -35,7 +35,7 @@ func (c *orderServiceController) GetOfflineOrders(ctx context.Context) ([]*schem
 		}
 
 		// add order goods data
-		orderGoodsList, ok := mapOrderIdToOrderModel[order.OrderCode]
+		_, ok := mapOrderIdToOrderModel[order.OrderCode]
 		if !ok {
 			// not exists goods list with this order id, create new slice
 			mapOrderIdToOrderModel[order.OrderCode] = []*repository.GoodsModel{
@@ -55,7 +55,7 @@ func (c *orderServiceController) GetOfflineOrders(ctx context.Context) ([]*schem
 			}
 		} else {
 			// already exists, just append
-			orderGoodsList = append(orderGoodsList, &repository.GoodsModel{
+			mapOrderIdToOrderModel[order.OrderCode] = append(mapOrderIdToOrderModel[order.OrderCode], &repository.GoodsModel{
 				GoodsCode:  order.GoodsCode,
 				GoodsSize:  order.GoodsSize,
 				GoodsColor: order.GoodsColor,
