@@ -12,7 +12,7 @@ func (c *statisticServiceController) GetOverallStat(ctx context.Context, request
 	}
 
 	respStat := make([]*schema.GetOverallStatisticResponseData, 0, len(stat))
-	for _, data := range respStat {
+	for _, data := range stat {
 		respStat = append(respStat, &schema.GetOverallStatisticResponseData{
 			Revenue: data.Revenue,
 			Profit:  data.Profit,
