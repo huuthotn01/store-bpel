@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"errors"
+
 	"gorm.io/gorm"
 )
 
@@ -124,15 +125,15 @@ type (
 )
 
 /*
-	***************
-	| GET METHODS |
-	***************
+***************
+| GET METHODS |
+***************
 */
 func (r *orderServiceRepository) GetOnlineOrders(ctx context.Context) ([]*OnlineOrderJoiningResponse, error) {
 	var result []*OnlineOrderJoiningResponse
 	query := r.db.WithContext(ctx).Table(r.onlineOrdersTableName).
-		Joins("goods on online_orders.order_code = goods.order_code").
-		Joins("orders on online_orders.order_code = orders.order_code").
+		Joins(" JOIN goods ON online_orders.order_code = goods.order_code").
+		Joins("JOIN orders ON online_orders.order_code = orders.order_code").
 		Select("orders.*, online_orders.*, goods.goods_code, goods.image, goods.goods_name, goods.unit_price, goods.total_price as price, goods.tax, goods.quantity, goods.goods_size, goods.goods_color, goods.promotion")
 	return result, query.Find(&result).Error
 }
@@ -140,8 +141,8 @@ func (r *orderServiceRepository) GetOnlineOrders(ctx context.Context) ([]*Online
 func (r *orderServiceRepository) GetOfflineOrders(ctx context.Context) ([]*OfflineOrderJoiningResponse, error) {
 	var result []*OfflineOrderJoiningResponse
 	query := r.db.WithContext(ctx).Table(r.storeOrdersTableName).
-		Joins("goods on store_orders.order_code = goods.order_code").
-		Joins("orders on store_orders.order_code = orders.order_code").
+		Joins("JOIN goods ON store_orders.order_code = goods.order_code").
+		Joins("JOIN orders ON store_orders.order_code = orders.order_code").
 		Select("orders.*, goods.goods_code, goods.image, goods.goods_name, goods.unit_price, goods.total_price as price, goods.tax, goods.quantity, goods.goods_size, goods.goods_color, goods.promotion, store_orders.*")
 	return result, query.Find(&result).Error
 }
@@ -272,9 +273,9 @@ func (r *orderServiceRepository) GetOrderState(ctx context.Context, orderId int)
 }
 
 /*
-	***************
-	| UPDATE METHODS |
-	***************
+***************
+| UPDATE METHODS |
+***************
 */
 func (r *orderServiceRepository) CreateOnlineOrder(ctx context.Context, data *OnlineOrdersData) error {
 	return r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {

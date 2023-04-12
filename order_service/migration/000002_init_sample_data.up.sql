@@ -5,25 +5,26 @@ insert into order_state(order_code, state) values
 
 
 INSERT INTO `goods` (`goods_code`, `goods_size`, `goods_color`, `goods_name`, `order_code`, `quantity`, `unit_price`, `total_price`, `tax`, `image`, `promotion`) VALUES
-('goods_1681248800', '31', 'Đen ', '', 1, 2, 80000, 72000, 1000, '', 10),
-('goods_1681248800', '31', 'Đen ', '', 2, 1, 80000, 72000, 1000, '', 10),
-('goods_1681248800', '32', 'Đen ', '', 1, 1, 80000, 72000, 1000, '', 10),
-('goods_1681248800', '32', 'Đen ', '', 2, 1, 80000, 72000, 1000, '', 10),
-('goods_1681248884', '36', 'Đỏ xanh', '', 3, 1, 100000, 100000, 1000, '', 0),
-('goods_1681248884', '36', 'Trắng xanh', '', 3, 1, 100000, 100000, 1000, '', 0),
-('goods_1681249061', 'L', 'Đen', '', 4, 1, 185000, 185000, 1000, '', 0),
-('goods_1681249061', 'L', 'Hồng', '', 4, 1, 185000, 185000, 1000, '', 0),
-('goods_1681249061', 'M', 'Đen', '', 4, 1, 185000, 185000, 1000, '', 0),
-('goods_1681249162', 'L', 'Trắng hồng', '', 5, 1, 376000, 376000, 1000, '', 0),
-('goods_1681249286', '37', 'Đen', '', 6, 2, 249000, 249000, 1000, '', 0),
-('goods_1681249286', '38', 'Đen', '', 7, 1, 249000, 249000, 1000, '', 0),
-('goods_1681249286', '38', 'Trắng', '', 7, 1, 249000, 249000, 1000, '', 0),
-('goods-1', 'M', 'Đen', '', 8, 1, 250000, 250000, 1000, '', 0),
-('goods-2', 'L', 'Vàng', '', 10, 2, 150000, 150000, 1000, '', 0),
-('goods-2', 'M', 'Vàng', '', 10, 2, 150000, 150000, 1000, '', 0),
-('goods-3', 'L', 'Trắng', '', 11, 4, 200000, 200000, 1000, '', 0),
-('goods-4', 'XL', 'Trắng', '', 12, 1, 100000, 100000, 1000, '', 0),
-('goods-5', 'S', 'Đỏ', '', 9, 2, 120000, 120000, 1000, '', 0);
+('goods_1681248800', '31', 'Đen ', 'Giày sandal trẻ em', 1, 2, 80000, 72000, 1000, 'https://img.ltwebstatic.com/images3_pi/2021/07/13/1626159708d5e5e6727956537c66dcc84327801512.webp', 10),
+('goods_1681248800', '31', 'Đen ', 'Giày sandal trẻ em', 2, 1, 80000, 72000, 1000, 'https://img.ltwebstatic.com/images3_pi/2021/07/13/1626159708d5e5e6727956537c66dcc84327801512.webp', 10),
+('goods_1681248800', '32', 'Đen ', 'Giày sandal trẻ em', 1, 1, 80000, 72000, 1000, 'https://img.ltwebstatic.com/images3_pi/2021/07/13/1626159708d5e5e6727956537c66dcc84327801512.webp', 10),
+('goods_1681248800', '32', 'Đen ', 'Giày sandal trẻ em', 2, 1, 80000, 72000, 1000, 'https://img.ltwebstatic.com/images3_pi/2021/07/13/1626159708d5e5e6727956537c66dcc84327801512.webp', 10),
+('goods_1681248884', '36', 'Đỏ xanh', 'Giày bata ', 3, 1, 100000, 100000, 1000, 'https://minhsport.com/wp-content/uploads/2021/03/giay-bata-the-thao-asia-hoc-sinh-04-minh-sport.jpg', 0),
+('goods_1681248884', '36', 'Trắng xanh', 'Giày bata ', 3, 1, 100000, 100000, 1000, 'https://bizweb.dktcdn.net/100/218/328/products/4c7457fd-384c-4342-ab25-db90ea8bb994-jpeg.jpg?v=15288', 0),
+('goods_1681249061', 'L', 'Đen', 'Váy nữ hở vai phong cách trẻ trung', 4, 1, 185000, 185000, 1000, 'https://bucket.nhanh.vn/888555-3379/ps/20200402_DdhYCDD68H7MObRLHXtF3tta.jpg', 0),
+('goods_1681249061', 'L', 'Hồng', 'Váy nữ hở vai phong cách trẻ trung', 4, 1, 185000, 185000, 1000, 'https://bucket.nhanh.vn/888555-3379/ps/content/20230310_Ck7jGvF8Am2zabySvR5RFhT2.jpg', 0),
+('goods_1681249061', 'M', 'Đen', 'Váy nữ hở vai phong cách trẻ trung', 4, 1, 185000, 185000, 1000, 'https://bucket.nhanh.vn/888555-3379/ps/20200402_DdhYCDD68H7MObRLHXtF3tta.jpg', 0),
+('goods_1681249162', 'L', 'Trắng hồng', 'Áo khoác nữ Dây kéo', 5, 1, 376000, 376000, 1000, 'https://img.ltwebstatic.com/images3_pi/2021/09/27/16327094934386acd01e26f43b1eafd95c5bc8c53b_thumbna', 0),
+('goods_1681249286', '37', 'Đen', 'Giày cao gót Sandal ', 6, 2, 249000, 249000, 1000, 'https://sandro.com.vn/media/catalog/product/cache/29162ccbe9d79568e67e3d26712ec350/S/a/Sandro_SFACH0', 0),
+('goods_1681249286', '38', 'Đen', 'Giày cao gót Sandal ', 7, 1, 249000, 249000, 1000, 'https://sandro.com.vn/media/catalog/product/cache/29162ccbe9d79568e67e3d26712ec350/S/a/Sandro_SFACH0', 0),
+('goods_1681249286', '38', 'Trắng', 'Giày cao gót Sandal ', 7, 1, 249000, 249000, 1000, 'https://sandro.com.vn/media/catalog/product/cache/29162ccbe9d79568e67e3d26712ec350/S/a/Sandro_SFACH0', 0),
+('goods-1', 'M', 'Đen', 'Áo khoác gió', 8, 1, 250000, 250000, 1000, 'https://img.cdn.vncdn.io/cdn-pos/4260cc-24295/ps/20211117_JDjzizniwgIQrAoKpbnvvT9M.jpg', 0),
+('goods-2', 'L', 'Vàng', 'Quần tây nữ', 10, 2, 150000, 150000, 1000, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTacYbO51xLDOg6Ya_HwE8dNN2urSM2hWewWQ&usqp=CAU', 0),
+('goods-2', 'M', 'Vàng', 'Quần tây nữ', 10, 2, 150000, 150000, 1000, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTacYbO51xLDOg6Ya_HwE8dNN2urSM2hWewWQ&usqp=CAU', 0),
+('goods-3', 'L', 'Trắng', 'Quần kaki nữ', 11, 4, 200000, 200000, 1000, 'https://bumshop.com.vn/wp-content/uploads/2022/03/quan-kaki-nu-10.jpeg', 0),
+('goods-4', 'XL', 'Trắng', 'Áo thun unisex', 12, 1, 100000, 100000, 1000, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQsMkZoGYBWUFPGEE_73ppFEwad1-L-P9ClP7bfRZUVBkDQ', 0),
+('goods-5', 'S', 'Đỏ', 'Áo thun trẻ em', 9, 2, 120000, 120000, 1000, 'https://product.hstatic.net/1000322378/product/k0030307_10997bdba75440cf8d0502d4edeb6629.jpg', 0);
+
 
 INSERT INTO `online_orders` (`order_code`, `expected_delivery`, `shipping_fee`, `customer_id`, `payment_method`, `street`, `ward`, `district`, `province`, `customer_name`, `customer_phone`, `customer_email`, `status`) VALUES
 (1, '2023-04-06', 5000, 'user2', 'Momo', 'Nguyen Du', 'Dong Hoa', 'Di An', 'Binh Duong', 'Tran Nguyen Huu Tho', '0123456789', 'test@gmail.com', 0),
