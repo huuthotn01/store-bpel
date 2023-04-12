@@ -10,7 +10,9 @@ import (
 type IGoodsServiceRepository interface {
 	GetGoods(ctx context.Context) ([]*GoodsModel, error)
 	GetGoodsDefault(ctx context.Context, limit, offset int) ([]string, error)
+	GetImages(ctx context.Context) ([]*GoodsImg, error)
 	GetGoodsImages(ctx context.Context, goodsId string) ([]*GoodsImg, error)
+	GetGoodsImageUrls(ctx context.Context, goodsId string) ([]string, error)
 	GetDetailGoods(ctx context.Context, goodsId string) ([]*GoodsModel, error)
 	AddGoods(ctx context.Context, data []*GoodsModel) error
 	UpdateGoods(ctx context.Context, data []*GoodsModel) error
@@ -41,9 +43,21 @@ func (r *goodsServiceRepository) GetGoodsDefault(ctx context.Context, pageSize, 
 	return goodsCodeList, query.Error
 }
 
+func (r *goodsServiceRepository) GetImages(ctx context.Context) ([]*GoodsImg, error) {
+	var result []*GoodsImg
+	query := r.db.WithContext(ctx).Table(r.goodsImgTableName).Find(&result)
+	return result, query.Error
+}
+
 func (r *goodsServiceRepository) GetGoodsImages(ctx context.Context, goodsId string) ([]*GoodsImg, error) {
 	var result []*GoodsImg
 	query := r.db.WithContext(ctx).Table(r.goodsImgTableName).Where("goods_code = ?", goodsId).Find(&result)
+	return result, query.Error
+}
+
+func (r *goodsServiceRepository) GetGoodsImageUrls(ctx context.Context, goodsId string) ([]string, error) {
+	var result []string
+	query := r.db.WithContext(ctx).Table(r.goodsImgTableName).Where("goods_code = ?", goodsId).Select("goods_img").Find(&result)
 	return result, query.Error
 }
 

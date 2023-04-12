@@ -1,5 +1,9 @@
 package goods_service
 
+type GetGoodsDetailRequest struct {
+	GoodsCode string
+}
+
 type AddGoodsRequest struct {
 	Element []*AddGoodsRequestData
 }

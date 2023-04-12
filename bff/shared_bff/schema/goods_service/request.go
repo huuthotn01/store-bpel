@@ -9,10 +9,6 @@ type GetProductsDetailRequest struct {
 	GoodsId string
 }
 
-type GetGoodsDetailRequest struct {
-	GoodsCode string
-}
-
 type CheckWarehouseRequest struct {
 	Elements []*CheckWarehouseRequestElement
 }

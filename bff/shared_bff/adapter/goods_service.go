@@ -14,10 +14,8 @@ import (
 )
 
 type IGoodsServiceAdapter interface {
-	GetGoods(ctx context.Context) ([]*schema.GetGoodsResponseData, error)
 	GetGoodsDefault(ctx context.Context, request *schema.GetGoodsDefaultRequest) ([]*schema.GetGoodsDefaultResponseData, error)
 	GetProductDetail(ctx context.Context, productId string) (*schema.GetGoodsDefaultResponseData, error)
-	GetGoodsDetail(ctx context.Context, goodsId string) ([]*schema.GetGoodsResponseData, error)
 	CheckWarehouse(ctx context.Context, request *schema.CheckWarehouseRequest) (*schema.CheckWarehouseResponseData, error)
 	CreateWHTransfer(ctx context.Context, request *schema.CreateGoodsTransactionRequest) error
 }
@@ -32,45 +30,6 @@ func NewGoodsAdapter(cfg *config.Config) IGoodsServiceAdapter {
 		httpClient: &http.Client{},
 		port:       cfg.GoodsServicePort,
 	}
-}
-
-func (a *goodsServiceAdapter) GetGoods(ctx context.Context) ([]*schema.GetGoodsResponseData, error) {
-	log.Println("Start to call goods service for GetGoods")
-	defer log.Println("End call goods service for GetGoods")
-
-	var result *schema.GetGoodsResponse
-	url := fmt.Sprintf("http://localhost:%d/api/goods-service/goods", a.port)
-
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
-	if err != nil {
-		log.Printf("BFF-Adapter-GoodsServiceAdapter-GetGoods-NewRequestWithContext error %v", err)
-		return nil, err
-	}
-
-	req.Header.Set("Content-Type", "application/json")
-	resp, err := a.httpClient.Do(req)
-	if err != nil {
-		log.Printf("BFF-Adapter-GoodsServiceAdapter-GetGoods-httpClient.Do error %v", err)
-		return nil, err
-	}
-
-	respByteArr, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		log.Printf("BFF-Adapter-GoodsServiceAdapter-GetGoods-ioutil.ReadAll error %v", err)
-		return nil, err
-	}
-
-	err = json.Unmarshal(respByteArr, &result)
-	if err != nil {
-		log.Printf("BFF-Adapter-GoodsServiceAdapter-GetGoods-json.Unmarshal error %v", err)
-		return nil, err
-	}
-
-	if result.StatusCode != http.StatusOK {
-		return nil, errors.New(result.Message)
-	}
-
-	return result.Data, nil
 }
 
 func (a *goodsServiceAdapter) GetGoodsDefault(ctx context.Context, request *schema.GetGoodsDefaultRequest) ([]*schema.GetGoodsDefaultResponseData, error) {
@@ -151,49 +110,6 @@ func (a *goodsServiceAdapter) GetProductDetail(ctx context.Context, productId st
 	err = json.Unmarshal(respByteArr, &result)
 	if err != nil {
 		log.Printf("BFF-Adapter-GoodsServiceAdapter-GetProductDetail-json.Unmarshal error %v", err)
-		return nil, err
-	}
-
-	if result.StatusCode != http.StatusOK {
-		return nil, errors.New(result.Message)
-	}
-
-	return result.Data, nil
-}
-
-func (a *goodsServiceAdapter) GetGoodsDetail(ctx context.Context, goodsId string) ([]*schema.GetGoodsResponseData, error) {
-	log.Printf("Start to call goods service for GetGoodsDetail, goodsId %s", goodsId)
-	defer log.Println("End call goods service for GetGoodsDetail")
-
-	if goodsId == "" {
-		return nil, errors.New("[BFF-Adapter-GoodsServiceAdapter-GetGoodsDetail] goodsId must not be empty")
-	}
-
-	var result *schema.GetGoodsResponse
-	url := fmt.Sprintf("http://localhost:%d/api/goods-service/goods/%s", a.port, goodsId)
-
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
-	if err != nil {
-		log.Printf("BFF-Adapter-GoodsServiceAdapter-GetGoodsDetail-NewRequestWithContext error %v", err)
-		return nil, err
-	}
-
-	req.Header.Set("Content-Type", "application/json")
-	resp, err := a.httpClient.Do(req)
-	if err != nil {
-		log.Printf("BFF-Adapter-GoodsServiceAdapter-GetGoodsDetail-httpClient.Do error %v", err)
-		return nil, err
-	}
-
-	respByteArr, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		log.Printf("BFF-Adapter-GoodsServiceAdapter-GetGoodsDetail-ioutil.ReadAll error %v", err)
-		return nil, err
-	}
-
-	err = json.Unmarshal(respByteArr, &result)
-	if err != nil {
-		log.Printf("BFF-Adapter-GoodsServiceAdapter-GetGoodsDetail-json.Unmarshal error %v", err)
 		return nil, err
 	}
 
