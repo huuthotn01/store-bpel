@@ -15,7 +15,7 @@ type IGoodsServiceController interface {
 	GetGoodsDefault(ctx context.Context, request *schema.GetGoodsDefaultRequest) ([]*schema.GetGoodsDefaultResponseData, error)
 	GetProductDetail(ctx context.Context, goodsId string) (*schema.GetGoodsDefaultResponseData, error)
 	CheckWarehouse(ctx context.Context, request *schema.CheckWarehouseRequest) (*schema.CheckWarehouseResponseData, error)
-	GetDetailGoods(ctx context.Context, goodsId string) ([]*schema.GetGoodsResponseData, error)
+	GetDetailGoods(ctx context.Context, goodsId string) (*schema.GetGoodsResponseData, error)
 	AddGoods(ctx context.Context, request []*schema.AddGoodsRequest) error
 	UpdateGoods(ctx context.Context, request []*schema.UpdateGoodsRequest, goodsId string) error
 	DeleteGoods(ctx context.Context, goodsId string) error

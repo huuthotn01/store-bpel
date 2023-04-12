@@ -8,6 +8,8 @@ import (
 )
 
 type IGoodsBffController interface {
+	GetGoods(ctx context.Context) ([]*goods_service.GetGoodsResponseData, error)
+	GetGoodsDetail(ctx context.Context, request *goods_service.GetGoodsDetailRequest) (*goods_service.GetGoodsResponseData, error)
 	AddGoods(ctx context.Context, request []*goods_service.AddGoodsRequestData) error
 	Import(ctx context.Context, request *goods_service.CreateGoodsTransactionRequest) error
 	Export(ctx context.Context, request *goods_service.CreateGoodsTransactionRequest) error

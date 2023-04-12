@@ -23,6 +23,8 @@ func RegisterEndpointHandler(mux *mux.Router, cfg *config.Config) {
 	// init controller
 	goodsController = NewController(cfg)
 	// register handler
+	mux.HandleFunc("/api/bff/goods-service/goods", handleGetGoods)
+	mux.HandleFunc("/api/bff/goods-service/goods-detail", handleGetGoodsDetail)
 	mux.HandleFunc("/api/bff/goods-service/goods/add", handleAddGoods)
 	mux.HandleFunc("/api/bff/goods-service/goods/import", handleImport)
 	mux.HandleFunc("/api/bff/goods-service/goods/export", handleExport)
@@ -31,6 +33,69 @@ func RegisterEndpointHandler(mux *mux.Router, cfg *config.Config) {
 	mux.HandleFunc("/api/bff/goods-service/goods/get-warehouse", handleGetWarehouse)
 	mux.HandleFunc("/api/bff/goods-service/goods/update", handleUpdateGoods)
 	mux.HandleFunc("/api/bff/goods-service/goods/image", handleUploadImage)
+}
+
+func handleGetGoods(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
+	w.Header().Set("Content-Type", "application/xml")
+	enc := xml.NewEncoder(w)
+	if r.Method == http.MethodPost {
+		resp, err := goodsController.GetGoods(ctx)
+		if err != nil {
+			err = enc.Encode(&goods_service.GetResponse{
+				StatusCode: 500,
+				Message:    fmt.Sprintf("BFF-Goods-handleGetGoods-GetGoods err %v", err),
+			})
+		} else {
+			err = enc.Encode(&goods_service.GetResponse{
+				StatusCode: 200,
+				Message:    "OK",
+				Data:       resp,
+			})
+		}
+	} else {
+		http.Error(w, "Method not supported", http.StatusNotFound)
+	}
+}
+
+func handleGetGoodsDetail(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
+	w.Header().Set("Content-Type", "application/xml")
+	enc := xml.NewEncoder(w)
+	payload, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		err = enc.Encode(&goods_service.GetResponse{
+			StatusCode: 500,
+			Message:    fmt.Sprintf("BFF-Goods-handleGetGoodsDetail-ioutil.ReadAll err %v", err),
+		})
+		return
+	}
+	if r.Method == http.MethodPost {
+		var request = new(goods_service.GetGoodsDetailRequest)
+		err = xml.Unmarshal(payload, request)
+		if err != nil {
+			err = enc.Encode(&goods_service.GetResponse{
+				StatusCode: 500,
+				Message:    fmt.Sprintf("BFF-Goods-handleGetGoodsDetail-xml.Unmarshal err %v", err),
+			})
+			return
+		}
+		resp, err := goodsController.GetGoodsDetail(ctx, request)
+		if err != nil {
+			err = enc.Encode(&goods_service.GetResponse{
+				StatusCode: 500,
+				Message:    fmt.Sprintf("BFF-Goods-handleGetGoodsDetail-GetCustomer err %v", err),
+			})
+		} else {
+			err = enc.Encode(&goods_service.GetResponse{
+				StatusCode: 200,
+				Message:    "OK",
+				Data:       resp,
+			})
+		}
+	} else {
+		http.Error(w, "Method not supported", http.StatusNotFound)
+	}
 }
 
 func handleUploadImage(w http.ResponseWriter, r *http.Request) {

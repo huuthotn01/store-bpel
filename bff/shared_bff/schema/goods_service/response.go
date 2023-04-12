@@ -31,21 +31,6 @@ type GetGoodsDefault_QuantityList struct {
 	Quantity   int
 }
 
-type GetGoodsResponseData struct {
-	GoodsCode    string
-	GoodsSize    string
-	GoodsColor   string
-	GoodsName    string
-	GoodsType    string
-	GoodsGender  int
-	GoodsAge     string
-	Manufacturer string
-	IsForSale    int
-	UnitPrice    int
-	UnitCost     int
-	Description  string
-}
-
 type CheckWarehouseResponseData struct {
 	NeedTransfer     bool
 	WarehouseActions []*WarehouseActions

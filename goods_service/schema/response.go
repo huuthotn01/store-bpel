@@ -45,6 +45,12 @@ type GetGoodsResponse struct {
 	Data       []*GetGoodsResponseData
 }
 
+type GetGoodsDetailResponse struct {
+	StatusCode int
+	Message    string
+	Data       *GetGoodsResponseData
+}
+
 type GetWarehouseByGoodsResponse struct {
 	StatusCode int
 	Message    string
@@ -52,10 +58,9 @@ type GetWarehouseByGoodsResponse struct {
 }
 
 type GetGoodsResponseData struct {
-	GoodsCode    string
-	GoodsSize    string
-	GoodsColor   string
+	GoodsId      string
 	GoodsName    string
+	Classify     []*GetGoodsResponseData_Classify
 	GoodsType    string
 	GoodsGender  int
 	GoodsAge     string
@@ -64,6 +69,12 @@ type GetGoodsResponseData struct {
 	UnitPrice    int
 	UnitCost     int
 	Description  string
+	Image        []string
+}
+
+type GetGoodsResponseData_Classify struct {
+	Size  string
+	Color string
 }
 
 type CheckWarehouseResponse struct {
