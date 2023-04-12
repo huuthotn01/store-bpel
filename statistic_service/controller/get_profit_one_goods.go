@@ -12,7 +12,7 @@ func (c *statisticServiceController) GetProfitOneGoods(ctx context.Context, requ
 	}
 
 	respStat := make([]*schema.GetProfitResponseData, 0, len(stat))
-	for _, data := range respStat {
+	for _, data := range stat {
 		respStat = append(respStat, &schema.GetProfitResponseData{
 			Profit: data.Profit,
 			Date:   data.Date,
