@@ -8,7 +8,7 @@ create table if not exists goods (
     unit_price int,
     quantity int,
     order_code varchar(100),
-    constraint PK_goods primary key (goods_code, goods_size, goods_color)
+    constraint PK_goods primary key (goods_code, goods_size, goods_color,order_code)
 ) engine = InnoDB default charset = utf8mb4 collate = utf8mb4_unicode_ci ;
 
 create table if not exists orders (
