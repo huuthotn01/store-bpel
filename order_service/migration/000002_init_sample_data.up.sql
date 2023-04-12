@@ -14,17 +14,18 @@ INSERT INTO `goods` (`goods_code`, `goods_size`, `goods_color`, `goods_name`, `o
 ('goods_1681249061', 'L', 'Đen', 'Váy nữ hở vai phong cách trẻ trung', 4, 1, 185000, 185000, 1000, 'https://bucket.nhanh.vn/888555-3379/ps/20200402_DdhYCDD68H7MObRLHXtF3tta.jpg', 0),
 ('goods_1681249061', 'L', 'Hồng', 'Váy nữ hở vai phong cách trẻ trung', 4, 1, 185000, 185000, 1000, 'https://bucket.nhanh.vn/888555-3379/ps/content/20230310_Ck7jGvF8Am2zabySvR5RFhT2.jpg', 0),
 ('goods_1681249061', 'M', 'Đen', 'Váy nữ hở vai phong cách trẻ trung', 4, 1, 185000, 185000, 1000, 'https://bucket.nhanh.vn/888555-3379/ps/20200402_DdhYCDD68H7MObRLHXtF3tta.jpg', 0),
-('goods_1681249162', 'L', 'Trắng hồng', 'Áo khoác nữ Dây kéo', 5, 1, 376000, 376000, 1000, 'https://img.ltwebstatic.com/images3_pi/2021/09/27/16327094934386acd01e26f43b1eafd95c5bc8c53b_thumbna', 0),
-('goods_1681249286', '37', 'Đen', 'Giày cao gót Sandal ', 6, 2, 249000, 249000, 1000, 'https://sandro.com.vn/media/catalog/product/cache/29162ccbe9d79568e67e3d26712ec350/S/a/Sandro_SFACH0', 0),
-('goods_1681249286', '38', 'Đen', 'Giày cao gót Sandal ', 7, 1, 249000, 249000, 1000, 'https://sandro.com.vn/media/catalog/product/cache/29162ccbe9d79568e67e3d26712ec350/S/a/Sandro_SFACH0', 0),
-('goods_1681249286', '38', 'Trắng', 'Giày cao gót Sandal ', 7, 1, 249000, 249000, 1000, 'https://sandro.com.vn/media/catalog/product/cache/29162ccbe9d79568e67e3d26712ec350/S/a/Sandro_SFACH0', 0),
+('goods_1681249162', 'L', 'Trắng hồng', 'Áo khoác nữ Dây kéo', 5, 1, 376000, 376000, 1000, 'https://img.ltwebstatic.com/images3_pi/2021/09/27/16327094934386acd01e26f43b1eafd95c5bc8c53b_thumbnail_900x.webp', 0),
+('goods_1681249286', '37', 'Đen', 'Giày cao gót Sandal ', 6, 2, 249000, 249000, 1000, 'https://sandro.com.vn/media/catalog/product/cache/29162ccbe9d79568e67e3d26712ec350/S/a/Sandro_SFACH00437-20_V_1_1.jpg', 0),
+('goods_1681249286', '38', 'Đen', 'Giày cao gót Sandal ', 7, 1, 249000, 249000, 1000, 'https://sandro.com.vn/media/catalog/product/cache/29162ccbe9d79568e67e3d26712ec350/S/a/Sandro_SFACH00437-20_V_1_1.jpg', 0),
+('goods_1681249286', '38', 'Trắng', 'Giày cao gót Sandal ', 7, 1, 249000, 249000, 1000, 'https://sandro.com.vn/media/catalog/product/cache/29162ccbe9d79568e67e3d26712ec350/S/a/Sandro_SFACH00437-20_V_2_1.jpg', 0),
 ('goods-1', 'M', 'Đen', 'Áo khoác gió', 8, 1, 250000, 250000, 1000, 'https://img.cdn.vncdn.io/cdn-pos/4260cc-24295/ps/20211117_JDjzizniwgIQrAoKpbnvvT9M.jpg', 0),
 ('goods-2', 'L', 'Vàng', 'Quần tây nữ', 10, 2, 150000, 150000, 1000, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTacYbO51xLDOg6Ya_HwE8dNN2urSM2hWewWQ&usqp=CAU', 0),
 ('goods-2', 'M', 'Vàng', 'Quần tây nữ', 10, 2, 150000, 150000, 1000, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTacYbO51xLDOg6Ya_HwE8dNN2urSM2hWewWQ&usqp=CAU', 0),
 ('goods-3', 'L', 'Trắng', 'Quần kaki nữ', 11, 4, 200000, 200000, 1000, 'https://bumshop.com.vn/wp-content/uploads/2022/03/quan-kaki-nu-10.jpeg', 0),
-('goods-4', 'XL', 'Trắng', 'Áo thun unisex', 12, 1, 100000, 100000, 1000, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQsMkZoGYBWUFPGEE_73ppFEwad1-L-P9ClP7bfRZUVBkDQ', 0),
+('goods-4', 'XL', 'Trắng', 'Áo thun unisex', 12, 1, 100000, 100000, 1000, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQsMkZoGYBWUFPGEE_73ppFEwad1-L-P9ClP7bfRZUVBkDQUHPoGP0tHZT5dueYtGDmn9c&usqp=CAU', 0),
 ('goods-5', 'S', 'Đỏ', 'Áo thun trẻ em', 9, 2, 120000, 120000, 1000, 'https://product.hstatic.net/1000322378/product/k0030307_10997bdba75440cf8d0502d4edeb6629.jpg', 0);
 
+--
 
 INSERT INTO `online_orders` (`order_code`, `expected_delivery`, `shipping_fee`, `customer_id`, `payment_method`, `street`, `ward`, `district`, `province`, `customer_name`, `customer_phone`, `customer_email`, `status`) VALUES
 (1, '2023-04-06', 5000, 'user2', 'Momo', 'Nguyen Du', 'Dong Hoa', 'Di An', 'Binh Duong', 'Tran Nguyen Huu Tho', '0123456789', 'test@gmail.com', 0),
