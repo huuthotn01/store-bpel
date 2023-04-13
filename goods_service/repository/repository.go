@@ -8,6 +8,7 @@ import (
 )
 
 type IGoodsServiceRepository interface {
+	FilterGoods(ctx context.Context, name string, newAdded bool) ([]string, error)
 	GetGoods(ctx context.Context) ([]*GoodsModel, error)
 	GetGoodsDefault(ctx context.Context, limit, offset int) ([]string, error)
 	GetImages(ctx context.Context) ([]*GoodsImg, error)
@@ -31,6 +32,15 @@ func NewRepository(db *gorm.DB) IGoodsServiceRepository {
 		goodsImgTableName:  "goods_img",
 		goodsInWhTableName: "goods_in_wh",
 	}
+}
+
+func (r *goodsServiceRepository) FilterGoods(ctx context.Context, name string, newAdded bool) ([]string, error) {
+	var result []string
+	query := r.db.WithContext(ctx).Table(r.goodsTableName).Where("goods_code like '%" + name + "%'").Select("goods_code")
+	if newAdded {
+		query = query.Where("created_at >= date_sub(curdate(), interval 30 day)").Order("created_at desc")
+	}
+	return result, query.Find(&result).Error
 }
 
 func (r *goodsServiceRepository) GetGoodsDefault(ctx context.Context, pageSize, pageNum int) ([]string, error) {
@@ -63,8 +73,8 @@ func (r *goodsServiceRepository) GetGoodsImageUrls(ctx context.Context, goodsId 
 
 func (r *goodsServiceRepository) GetGoods(ctx context.Context) ([]*GoodsModel, error) {
 	var result []*GoodsModel
-	query := r.db.WithContext(ctx).Table(r.goodsTableName).Find(&result)
-	return result, query.Error
+	query := r.db.WithContext(ctx).Table(r.goodsTableName)
+	return result, query.Find(&result).Error
 }
 
 func (r *goodsServiceRepository) GetDetailGoods(ctx context.Context, goodsId string) ([]*GoodsModel, error) {

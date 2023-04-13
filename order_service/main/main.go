@@ -55,6 +55,7 @@ func registerEndpoint(r *mux.Router) {
 	// Shared
 	r.HandleFunc("/api/order-service/ship-fee", handleGetShipFee)
 	r.HandleFunc("/api/order-service/online-order-status", handleUpdateOnlineOrdersState)
+	r.HandleFunc("/api/order-service/best-goods", handleGetBestSellingGoods)
 }
 
 func handleMakeOnlineOrder(w http.ResponseWriter, r *http.Request) {
@@ -366,6 +367,30 @@ func handleUpdateOnlineOrdersState(w http.ResponseWriter, r *http.Request) {
 			err = enc.Encode(&schema.UpdateResponse{
 				StatusCode: 200,
 				Message:    "OK",
+			})
+		}
+	} else {
+		http.Error(w, "Method not supported", http.StatusNotFound)
+	}
+}
+
+func handleGetBestSellingGoods(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	enc := json.NewEncoder(w)
+	if r.Method == http.MethodGet {
+		goods, err := ctrl.GetBestSellingGoods(ctx)
+		if err != nil {
+			err = enc.Encode(&schema.GetBestSellingGoodsResponse{
+				StatusCode: 500,
+				Message:    err.Error(),
+			})
+		} else {
+			err = enc.Encode(&schema.GetBestSellingGoodsResponse{
+				StatusCode: 200,
+				Message:    "OK",
+				Data:       goods,
 			})
 		}
 	} else {

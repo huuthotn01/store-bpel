@@ -20,6 +20,7 @@ type IOrderServiceRepository interface {
 	GetOrderState(ctx context.Context, orderId int) ([]*OrderStateModel, error)
 	GetOnlineOrderByOrderId(ctx context.Context, orderId int) (*OnlineOrdersModel, error)
 	GetOfflineOrderByOrderId(ctx context.Context, orderId int) (*StoreOrdersModel, error)
+	GetBestGoods(ctx context.Context) ([]string, error)
 
 	CreateOnlineOrder(ctx context.Context, data *OnlineOrdersData) error
 	CreateOfflineOrder(ctx context.Context, data *OfflineOrdersData) error
@@ -269,6 +270,16 @@ func (r *orderServiceRepository) GetOfflineOrderByOrderId(ctx context.Context, o
 func (r *orderServiceRepository) GetOrderState(ctx context.Context, orderId int) ([]*OrderStateModel, error) {
 	var result []*OrderStateModel
 	query := r.db.WithContext(ctx).Table(r.orderStateTableName).Where("order_code = ?", orderId)
+	return result, query.Find(&result).Error
+}
+
+func (r *orderServiceRepository) GetBestGoods(ctx context.Context) ([]string, error) {
+	// get best selling goods by total sold quantity in past month (in 30 days)
+	var result []string
+	query := r.db.WithContext(ctx).Table(r.goodsTableName).Joins("join orders on orders.order_code = goods.order_code").
+		Where("orders.transaction_date >= date_sub(curdate(), interval 30 day)").
+		Group("goods.goods_code").Order("sum(goods.quantity) desc").
+		Select("goods.goods_code")
 	return result, query.Find(&result).Error
 }
 

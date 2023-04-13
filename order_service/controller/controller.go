@@ -25,6 +25,7 @@ type IOrderServiceController interface {
 	// Shared
 	GetShipFee(ctx context.Context, request *schema.GetShipFeeRequest) (*schema.GetShipFeeResponseData, error)
 	UpdateOrderState(ctx context.Context, request *schema.UpdateOnlineOrdersStatusRequest) error
+	GetBestSellingGoods(ctx context.Context) ([]string, error)
 }
 
 type orderServiceController struct {

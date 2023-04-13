@@ -48,6 +48,7 @@ func registerEndpoint(r *mux.Router) {
 	r.HandleFunc("/api/goods-service/goods/warehouse/{goodsId}", handleWarehouse)
 	r.HandleFunc("/api/goods-service/goods", handleGoods)
 	r.HandleFunc("/api/goods-service/default-goods", handleGoodsDefault)
+	r.HandleFunc("/api/goods-service/goods:search", handleSearchGoods)
 	r.HandleFunc("/api/goods-service/product/{productId}", handleProductDetail)
 	r.HandleFunc("/api/goods-service/check-wh", handleCheckWH)
 	r.HandleFunc("/api/goods-service/image", handleUploadImage)
@@ -125,6 +126,47 @@ func handleGoodsDefault(w http.ResponseWriter, r *http.Request) {
 			})
 		} else {
 			err = enc.Encode(&schema.GetGoodsDefaultResponse{
+				StatusCode: 200,
+				Message:    "OK",
+				Data:       resp,
+			})
+		}
+	} else {
+		http.Error(w, "Method not supported", http.StatusNotFound)
+	}
+}
+
+func handleSearchGoods(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	enc := json.NewEncoder(w)
+	if r.Method == "GET" {
+		reqBody, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			err = enc.Encode(&schema.SearchGoodsResponse{
+				StatusCode: 500,
+				Message:    err.Error(),
+			})
+			return
+		}
+		var request *schema.SearchGoodsRequest
+		err = json.Unmarshal(reqBody, &request)
+		if err != nil {
+			err = enc.Encode(&schema.SearchGoodsResponse{
+				StatusCode: 500,
+				Message:    err.Error(),
+			})
+			return
+		}
+		resp, err := ctrl.SearchGoods(ctx, request)
+		if err != nil {
+			err = enc.Encode(&schema.SearchGoodsResponse{
+				StatusCode: 500,
+				Message:    err.Error(),
+			})
+		} else {
+			err = enc.Encode(&schema.SearchGoodsResponse{
 				StatusCode: 200,
 				Message:    "OK",
 				Data:       resp,

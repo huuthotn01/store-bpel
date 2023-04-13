@@ -5,6 +5,12 @@ type UpdateResponse struct {
 	Message    string
 }
 
+type GetBestSellingGoodsResponse struct {
+	StatusCode int
+	Message    string
+	Data       []string
+}
+
 type GetOnlineOrdersStatusResponse struct {
 	StatusCode int
 	Message    string

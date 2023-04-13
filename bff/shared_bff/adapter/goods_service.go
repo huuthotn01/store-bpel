@@ -18,6 +18,7 @@ type IGoodsServiceAdapter interface {
 	GetProductDetail(ctx context.Context, productId string) (*schema.GetGoodsDefaultResponseData, error)
 	CheckWarehouse(ctx context.Context, request *schema.CheckWarehouseRequest) (*schema.CheckWarehouseResponseData, error)
 	CreateWHTransfer(ctx context.Context, request *schema.CreateGoodsTransactionRequest) error
+	SearchGoods(ctx context.Context, request *schema.SearchGoodsRequest) ([]*schema.GetGoodsDefaultResponseData, error)
 }
 
 type goodsServiceAdapter struct {
@@ -206,4 +207,49 @@ func (a *goodsServiceAdapter) CreateWHTransfer(ctx context.Context, request *sch
 	}
 
 	return nil
+}
+
+func (a *goodsServiceAdapter) SearchGoods(ctx context.Context, request *schema.SearchGoodsRequest) ([]*schema.GetGoodsDefaultResponseData, error) {
+	log.Println("Start to call goods service for SearchGoods")
+	defer log.Println("End call goods service for SearchGoods")
+
+	var result *schema.SearchGoodsResponse
+	url := fmt.Sprintf("http://localhost:%d/api/goods-service/goods:search", a.port)
+
+	data, err := json.Marshal(request)
+	if err != nil {
+		log.Printf("BFF-Adapter-GoodsServiceAdapter-SearchGoods-Marshal error %v", err)
+		return nil, err
+	}
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, bytes.NewReader(data))
+	if err != nil {
+		log.Printf("BFF-Adapter-GoodsServiceAdapter-SearchGoods-NewRequestWithContext error %v", err)
+		return nil, err
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+	resp, err := a.httpClient.Do(req)
+	if err != nil {
+		log.Printf("BFF-Adapter-GoodsServiceAdapter-SearchGoods-httpClient.Do error %v", err)
+		return nil, err
+	}
+
+	respByteArr, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Printf("BFF-Adapter-GoodsServiceAdapter-SearchGoods-ioutil.ReadAll error %v", err)
+		return nil, err
+	}
+
+	err = json.Unmarshal(respByteArr, &result)
+	if err != nil {
+		log.Printf("BFF-Adapter-GoodsServiceAdapter-SearchGoods-json.Unmarshal error %v", err)
+		return nil, err
+	}
+
+	if result.StatusCode != http.StatusOK {
+		return nil, errors.New(result.Message)
+	}
+
+	return result.Data, nil
 }

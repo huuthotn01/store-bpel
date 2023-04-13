@@ -1,5 +1,11 @@
 package schema
 
+type SearchGoodsRequest struct {
+	Query    string
+	PageSize int
+	Category int // 0: nothing, 1: best-selling goods, 2: newly added goods
+}
+
 type UploadImageRequest struct {
 	GoodsId    string
 	GoodsColor string

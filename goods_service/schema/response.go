@@ -8,6 +8,12 @@ type GetGoodsDefaultResponse struct {
 	Data       []*GetGoodsDefaultResponseData
 }
 
+type SearchGoodsResponse struct {
+	StatusCode int
+	Message    string
+	Data       []*GetGoodsDefaultResponseData
+}
+
 type GetGoodsDefaultResponseData struct {
 	GoodsId      string
 	Name         string
