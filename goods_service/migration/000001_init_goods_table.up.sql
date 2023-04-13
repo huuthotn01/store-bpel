@@ -11,5 +11,6 @@ create table if not exists goods (
     unit_price int,
     unit_cost int not null,
     description varchar(100),
+    created_at timestamp not null default current_timestamp,
     constraint PK_goods primary key (goods_code, goods_size, goods_color)
 ) engine = InnoDB default charset = utf8mb4 collate = utf8mb4_unicode_ci ;

@@ -26,6 +26,7 @@ type GoodsModel struct {
 	UnitPrice    int
 	UnitCost     int
 	Description  string
+	CreatedAt    time.Time
 }
 
 type GoodsImg struct {

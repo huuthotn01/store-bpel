@@ -8,6 +8,7 @@ type Config struct {
 	HttpPort             int          `json:"http_port" mapstructure:"http_port"`
 	WarehouseServicePort int          `json:"warehouse_service_port" mapstructure:"warehouse_service_port"`
 	EventServicePort     int          `json:"event_service_port" mapstructure:"event_service_port"`
+	OrderServicePort     int          `json:"order_service_port" mapstructure:"order_service_port"`
 	KafkaPort            int          `json:"kafka_port" mapstructure:"kafka_port"`
 	MySQL                *MySQLConfig `json:"mysql" mapstructure:"mysql"`
 }
