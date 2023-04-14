@@ -6,7 +6,7 @@ import (
 )
 
 func (c *statisticServiceController) GetOverallStat(ctx context.Context, request *schema.CommonGetStatisticRequest) ([]*schema.GetOverallStatisticResponseData, error) {
-	stat, err := c.repository.GetOverallStat(ctx, request.Start, request.End, "", nil, nil, nil)
+	stat, err := c.repository.GetOverallStat(ctx, request.Start, request.End, "", request.BranchId, nil, nil)
 	if err != nil {
 		return nil, err
 	}

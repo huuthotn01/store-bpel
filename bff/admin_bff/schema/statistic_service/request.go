@@ -1,8 +1,9 @@
 package statistic_service
 
 type GetOverallStatRequest struct {
-	Start string
-	End   string
+	Start    string
+	End      string
+	BranchId []string
 }
 
 type FilterGetStatisticRequest struct {
