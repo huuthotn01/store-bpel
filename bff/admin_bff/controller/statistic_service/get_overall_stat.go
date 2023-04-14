@@ -8,8 +8,9 @@ import (
 
 func (c *statisticBffController) GetOverallStat(ctx context.Context, request *statistic_service.GetOverallStatRequest) ([]*statistic_service.GetOverallStatisticResponseData, error) {
 	stat, err := c.statisticAdapter.GetOverallStat(ctx, &schema.CommonGetStatisticRequest{
-		Start: request.Start,
-		End:   request.End,
+		Start:    request.Start,
+		End:      request.End,
+		BranchId: request.BranchId,
 	})
 	if err != nil {
 		return nil, err
