@@ -5,8 +5,9 @@ import (
 )
 
 type Config struct {
-	HttpPort int          `json:"http_port" mapstructure:"http_port"`
-	MySQL    *MySQLConfig `json:"mysql" mapstructure:"mysql"`
+	HttpPort     int           `json:"http_port" mapstructure:"http_port"`
+	MySQL        *MySQLConfig  `json:"mysql" mapstructure:"mysql"`
+	ServiceFlags *ServiceFlags `json:"service_flags" mapstructure:"service_flags"`
 
 	StaffServicePort    int `json:"staff_service_port" mapstructure:"staff_service_port"`
 	CustomerServicePort int `json:"customer_service_port" mapstructure:"customer_service_port"`
@@ -18,6 +19,10 @@ type MySQLConfig struct {
 	Username string `json:"username" mapstructure:"username"`
 	Password string `json:"password" mapstructure:"password"`
 	Database string `json:"database" mapstructure:"database"`
+}
+
+type ServiceFlags struct {
+	IsEnableAsync bool `json:"is_enable_async" mapstructure:"is_enable_async"`
 }
 
 func Load() (config *Config, err error) {
