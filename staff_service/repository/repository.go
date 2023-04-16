@@ -34,10 +34,11 @@ func NewRepository(db *gorm.DB) IStaffServiceRepository {
 func (r *staffServiceRepository) GetStaff(ctx context.Context, staffName, staffId string) ([]*StaffModel, error) {
 	var result []*StaffModel
 	query := r.db.WithContext(ctx).Table(r.staffTableName)
-	if staffName != "" {
+	if staffName != "" && staffId != "" {
+		query = query.Where("staff_name LIKE ? OR staff_id LIKE ?", "%"+staffName+"%", "%"+staffId+"%")
+	} else if staffName != "" {
 		query = query.Where("staff_name LIKE ?", "%"+staffName+"%")
-	}
-	if staffId != "" {
+	} else if staffId != "" {
 		query = query.Where("staff_id LIKE ?", "%"+staffId+"%")
 	}
 	return result, query.Find(&result).Error
