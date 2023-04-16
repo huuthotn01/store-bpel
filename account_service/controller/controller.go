@@ -8,6 +8,7 @@ import (
 	"store-bpel/account_service/config"
 	"store-bpel/account_service/repository"
 	"store-bpel/account_service/schema"
+	"store-bpel/library/kafka_lib"
 	"time"
 )
 
@@ -25,7 +26,7 @@ type accountServiceController struct {
 
 	staffAdapter    adapter.IStaffServiceAdapter
 	customerAdapter adapter.ICustomerServiceAdapter
-	kafkaAdapter    adapter.IKafkaAdapter
+	kafkaAdapter    kafka_lib.IKafkaLib
 }
 
 func NewController(cfg *config.Config, db *gorm.DB) IAccountServiceController {
@@ -42,7 +43,7 @@ func NewController(cfg *config.Config, db *gorm.DB) IAccountServiceController {
 	customerAdapter := adapter.NewCustomerAdapter(cfg)
 
 	// init kafka adapter
-	kafkaAdapter := adapter.NewKafkaAdapter()
+	kafkaAdapter := kafka_lib.NewKafkaLib()
 
 	return &accountServiceController{
 		cfg:             cfg,

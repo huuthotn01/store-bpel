@@ -32,6 +32,9 @@ func main() {
 	r := mux.NewRouter()
 	registerEndpoint(r)
 
+	ctx := context.Background()
+	go Consume(ctx)
+
 	if err = http.ListenAndServe(":"+cast.ToString(cfg.HttpPort), r); err != nil {
 		log.Fatal(err)
 	}

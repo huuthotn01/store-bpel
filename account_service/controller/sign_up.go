@@ -2,11 +2,13 @@ package controller
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"gorm.io/gorm"
 	"store-bpel/account_service/repository"
 	"store-bpel/account_service/schema"
 	customer_schema "store-bpel/customer_service/schema"
+	"store-bpel/library/kafka_lib"
 )
 
 func (c *accountServiceController) SignUp(ctx context.Context, request *schema.SignUpRequest) error {
@@ -32,7 +34,7 @@ func (c *accountServiceController) SignUp(ctx context.Context, request *schema.S
 		return err
 	}
 
-	return c.customerAdapter.AddCustomer(ctx, &customer_schema.AddCustomerRequest{
+	addCustomerRequest := &customer_schema.AddCustomerRequest{
 		Username: request.Username,
 		Email:    request.Email,
 		Name:     request.Name,
@@ -43,5 +45,17 @@ func (c *accountServiceController) SignUp(ctx context.Context, request *schema.S
 		Ward:     request.Ward,
 		District: request.District,
 		Province: request.Province,
-	})
+	}
+
+	if c.cfg.ServiceFlags.IsEnableAsync {
+		addCustReqByte, err := json.Marshal(addCustomerRequest)
+		if err != nil {
+			return err
+		}
+
+		// publish event to customer service to add customer
+		return c.kafkaAdapter.Publish(ctx, kafka_lib.CUSTOMER_SERVICE_TOPIC, addCustReqByte)
+	}
+
+	return c.customerAdapter.AddCustomer(ctx, addCustomerRequest)
 }

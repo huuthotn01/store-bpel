@@ -9,3 +9,6 @@ MYSQL:
   USERNAME: admin
   PASSWORD: 'admin'
   DATABASE: account_service
+
+SERVICE_FLAGS:
+  IS_ENABLE_ASYNC: false
