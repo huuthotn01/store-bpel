@@ -42,6 +42,7 @@ func main() {
 
 func registerEndpoint(r *mux.Router) {
 	r.HandleFunc("/api/event-service/event", handleEvent)
+	r.HandleFunc("/api/event-service/event/current", handleEventCurrent)
 	r.HandleFunc("/api/event-service/event/{eventId}", handleEventDetail)
 	r.HandleFunc("/api/event-service/get-by-goods/{goodsId}", handleEventByGoods)
 }
@@ -54,6 +55,71 @@ func handleEvent(w http.ResponseWriter, r *http.Request) {
 	enc := json.NewEncoder(w)
 	if r.Method == "GET" {
 		resp, err := ctrl.GetEvent(ctx)
+		if err != nil {
+			err = enc.Encode(&schema.GetEventResponse{
+				StatusCode: 500,
+				Message:    err.Error(),
+			})
+		} else {
+			err = enc.Encode(&schema.GetEventResponse{
+				StatusCode: 200,
+				Message:    "OK",
+				Data:       resp,
+			})
+		}
+	} else if r.Method == "POST" {
+		reqBody, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			err = enc.Encode(&schema.UpdateResponse{
+				StatusCode: 500,
+				Message:    err.Error(),
+			})
+			return
+		}
+		var request *schema.AddEventRequest
+		err = json.Unmarshal(reqBody, &request)
+
+		if err != nil {
+			err = enc.Encode(&schema.UpdateResponse{
+				StatusCode: 500,
+				Message:    err.Error(),
+			})
+			return
+		}
+
+		err = ctrl.AddEvent(ctx, request)
+		if err != nil {
+			err = enc.Encode(&schema.UpdateResponse{
+				StatusCode: 500,
+				Message:    err.Error(),
+			})
+		} else {
+			err = enc.Encode(&schema.UpdateResponse{
+				StatusCode: 200,
+				Message:    "OK",
+			})
+		}
+
+	} else {
+		http.Error(w, "Method not supported", http.StatusNotFound)
+	}
+}
+
+func handleEventCurrent(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	enc := json.NewEncoder(w)
+	if r.Method == "GET" {
+		date, err := strconv.Atoi(r.URL.Query().Get("date"))
+		if err != nil {
+			err = enc.Encode(&schema.GetEventResponse{
+				StatusCode: 500,
+				Message:    err.Error(),
+			})
+		}
+		resp, err := ctrl.GetEventCurrent(ctx, date)
 		if err != nil {
 			err = enc.Encode(&schema.GetEventResponse{
 				StatusCode: 500,
