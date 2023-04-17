@@ -14,6 +14,7 @@ import (
 
 type IEventServiceAdapter interface {
 	GetEventDetail(ctx context.Context, eventId string) (*schema.GetEventData, error)
+	GetEventCurrent(ctx context.Context, date string) ([]*schema.GetEventData, error)
 	GetEvent(ctx context.Context) ([]*schema.GetEventData, error)
 	GetEventByGoods(ctx context.Context, goodsId string) ([]*schema.GetEventByGoodsData, error)
 }
@@ -61,14 +62,63 @@ func (a *eventServiceAdapter) GetEventDetail(ctx context.Context, eventId string
 	// Convert io.Reader (type off http.Response.Body) to []byte
 	respByteArr, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		log.Printf("BFF-Adapter-EventServiceAdapter-GetGoodsDetail-ioutil.ReadAll error %v", err)
+		log.Printf("BFF-Adapter-EventServiceAdapter-GetEventDetail-ioutil.ReadAll error %v", err)
 		return nil, err
 	}
 
 	// Convert []byte to JSON
 	err = json.Unmarshal(respByteArr, &result)
 	if err != nil {
-		log.Printf("BFF-Adapter-EventServiceAdapter-GetGoodsDetail-json.Unmarshal error %v", err)
+		log.Printf("BFF-Adapter-EventServiceAdapter-GetEventDetail-json.Unmarshal error %v", err)
+		return nil, err
+	}
+
+	if result.StatusCode != http.StatusOK {
+		return nil, errors.New(result.Message)
+	}
+
+	return result.Data, nil
+}
+
+func (a *eventServiceAdapter) GetEventCurrent(ctx context.Context, date string) ([]*schema.GetEventData, error) {
+	log.Printf("Start to call event service for GetEventCurrent, date %s", date)
+	defer log.Println("End call event service for GetEventCurrent")
+
+	if date == "" {
+		return nil, errors.New("[BFF-Adapter-EventServiceAdapter-GetEventCurrent] date must not be empty")
+	}
+
+	// call http to event service
+	var result *schema.GetEventResponse
+	url := fmt.Sprintf("http://localhost:%d/api/event-service/event/current?date=%s", a.port, date)
+
+	// create http request
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
+	if err != nil {
+		log.Printf("BFF-Adapter-EventServiceAdapter-GetEventCurrent-NewRequestWithContext error %v", err)
+		return nil, err
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+	// send request to event service
+	resp, err := a.httpClient.Do(req)
+	if err != nil {
+		log.Printf("BFF-Adapter-EventServiceAdapter-GetEventCurrent-httpClient.Do error %v", err)
+		return nil, err
+	}
+
+	// Read all data response
+	// Convert io.Reader (type off http.Response.Body) to []byte
+	respByteArr, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Printf("BFF-Adapter-EventServiceAdapter-GetEventCurrent-ioutil.ReadAll error %v", err)
+		return nil, err
+	}
+
+	// Convert []byte to JSON
+	err = json.Unmarshal(respByteArr, &result)
+	if err != nil {
+		log.Printf("BFF-Adapter-EventServiceAdapter-GetEventCurrent-json.Unmarshal error %v", err)
 		return nil, err
 	}
 

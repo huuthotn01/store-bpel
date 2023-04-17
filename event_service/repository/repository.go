@@ -9,6 +9,7 @@ import (
 
 type IEventServiceRepository interface {
 	GetAllEvent(ctx context.Context) ([]*EventModel, error)
+	GetAllEventCurrent(ctx context.Context, date int) ([]*EventModel, error)
 	GetGoods(ctx context.Context, eventId int) ([]string, error)
 	GetEvent(ctx context.Context, eventId int) (*EventModel, error)
 	AddEvent(ctx context.Context, data *AddEventData) error
@@ -50,6 +51,14 @@ func (r *eventServiceRepository) GetAllEvent(ctx context.Context) ([]*EventModel
 
 	var result []*EventModel
 	query := r.db.WithContext(ctx).Table(r.eventTableName).Find(&result)
+
+	return result, query.Error
+}
+
+func (r *eventServiceRepository) GetAllEventCurrent(ctx context.Context, date int) ([]*EventModel, error) {
+
+	var result []*EventModel
+	query := r.db.WithContext(ctx).Table(r.eventTableName).Where("start_time < NOW() + INTERVAL ? DAY AND end_time > NOW()", date).Find(&result)
 
 	return result, query.Error
 }
