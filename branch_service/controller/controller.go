@@ -2,21 +2,22 @@ package controller
 
 import (
 	"context"
-	"gorm.io/gorm"
 	"store-bpel/branch_service/adapter"
 	"store-bpel/branch_service/config"
 	repo "store-bpel/branch_service/repository"
 	"store-bpel/branch_service/schema"
+
+	"gorm.io/gorm"
 )
 
 type IBranchServiceController interface {
 	GetBranch(ctx context.Context) ([]*schema.GetBranchResponseData, error)
 	GetBranchDetail(ctx context.Context, branchId string) (*schema.GetBranchResponseData, error)
 	GetBranchStaff(ctx context.Context, branchId string) ([]string, error)
-	UpdateBranch(ctx context.Context, request *schema.UpdateBranchRequest, branchId int32) error
-	UpdateBranchManager(ctx context.Context, request *schema.UpdateBranchManagerRequest, branchId int32) error
+	UpdateBranch(ctx context.Context, request *schema.UpdateBranchRequest, branchId string) error
+	UpdateBranchManager(ctx context.Context, request *schema.UpdateBranchManagerRequest, branchId string) error
 	AddBranch(ctx context.Context, request *schema.AddBranchRequest) error
-	DeleteBranch(ctx context.Context, branchId int32) error
+	DeleteBranch(ctx context.Context, branchId string) error
 	UploadBranchImage(ctx context.Context, branchId string) error
 }
 

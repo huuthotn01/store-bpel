@@ -1,5 +1,5 @@
 create table if not exists branch (
-    branch_code int auto_increment,
+    branch_code varchar(30),
     branch_name varchar(100),
     branch_province varchar(50),
     branch_district varchar(50),

@@ -12,6 +12,7 @@ type IOrderBffController interface {
 	GetOrderDetail(ctx context.Context, request *order_service.GetOrderDetailRequest) (*order_service.GetOrderDetailResponseData, error)
 	GetOnlineOrders(ctx context.Context) ([]*order_service.GetOnlineOrdersResponseData, error)
 	GetOfflineOrders(ctx context.Context) ([]*order_service.GetOfflineOrdersResponseData, error)
+	GetListOrderCustomer(ctx context.Context, request *order_service.GetListOrderCustomerRequest) ([]*order_service.GetListOrderCustomerResponseData, error)
 }
 
 type orderBffController struct {

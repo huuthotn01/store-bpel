@@ -3,14 +3,15 @@ package main
 import (
 	"context"
 	"encoding/json"
-	"github.com/gorilla/mux"
-	"github.com/spf13/cast"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"store-bpel/branch_service/config"
 	"store-bpel/branch_service/controller"
 	"store-bpel/branch_service/schema"
+
+	"github.com/gorilla/mux"
+	"github.com/spf13/cast"
 )
 
 var ctrl controller.IBranchServiceController
@@ -138,7 +139,7 @@ func handleBranchDetail(w http.ResponseWriter, r *http.Request) {
 			})
 			return
 		}
-		err = ctrl.UpdateBranch(ctx, request, cast.ToInt32(branchId))
+		err = ctrl.UpdateBranch(ctx, request, branchId)
 		if err != nil {
 			err = enc.Encode(&schema.UpdateResponse{
 				StatusCode: 500,
@@ -151,7 +152,7 @@ func handleBranchDetail(w http.ResponseWriter, r *http.Request) {
 			})
 		}
 	} else if r.Method == http.MethodDelete {
-		err := ctrl.DeleteBranch(ctx, cast.ToInt32(branchId))
+		err := ctrl.DeleteBranch(ctx, branchId)
 		if err != nil {
 			err = enc.Encode(&schema.UpdateResponse{
 				StatusCode: 500,
@@ -193,7 +194,7 @@ func handleBranchManager(w http.ResponseWriter, r *http.Request) {
 			})
 			return
 		}
-		err = ctrl.UpdateBranchManager(ctx, request, cast.ToInt32(branchId))
+		err = ctrl.UpdateBranchManager(ctx, request, branchId)
 		if err != nil {
 			err = enc.Encode(&schema.UpdateResponse{
 				StatusCode: 500,

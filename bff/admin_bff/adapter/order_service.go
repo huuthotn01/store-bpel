@@ -18,6 +18,7 @@ type IOrderServiceAdapter interface {
 	GetOrderDetail(ctx context.Context, orderId int) (*schema.GetOrderDetailAdminResponseData, error)
 	GetOnlineOrders(ctx context.Context) ([]*schema.GetOnlineOrdersResponseData, error)
 	GetOfflineOrders(ctx context.Context) ([]*schema.GetOfflineOrdersResponseData, error)
+	GetListOrderCustomer(ctx context.Context, customerId string) ([]*schema.GetListOrderCustomerResponseData, error)
 }
 
 type orderServiceAdapter struct {
@@ -183,6 +184,48 @@ func (a *orderServiceAdapter) GetOfflineOrders(ctx context.Context) ([]*schema.G
 	err = json.Unmarshal(respByteArr, &result)
 	if err != nil {
 		log.Printf("BFF-Adapter-OrderServiceAdapter-GetOfflineOrders-json.Unmarshal error %v", err)
+		return nil, err
+	}
+
+	if result.StatusCode != http.StatusOK {
+		return nil, errors.New(result.Message)
+	}
+
+	return result.Data, nil
+}
+
+func (a *orderServiceAdapter) GetListOrderCustomer(ctx context.Context, customerId string) ([]*schema.GetListOrderCustomerResponseData, error) {
+	if customerId == "" {
+		return nil, errors.New("[BFF-Adapter-OrderServiceAdapter-GetListOrderCustomer] customerId must not be empty")
+	}
+
+	log.Printf("Start to call order service for GetListOrderCustomer, customerId %s", customerId)
+	defer log.Println("End call order service for GetListOrderCustomer")
+
+	var result *schema.GetListOrderCustomerResponse
+
+	url := fmt.Sprintf("http://localhost:%d/api/order-service/customer/%s", a.port, customerId)
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
+	if err != nil {
+		log.Printf("BFF-Adapter-OrderServiceAdapter-GetOnlineOrdersStatus-NewRequestWithContext error %v", err)
+		return nil, err
+	}
+
+	resp, err := a.httpClient.Do(req)
+	if err != nil {
+		log.Printf("BFF-Adapter-OrderServiceAdapter-GetListOrderCustomer-httpClient.Do error %v", err)
+		return nil, err
+	}
+
+	respByteArr, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Printf("BFF-Adapter-OrderServiceAdapter-GetListOrderCustomer-ioutil.ReadAll error %v", err)
+		return nil, err
+	}
+
+	err = json.Unmarshal(respByteArr, &result)
+	if err != nil {
+		log.Printf("BFF-Adapter-OrderServiceAdapter-GetListOrderCustomer-json.Unmarshal error %v", err)
 		return nil, err
 	}
 

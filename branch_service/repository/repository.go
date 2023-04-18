@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
@@ -12,8 +13,8 @@ type IBranchServiceRepository interface {
 	GetBranchStaff(ctx context.Context, branchId string) ([]*BranchStaffModel, error)
 	AddBranch(ctx context.Context, data *BranchModel) error
 	UpdateBranch(ctx context.Context, data *BranchModel) error
-	UpdateBranchManager(ctx context.Context, branchId int32, managerId string) error
-	DeleteBranch(ctx context.Context, branchId int32) error
+	UpdateBranchManager(ctx context.Context, branchId string, managerId string) error
+	DeleteBranch(ctx context.Context, branchId string) error
 }
 
 func NewRepository(db *gorm.DB) IBranchServiceRepository {
@@ -52,7 +53,7 @@ func (r *branchServiceRepository) UpdateBranch(ctx context.Context, data *Branch
 	return r.db.WithContext(ctx).Table(r.branchTableName).Where("branch_code = ?", data.BranchCode).Updates(data).Error
 }
 
-func (r *branchServiceRepository) UpdateBranchManager(ctx context.Context, branchId int32, managerId string) error {
+func (r *branchServiceRepository) UpdateBranchManager(ctx context.Context, branchId string, managerId string) error {
 	return r.db.Transaction(func(tx *gorm.DB) error {
 		// end current manager
 		if err := r.db.WithContext(ctx).Exec("update branch_manager set end_date = NOW() where branch_code = ? and end_date is null", branchId).Error; err != nil {
@@ -82,6 +83,6 @@ func (r *branchServiceRepository) UpdateBranchManager(ctx context.Context, branc
 	})
 }
 
-func (r *branchServiceRepository) DeleteBranch(ctx context.Context, branchId int32) error {
+func (r *branchServiceRepository) DeleteBranch(ctx context.Context, branchId string) error {
 	return r.db.WithContext(ctx).Table(r.branchTableName).Where("branch_code = ?", branchId).Delete(branchId).Error
 }

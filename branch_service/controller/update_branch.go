@@ -6,7 +6,7 @@ import (
 	"store-bpel/branch_service/schema"
 )
 
-func (s *branchServiceController) UpdateBranch(ctx context.Context, request *schema.UpdateBranchRequest, branchId int32) error {
+func (s *branchServiceController) UpdateBranch(ctx context.Context, request *schema.UpdateBranchRequest, branchId string) error {
 	return s.repository.UpdateBranch(ctx, &repository.BranchModel{
 		BranchCode:     branchId,
 		BranchName:     request.Name,
@@ -19,6 +19,6 @@ func (s *branchServiceController) UpdateBranch(ctx context.Context, request *sch
 	})
 }
 
-func (s *branchServiceController) UpdateBranchManager(ctx context.Context, request *schema.UpdateBranchManagerRequest, branchId int32) error {
+func (s *branchServiceController) UpdateBranchManager(ctx context.Context, request *schema.UpdateBranchManagerRequest, branchId string) error {
 	return s.repository.UpdateBranchManager(ctx, branchId, request.StaffId)
 }
