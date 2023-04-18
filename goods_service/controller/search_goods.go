@@ -14,6 +14,14 @@ func (c *goodsServiceController) SearchGoods(ctx context.Context, request *schem
 	res := make([]*schema.GetGoodsDefaultResponseData, request.PageSize)
 
 	switch request.Category {
+	case 0: // Search goods
+		for i := 0; i < request.PageSize; i++ {
+			goodsDefault, err := c.getEachProductDetail(ctx, goods[i])
+			if err != nil {
+				return nil, err
+			}
+			res[i] = goodsDefault
+		}
 	case 1: // get best-selling
 		mapGoodsCodeToTrue := make(map[string]bool, 0)
 		for _, goodsId := range goods {
