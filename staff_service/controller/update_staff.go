@@ -2,8 +2,10 @@ package controller
 
 import (
 	"context"
+	accountSchema "store-bpel/account_service/schema"
 	"store-bpel/staff_service/repository"
 	"store-bpel/staff_service/schema"
+	"strconv"
 )
 
 func (s *staffServiceController) UpdateStaff(ctx context.Context, request *schema.UpdateStaffRequest, staffId string) error {
@@ -25,6 +27,15 @@ func (s *staffServiceController) UpdateStaff(ctx context.Context, request *schem
 	if err != nil {
 		return err
 	}
+
+	role, err := strconv.Atoi(request.Role)
+	if err == nil {
+		err = s.accountAdapter.UpdateRole(ctx, staffId, &accountSchema.UpdateRoleRequest{
+			Role: role,
+		})
+		return err
+	}
+
 	if request.WorkingPlace != "" {
 		// TODO update to branch service
 	}

@@ -19,6 +19,7 @@ func (c *accountServiceController) AddAccount(ctx context.Context, request *sche
 	if err != nil {
 		return err
 	}
+
 	return c.repository.AddAccount(ctx, &repository.AccountModel{
 		Username: request.Username,
 		Password: hashedPass,

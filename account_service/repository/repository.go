@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+
 	"gorm.io/gorm"
 )
 
@@ -21,7 +22,7 @@ func NewRepository(db *gorm.DB) IAccountServiceRepository {
 
 func (r *accountServiceRepository) GetListAccount(ctx context.Context, username string) ([]*AccountModel, error) {
 	var result []*AccountModel
-	query := r.db.WithContext(ctx).Table(r.accountTableName)
+	query := r.db.WithContext(ctx).Table(r.accountTableName).Where("is_activated=1")
 	if username != "" {
 		query = query.Where("username LIKE ?", "%"+username+"%")
 	}
@@ -35,9 +36,20 @@ func (r *accountServiceRepository) GetAccount(ctx context.Context, username stri
 }
 
 func (r *accountServiceRepository) AddAccount(ctx context.Context, data *AccountModel) error {
+	if data.UserRole == 7 {
+		return r.db.Exec("INSERT INTO `account` (`username`, `password`, `user_role`, `is_activated`) VALUES (?, ?, ?, '0');",
+			data.Username, data.Password, data.UserRole).Error
+	}
 	return r.db.WithContext(ctx).Table(r.accountTableName).Select("username", "password", "user_role").Create(data).Error
 }
 
 func (r *accountServiceRepository) UpdateRole(ctx context.Context, username string, role int) error {
-	return r.db.WithContext(ctx).Table(r.accountTableName).Where("username = ?", username).Update("user_role", role).Error
+	var err error
+	if role == 7 {
+		err = r.db.Exec("UPDATE `account` SET `user_role` = ?, `is_activated` = '0' WHERE `account`.`username` = ?;", role, username).Error
+	} else {
+		err = r.db.Exec("UPDATE `account` SET `user_role` = ?, `is_activated` = '1' WHERE `account`.`username` = ?;", role, username).Error
+	}
+
+	return err
 }
