@@ -14,7 +14,7 @@ type UpdateResponse struct {
 }
 
 type GetBranchResponseData struct {
-	BranchCode     int32
+	BranchCode     string
 	BranchName     string
 	BranchProvince string
 	BranchDistrict string
