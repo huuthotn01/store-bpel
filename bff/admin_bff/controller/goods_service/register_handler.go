@@ -13,6 +13,7 @@ import (
 	"store-bpel/bff/admin_bff/config"
 	"store-bpel/bff/admin_bff/schema/goods_service"
 	"store-bpel/goods_service/common"
+	"time"
 
 	"github.com/gorilla/mux"
 )
@@ -33,6 +34,7 @@ func RegisterEndpointHandler(mux *mux.Router, cfg *config.Config) {
 	mux.HandleFunc("/api/bff/goods-service/goods/get-warehouse", handleGetWarehouse)
 	mux.HandleFunc("/api/bff/goods-service/goods/update", handleUpdateGoods)
 	mux.HandleFunc("/api/bff/goods-service/goods/image", handleUploadImage)
+	mux.HandleFunc("/api/bff/goods-service/goods/image:delete", handleDeleteImage)
 }
 
 func handleGetGoods(w http.ResponseWriter, r *http.Request) {
@@ -130,7 +132,7 @@ func handleUploadImage(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// Create a new file in the uploads directory
-		relativePath := fmt.Sprintf("../uploads/%s/%s", goodsId, fileHeader.Filename)
+		relativePath := fmt.Sprintf("../uploads/%s/%d%s", goodsId, time.Now().Unix(), filepath.Ext(fileHeader.Filename))
 		dst, err := os.Create(relativePath)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -162,6 +164,44 @@ func handleUploadImage(w http.ResponseWriter, r *http.Request) {
 			StatusCode: 200,
 			Message:    "OK",
 		})
+	} else {
+		http.Error(w, "Method not supported", http.StatusNotFound)
+	}
+}
+
+func handleDeleteImage(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
+	w.Header().Set("Content-Type", "application/xml")
+	enc := xml.NewEncoder(w)
+	payload, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		err = enc.Encode(&goods_service.UpdateResponse{
+			StatusCode: 500,
+			Message:    fmt.Sprintf("BFF-Goods-handleDeleteImage-ioutil.ReadAll err %v", err),
+		})
+		return
+	}
+	if r.Method == http.MethodPost {
+		var request = new(goods_service.DeleteImageRequest)
+		err = xml.Unmarshal(payload, request)
+		if err != nil {
+			err = enc.Encode(&goods_service.UpdateResponse{
+				StatusCode: 500,
+				Message:    fmt.Sprintf("BFF-Goods-handleDeleteImage-xml.Unmarshal err %v", err),
+			})
+		}
+		err = goodsController.DeleteImage(ctx, request)
+		if err != nil {
+			err = enc.Encode(&goods_service.UpdateResponse{
+				StatusCode: 500,
+				Message:    fmt.Sprintf("BFF-Goods-handleDeleteImage-AddGoods err %v", err),
+			})
+		} else {
+			err = enc.Encode(&goods_service.UpdateResponse{
+				StatusCode: 200,
+				Message:    "OK",
+			})
+		}
 	} else {
 		http.Error(w, "Method not supported", http.StatusNotFound)
 	}

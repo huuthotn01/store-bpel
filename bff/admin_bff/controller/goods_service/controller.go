@@ -18,6 +18,7 @@ type IGoodsBffController interface {
 	GetWarehouseByGoods(ctx context.Context, request *goods_service.GetWarehouseByGoodsRequest) ([]*goods_service.GetWarehouseResponseData, error)
 	UpdateGoods(ctx context.Context, request []*goods_service.UpdateGoodsRequestData) error
 	UploadImage(ctx context.Context, goodsId, goodsColor, url string, isDefault bool) error
+	DeleteImage(ctx context.Context, request *goods_service.DeleteImageRequest) error
 }
 
 type goodsBffController struct {
