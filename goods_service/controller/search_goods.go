@@ -10,17 +10,25 @@ func (c *goodsServiceController) SearchGoods(ctx context.Context, request *schem
 	if err != nil {
 		return nil, err
 	}
+	if len(goods) == 0 {
+		return nil, nil
+	}
 
-	res := make([]*schema.GetGoodsDefaultResponseData, request.PageSize)
+	res := make([]*schema.GetGoodsDefaultResponseData, 0, request.PageSize)
 
 	switch request.Category {
-	case 0: // Search goods
-		for i := 0; i < request.PageSize; i++ {
-			goodsDefault, err := c.getEachProductDetail(ctx, goods[i])
+	case 0, 2: // 0: default search goods by filtering name, 2: newly-added
+		counter := 0
+		for _, data := range goods {
+			goodsDefault, err := c.getEachProductDetail(ctx, data)
 			if err != nil {
 				return nil, err
 			}
-			res[i] = goodsDefault
+			res = append(res, goodsDefault)
+			counter++
+			if counter == request.PageSize {
+				break
+			}
 		}
 	case 1: // get best-selling
 		mapGoodsCodeToTrue := make(map[string]bool, 0)
@@ -38,20 +46,12 @@ func (c *goodsServiceController) SearchGoods(ctx context.Context, request *schem
 				if err != nil {
 					return nil, err
 				}
-				res[counter] = goodsDefault
+				res = append(res, goodsDefault)
 				counter++
 				if counter == request.PageSize {
 					break
 				}
 			}
-		}
-	case 2: // get newly added
-		for i := 0; i < request.PageSize; i++ {
-			goodsDefault, err := c.getEachProductDetail(ctx, goods[i])
-			if err != nil {
-				return nil, err
-			}
-			res[i] = goodsDefault
 		}
 	}
 
