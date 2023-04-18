@@ -1,5 +1,5 @@
 create table if not exists branch (
-    branch_code int auto_increment,
+    branch_code varchar(30),
     branch_name varchar(100),
     branch_province varchar(50),
     branch_district varchar(50),
@@ -13,13 +13,13 @@ create table if not exists branch (
 ) engine = InnoDB default charset = utf8mb4 collate = utf8mb4_unicode_ci ;
 
 create table if not exists branch_img (
-    branch_code int,
+    branch_code varchar(30),
     branch_img varchar(100),
     constraint PK_branch_img primary key (branch_code, branch_img)
 ) engine = InnoDB default charset = utf8mb4 collate = utf8mb4_unicode_ci ;
 
 create table if not exists branch_manager (
-    branch_code int,
+    branch_code varchar(30),
     manager_code varchar(100),
     start_date timestamp not null default CURRENT_TIMESTAMP,
     end_date timestamp null,
@@ -27,7 +27,7 @@ create table if not exists branch_manager (
 ) engine = InnoDB default charset = utf8mb4 collate = utf8mb4_unicode_ci ;
 
 create table if not exists branch_staff (
-    branch_code int,
+    branch_code varchar(30),
     staff_code varchar(100),
     start_date timestamp not null default CURRENT_TIMESTAMP,
     end_date timestamp null,

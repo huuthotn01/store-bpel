@@ -86,3 +86,24 @@ type Address struct {
 	District string
 	Province string
 }
+
+type GetListOrderCustomerResponseData struct {
+	OrderId         int    // private code
+	OrderCode       string // public code
+	PaymentMethod   string
+	ListGoods       []*OrderGoodsResponse
+	TotalPrice      int
+	TotalGoods      int
+	TotalDiscount   int
+	TotalOrder      int
+	IsCompleted     bool
+	ShipFee         int
+	StatusShip      []*GetListOrderStateResponse
+	TransactionDate string
+	ExpectDate      string
+}
+
+type GetListOrderStateResponse struct {
+	State string
+	Time  string
+}

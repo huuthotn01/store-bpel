@@ -22,3 +22,7 @@ type OrderGoodsRequest struct {
 	Discount  float32
 	Tax       float32
 }
+
+type GetListOrderCustomerRequest struct {
+	CustomerId string
+}

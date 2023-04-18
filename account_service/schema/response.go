@@ -32,10 +32,7 @@ type GetListAccountResponseData struct {
 	Id          string
 	Role        int
 	PhoneNumber string
-	Street      string
-	Ward        string
-	District    string
-	Province    string
+	Email       string
 	Name        string
 	IsActivated bool
 	CreatedAt   time.Time

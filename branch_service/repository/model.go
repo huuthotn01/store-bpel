@@ -1,8 +1,9 @@
 package repository
 
 import (
-	"gorm.io/gorm"
 	"time"
+
+	"gorm.io/gorm"
 )
 
 type branchServiceRepository struct {
@@ -14,7 +15,7 @@ type branchServiceRepository struct {
 }
 
 type BranchModel struct {
-	BranchCode     int32
+	BranchCode     string
 	BranchName     string
 	BranchProvince string
 	BranchDistrict string
@@ -27,19 +28,19 @@ type BranchModel struct {
 }
 
 type BranchImgModel struct {
-	BranchCode int32
+	BranchCode string
 	BranchImg  string
 }
 
 type BranchManagerModel struct {
-	BranchCode  int32
+	BranchCode  string
 	ManagerCode string
 	StartDate   time.Time
 	EndDate     time.Time
 }
 
 type BranchStaffModel struct {
-	BranchCode int32
+	BranchCode string
 	StaffCode  string
 	StartDate  time.Time
 	EndDate    time.Time
