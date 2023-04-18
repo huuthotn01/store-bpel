@@ -24,6 +24,7 @@ type IGoodsServiceAdapter interface {
 	GetWarehouseByGoods(ctx context.Context, goodsId string) ([]*schema.GetGoodsInWarehouseResponseData, error)
 	UpdateGoods(ctx context.Context, goodsId string, request []*schema.UpdateGoodsRequest) error
 	UploadImage(ctx context.Context, request *schema.UploadImageRequest) error
+	DeleteImage(ctx context.Context, imgUrl string) error
 }
 
 type goodsServiceAdapter struct {
@@ -472,6 +473,49 @@ func (a *goodsServiceAdapter) UploadImage(ctx context.Context, request *schema.U
 	err = json.Unmarshal(respByteArr, &result)
 	if err != nil {
 		log.Printf("BFF-Adapter-GoodsServiceAdapter-UploadImage-json.Unmarshal error %v", err)
+		return err
+	}
+
+	if result.StatusCode != http.StatusOK {
+		return errors.New(result.Message)
+	}
+
+	return nil
+}
+
+func (a *goodsServiceAdapter) DeleteImage(ctx context.Context, imgUrl string) error {
+	if imgUrl == "" {
+		return errors.New("[BFF-Adapter-GoodsServiceAdapter-DeleteImage] image url must not be empty")
+	}
+
+	log.Printf("Start to call goods service for DeleteImage")
+	defer log.Println("End call goods service for DeleteImage")
+
+	var result *schema.UpdateResponse
+
+	url := fmt.Sprintf("http://localhost:%d/api/goods-service/image/%s", a.port, imgUrl)
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodDelete, url, nil)
+	if err != nil {
+		log.Printf("BFF-Adapter-GoodsServiceAdapter-DeleteImage-NewRequestWithContext error %v", err)
+		return err
+	}
+
+	resp, err := a.httpClient.Do(req)
+	if err != nil {
+		log.Printf("BFF-Adapter-GoodsServiceAdapter-DeleteImage-httpClient.Do error %v", err)
+		return err
+	}
+
+	respByteArr, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Printf("BFF-Adapter-GoodsServiceAdapter-DeleteImage-ioutil.ReadAll error %v", err)
+		return err
+	}
+
+	err = json.Unmarshal(respByteArr, &result)
+	if err != nil {
+		log.Printf("BFF-Adapter-GoodsServiceAdapter-DeleteImage-json.Unmarshal error %v", err)
 		return err
 	}
 

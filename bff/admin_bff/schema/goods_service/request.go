@@ -1,5 +1,9 @@
 package goods_service
 
+type DeleteImageRequest struct {
+	Url string
+}
+
 type GetGoodsDetailRequest struct {
 	GoodsCode string
 }
