@@ -24,3 +24,8 @@ type AddCustomerRequest struct {
 	District string
 	Province string
 }
+
+type UploadImageRequest struct {
+	Username string
+	ImageUrl string
+}

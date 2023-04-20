@@ -45,6 +45,8 @@ func registerEndpoint(r *mux.Router) {
 	r.HandleFunc("/api/event-service/event/current", handleEventCurrent)
 	r.HandleFunc("/api/event-service/event/{eventId}", handleEventDetail)
 	r.HandleFunc("/api/event-service/get-by-goods/{goodsId}", handleEventByGoods)
+	r.HandleFunc("/api/event-service/image", handleImage)
+	r.HandleFunc("/api/event-service/image/{eventId}", handleDeleteImage)
 }
 
 func handleEvent(w http.ResponseWriter, r *http.Request) {
@@ -286,6 +288,73 @@ func handleEventByGoods(w http.ResponseWriter, r *http.Request) {
 				StatusCode: 200,
 				Message:    "OK",
 				Data:       resp,
+			})
+		}
+	} else {
+		http.Error(w, "Method not supported", http.StatusNotFound)
+	}
+}
+
+func handleImage(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	enc := json.NewEncoder(w)
+	if r.Method == http.MethodPost {
+		reqBody, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			err = enc.Encode(&schema.UpdateResponse{
+				StatusCode: 500,
+				Message:    err.Error(),
+			})
+			return
+		}
+		var request *schema.UploadImageRequest
+		err = json.Unmarshal(reqBody, &request)
+		if err != nil {
+			err = enc.Encode(&schema.UpdateResponse{
+				StatusCode: 500,
+				Message:    err.Error(),
+			})
+			return
+		}
+		err = ctrl.UploadImage(ctx, request)
+		if err != nil {
+			err = enc.Encode(&schema.UpdateResponse{
+				StatusCode: 500,
+				Message:    err.Error(),
+			})
+		} else {
+			err = enc.Encode(&schema.UpdateResponse{
+				StatusCode: 200,
+				Message:    "OK",
+			})
+		}
+	} else {
+		http.Error(w, "Method not supported", http.StatusNotFound)
+	}
+}
+
+func handleDeleteImage(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	enc := json.NewEncoder(w)
+	vars := mux.Vars(r)
+
+	if r.Method == http.MethodDelete {
+		eventId := vars["eventId"]
+		err := ctrl.DeleteImage(ctx, eventId)
+		if err != nil {
+			err = enc.Encode(&schema.UpdateResponse{
+				StatusCode: 500,
+				Message:    err.Error(),
+			})
+		} else {
+			err = enc.Encode(&schema.UpdateResponse{
+				StatusCode: 200,
+				Message:    "OK",
 			})
 		}
 	} else {

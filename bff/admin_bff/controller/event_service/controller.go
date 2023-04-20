@@ -11,6 +11,8 @@ type IEventBffController interface {
 	AddEvent(ctx context.Context, request *event_service.AddEventRequest) error
 	UpdateEvent(ctx context.Context, request *event_service.UpdateEventRequest) error
 	DeleteEvent(ctx context.Context, request *event_service.DeleteEventRequest) error
+	UploadImage(ctx context.Context, request *event_service.UploadImageRequest) error
+	DeleteImage(ctx context.Context, request *event_service.DeleteImageRequest) error
 }
 
 type eventBffController struct {

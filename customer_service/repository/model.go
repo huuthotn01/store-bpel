@@ -20,4 +20,5 @@ type CustomerModel struct {
 	Ward           string
 	District       string
 	Province       string
+	Image          string
 }

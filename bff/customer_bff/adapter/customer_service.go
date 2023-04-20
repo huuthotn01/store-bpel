@@ -17,6 +17,8 @@ type ICustomerServiceAdapter interface {
 	GetCustomer(ctx context.Context, username string) (*schema.GetCustomerInfoResponseData, error)
 	AddCustomer(ctx context.Context, request *schema.AddCustomerRequest) error
 	UpdateCustomer(ctx context.Context, username string, request *schema.UpdateCustomerInfoRequest) error
+	UploadImage(ctx context.Context, request *schema.UploadImageRequest) error
+	DeleteImage(ctx context.Context, username string) error
 }
 
 type customerServiceAdapter struct {
@@ -157,6 +159,93 @@ func (a *customerServiceAdapter) UpdateCustomer(ctx context.Context, username st
 	err = json.Unmarshal(respByteArr, &result)
 	if err != nil {
 		log.Printf("BFF-Adapter-CustomerServiceAdapter-UpdateCustomer-json.Unmarshal error %v", err)
+		return err
+	}
+
+	if result.StatusCode != http.StatusOK {
+		return errors.New(result.Message)
+	}
+
+	return nil
+}
+
+func (a *customerServiceAdapter) UploadImage(ctx context.Context, request *schema.UploadImageRequest) error {
+	log.Println("Start to call customer service for UploadImage")
+	defer log.Println("End call customer service for UploadImage")
+
+	var result *schema.UpdateResponse
+	url := fmt.Sprintf("http://localhost:%d/api/customer-service/image", a.port)
+	data, err := json.Marshal(request)
+	if err != nil {
+		log.Printf("BFF-Adapter-CustomerServiceAdapter-UploadImage-Marshal error %v", err)
+		return err
+	}
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, bytes.NewReader(data))
+	if err != nil {
+		log.Printf("BFF-Adapter-CustomerServiceAdapter-UploadImage-NewRequestWithContext error %v", err)
+		return err
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+	resp, err := a.httpClient.Do(req)
+	if err != nil {
+		log.Printf("BFF-Adapter-CustomerServiceAdapter-UploadImage-httpClient.Do error %v", err)
+		return err
+	}
+
+	respByteArr, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Printf("BFF-Adapter-CustomerServiceAdapter-UploadImage-ioutil.ReadAll error %v", err)
+		return err
+	}
+
+	err = json.Unmarshal(respByteArr, &result)
+	if err != nil {
+		log.Printf("BFF-Adapter-CustomerServiceAdapter-UploadImage-json.Unmarshal error %v", err)
+		return err
+	}
+
+	if result.StatusCode != http.StatusOK {
+		return errors.New(result.Message)
+	}
+
+	return nil
+}
+
+func (a *customerServiceAdapter) DeleteImage(ctx context.Context, username string) error {
+	if username == "" {
+		return errors.New("[BFF-Adapter-CustomerServiceAdapter-DeleteImage] username must not be empty")
+	}
+
+	log.Println("Start to call customer service for DeleteImage")
+	defer log.Println("End call customer service for DeleteImage")
+
+	var result *schema.UpdateResponse
+	url := fmt.Sprintf("http://localhost:%d/api/customer-service/image/%s", a.port, username)
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, nil)
+	if err != nil {
+		log.Printf("BFF-Adapter-CustomerServiceAdapter-DeleteImage-NewRequestWithContext error %v", err)
+		return err
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+	resp, err := a.httpClient.Do(req)
+	if err != nil {
+		log.Printf("BFF-Adapter-CustomerServiceAdapter-DeleteImage-httpClient.Do error %v", err)
+		return err
+	}
+
+	respByteArr, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Printf("BFF-Adapter-CustomerServiceAdapter-DeleteImage-ioutil.ReadAll error %v", err)
+		return err
+	}
+
+	err = json.Unmarshal(respByteArr, &result)
+	if err != nil {
+		log.Printf("BFF-Adapter-CustomerServiceAdapter-DeleteImage-json.Unmarshal error %v", err)
 		return err
 	}
 

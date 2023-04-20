@@ -14,6 +14,8 @@ type ICustomerServiceController interface {
 	GetCustomerInfo(ctx context.Context, customerId string) (*schema.GetCustomerInfoResponseData, error)
 	UpdateCustomerInfo(ctx context.Context, customerId string, request *schema.UpdateCustomerInfoRequest) error
 	AddCustomer(ctx context.Context, request *schema.AddCustomerRequest) error
+	UploadImage(ctx context.Context, request *schema.UploadImageRequest) error
+	DeleteImage(ctx context.Context, username string) error
 }
 
 type customerServiceController struct {
