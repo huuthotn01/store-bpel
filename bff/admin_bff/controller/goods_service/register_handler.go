@@ -132,8 +132,8 @@ func handleUploadImage(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// Create a new file in the uploads directory
-		relativePath := fmt.Sprintf("../uploads/%s/%d%s", goodsId, time.Now().Unix(), filepath.Ext(fileHeader.Filename))
-		dst, err := os.Create(relativePath)
+		relativePath := fmt.Sprintf("uploads/%s/%d%s", goodsId, time.Now().Unix(), filepath.Ext(fileHeader.Filename))
+		dst, err := os.Create("../" + relativePath)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
@@ -149,13 +149,13 @@ func handleUploadImage(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		absPath, err := filepath.Abs(relativePath)
+		imgPath := "/store-bpel/bff/admin_bff/" + relativePath
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 
-		err = goodsController.UploadImage(ctx, goodsId, goodsColor, absPath, isDefault == "true")
+		err = goodsController.UploadImage(ctx, goodsId, goodsColor, imgPath, isDefault == "true")
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return

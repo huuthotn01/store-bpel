@@ -17,6 +17,8 @@ type IEventServiceAdapter interface {
 	AddEvent(ctx context.Context, data *schema.AddEventRequest) error
 	UpdateEvent(ctx context.Context, eventId string, data *schema.UpdateEventRequest) error
 	DeleteEvent(ctx context.Context, eventId string) error
+	UploadImage(ctx context.Context, data *schema.UploadImageRequest) error
+	DeleteImage(ctx context.Context, eventId int) error
 }
 
 type eventServiceAdapter struct {
@@ -29,6 +31,102 @@ func NewEventAdapter(cfg *config.Config) IEventServiceAdapter {
 		httpClient: &http.Client{},
 		port:       cfg.EventServicePort,
 	}
+}
+
+func (a *eventServiceAdapter) UploadImage(ctx context.Context, data *schema.UploadImageRequest) error {
+	log.Printf("Start to call event service for UploadImage")
+	defer log.Println("End call event service for UploadImage")
+
+	// call http to event service
+	url := fmt.Sprintf("http://localhost:%d/api/event-service/image", a.port)
+
+	payload, err := json.Marshal(data)
+	if err != nil {
+		log.Printf("BFF-Adapter-EventServiceAdapter-UploadImage-json.Marshal error %v", err)
+		return err
+	}
+
+	// create http request
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, bytes.NewBuffer(payload))
+	if err != nil {
+		log.Printf("BFF-Adapter-EventServiceAdapter-UploadImage-NewRequestWithContext error %v", err)
+		return err
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+	// send request to event service
+	resp, err := a.httpClient.Do(req)
+	if err != nil {
+		log.Printf("BFF-Adapter-EventServiceAdapter-UploadImage-httpClient.Do error %v", err)
+		return err
+	}
+
+	// Read all data response
+	// Convert io.Reader (type off http.Response.Body) to []byte
+	respByteArr, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Printf("BFF-Adapter-EventServiceAdapter-UploadImage-ioutil.ReadAll error %v", err)
+		return err
+	}
+
+	// Convert []byte to JSON
+	var result *schema.UpdateResponse
+	err = json.Unmarshal(respByteArr, &result)
+	if err != nil {
+		log.Printf("BFF-Adapter-EventServiceAdapter-UploadImage-json.Unmarshal error %v", err)
+		return err
+	}
+
+	if result.StatusCode != http.StatusOK {
+		return errors.New(result.Message)
+	}
+
+	return nil
+}
+
+func (a *eventServiceAdapter) DeleteImage(ctx context.Context, eventId int) error {
+	log.Printf("Start to call event service for DeleteImage")
+	defer log.Println("End call event service for DeleteImage")
+
+	// call http to event service
+	url := fmt.Sprintf("http://localhost:%d/api/event-service/image/%d", a.port, eventId)
+
+	// create http request
+	req, err := http.NewRequestWithContext(ctx, http.MethodDelete, url, nil)
+	if err != nil {
+		log.Printf("BFF-Adapter-EventServiceAdapter-DeleteImage-NewRequestWithContext error %v", err)
+		return err
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+	// send request to event service
+	resp, err := a.httpClient.Do(req)
+	if err != nil {
+		log.Printf("BFF-Adapter-EventServiceAdapter-DeleteImage-httpClient.Do error %v", err)
+		return err
+	}
+
+	// Read all data response
+	// Convert io.Reader (type off http.Response.Body) to []byte
+	respByteArr, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Printf("BFF-Adapter-EventServiceAdapter-DeleteImage-ioutil.ReadAll error %v", err)
+		return err
+	}
+
+	// Convert []byte to JSON
+	var result *schema.UpdateResponse
+	err = json.Unmarshal(respByteArr, &result)
+	if err != nil {
+		log.Printf("BFF-Adapter-EventServiceAdapter-DeleteImage-json.Unmarshal error %v", err)
+		return err
+	}
+
+	if result.StatusCode != http.StatusOK {
+		return errors.New(result.Message)
+	}
+
+	return nil
 }
 
 func (a *eventServiceAdapter) AddEvent(ctx context.Context, data *schema.AddEventRequest) error {

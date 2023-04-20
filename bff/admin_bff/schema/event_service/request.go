@@ -22,3 +22,12 @@ type UpdateEventRequest struct {
 type DeleteEventRequest struct {
 	EventId string
 }
+
+type UploadImageRequest struct {
+	EventId  int
+	ImageUrl string
+}
+
+type DeleteImageRequest struct {
+	EventId int
+}
