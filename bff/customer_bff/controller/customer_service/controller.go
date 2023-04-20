@@ -11,6 +11,8 @@ type ICustomerBffController interface {
 	AddCustomer(ctx context.Context, request *customer_service.AddCustomerRequest) error
 	UpdateCustomer(ctx context.Context, request *customer_service.UpdateCustomerInfoRequest) error
 	GetCustomer(ctx context.Context, request *customer_service.GetCustomerInfoRequest) (*customer_service.GetCustomerInfoResponseData, error)
+	UploadImage(ctx context.Context, request *customer_service.UploadImageRequest) error
+	DeleteImage(ctx context.Context, username string) error
 }
 
 type customerBffController struct {

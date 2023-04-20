@@ -18,7 +18,7 @@ type IEventServiceAdapter interface {
 	UpdateEvent(ctx context.Context, eventId string, data *schema.UpdateEventRequest) error
 	DeleteEvent(ctx context.Context, eventId string) error
 	UploadImage(ctx context.Context, data *schema.UploadImageRequest) error
-	DeleteImage(ctx context.Context, eventId int) error
+	DeleteImage(ctx context.Context, eventId string) error
 }
 
 type eventServiceAdapter struct {
@@ -84,12 +84,15 @@ func (a *eventServiceAdapter) UploadImage(ctx context.Context, data *schema.Uplo
 	return nil
 }
 
-func (a *eventServiceAdapter) DeleteImage(ctx context.Context, eventId int) error {
+func (a *eventServiceAdapter) DeleteImage(ctx context.Context, eventId string) error {
+	if eventId == "" {
+		return errors.New("[BFF-Adapter-EventServiceAdapter-DeleteImage] event id must not be empty")
+	}
 	log.Printf("Start to call event service for DeleteImage")
 	defer log.Println("End call event service for DeleteImage")
 
 	// call http to event service
-	url := fmt.Sprintf("http://localhost:%d/api/event-service/image/%d", a.port, eventId)
+	url := fmt.Sprintf("http://localhost:%d/api/event-service/image/%s", a.port, eventId)
 
 	// create http request
 	req, err := http.NewRequestWithContext(ctx, http.MethodDelete, url, nil)

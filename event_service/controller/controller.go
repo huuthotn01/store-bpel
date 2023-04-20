@@ -19,7 +19,7 @@ type IEventServiceController interface {
 	DeleteEvent(ctx context.Context, eventId int) error
 	GetEventByGoods(ctx context.Context, goodsId string) ([]*schema.GetEventByGoodsData, error)
 	UploadImage(ctx context.Context, request *schema.UploadImageRequest) error
-	DeleteImage(ctx context.Context, eventId int) error
+	DeleteImage(ctx context.Context, eventId string) error
 }
 
 type eventServiceController struct {

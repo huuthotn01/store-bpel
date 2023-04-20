@@ -19,6 +19,6 @@ type UpdateEventRequest struct {
 }
 
 type UploadImageRequest struct {
-	EventId  int
+	EventId  string
 	ImageUrl string
 }

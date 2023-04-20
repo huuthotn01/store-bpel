@@ -13,7 +13,6 @@ import (
 	"store-bpel/bff/admin_bff/config"
 	"store-bpel/bff/admin_bff/schema/event_service"
 	"store-bpel/goods_service/common"
-	"strconv"
 	"time"
 )
 
@@ -159,10 +158,6 @@ func handleUploadImage(w http.ResponseWriter, r *http.Request) {
 		var (
 			eventId = r.FormValue("eventId")
 		)
-		eventIdInt, err := strconv.Atoi(eventId)
-		if err != nil {
-			http.Error(w, "can't convert eventId from string to int", http.StatusInternalServerError)
-		}
 		r.Body = http.MaxBytesReader(w, r.Body, common.MAX_UPLOAD_SIZE) // max size 1MB
 		if err := r.ParseMultipartForm(common.MAX_UPLOAD_SIZE); err != nil {
 			http.Error(w, "Max upload size is 1MB", http.StatusBadRequest)
@@ -209,13 +204,13 @@ func handleUploadImage(w http.ResponseWriter, r *http.Request) {
 		}
 
 		err = eventController.UploadImage(ctx, &event_service.UploadImageRequest{
-			EventId:  eventIdInt,
+			EventId:  eventId,
 			ImageUrl: imgPath,
 		})
 		if err != nil {
 			err = enc.Encode(&event_service.UpdateResponse{
 				StatusCode: 500,
-				Message:    fmt.Sprintf("BFF-Event-handleUploadImage-DeleteEvent err %v", err),
+				Message:    fmt.Sprintf("BFF-Event-handleUploadImage-UploadImage err %v", err),
 			})
 		} else {
 			err = enc.Encode(&event_service.UpdateResponse{

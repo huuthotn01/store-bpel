@@ -344,16 +344,8 @@ func handleDeleteImage(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 
 	if r.Method == http.MethodDelete {
-		eventId, err := strconv.Atoi(vars["eventId"])
-		if err != nil {
-			err = enc.Encode(&schema.UpdateResponse{
-				StatusCode: 500,
-				Message:    err.Error(),
-			})
-			return
-		}
-
-		err = ctrl.DeleteImage(ctx, eventId)
+		eventId := vars["eventId"]
+		err := ctrl.DeleteImage(ctx, eventId)
 		if err != nil {
 			err = enc.Encode(&schema.UpdateResponse{
 				StatusCode: 500,

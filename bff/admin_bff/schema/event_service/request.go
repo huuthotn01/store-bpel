@@ -24,10 +24,10 @@ type DeleteEventRequest struct {
 }
 
 type UploadImageRequest struct {
-	EventId  int
+	EventId  string
 	ImageUrl string
 }
 
 type DeleteImageRequest struct {
-	EventId int
+	EventId string
 }

@@ -9,6 +9,7 @@ type ICustomerServiceRepository interface {
 	GetCustomerInfo(ctx context.Context, customerId string) (*CustomerModel, error)
 	UpdateCustomerInfo(ctx context.Context, data *CustomerModel) error
 	AddCustomer(ctx context.Context, data *CustomerModel) error
+	UpdateCustomerImage(ctx context.Context, customerId, imageUrl string) error
 }
 
 func NewRepository(db *gorm.DB) ICustomerServiceRepository {
@@ -16,6 +17,10 @@ func NewRepository(db *gorm.DB) ICustomerServiceRepository {
 		db:                db,
 		customerTableName: "customer",
 	}
+}
+
+func (r *customerServiceRepository) UpdateCustomerImage(ctx context.Context, customerId, imageUrl string) error {
+	return r.db.WithContext(ctx).Table(r.customerTableName).Where("username = ?", customerId).Update("image", imageUrl).Error
 }
 
 func (r *customerServiceRepository) GetCustomerInfo(ctx context.Context, customerId string) (*CustomerModel, error) {

@@ -44,6 +44,8 @@ func main() {
 func registerEndpoint(r *mux.Router) {
 	r.HandleFunc("/api/customer-service/customer/{customerId}", handleCustomerDetail)
 	r.HandleFunc("/api/customer-service/customer", handleCustomer)
+	r.HandleFunc("/api/customer-service/image", handleImage)
+	r.HandleFunc("/api/customer-service/image/{customerId}", handleDeleteImage)
 }
 
 func handleCustomer(w http.ResponseWriter, r *http.Request) {
@@ -125,6 +127,70 @@ func handleCustomerDetail(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		err = ctrl.UpdateCustomerInfo(ctx, customerId, request)
+		if err != nil {
+			err = enc.Encode(&schema.UpdateResponse{
+				StatusCode: 500,
+				Message:    err.Error(),
+			})
+		} else {
+			err = enc.Encode(&schema.UpdateResponse{
+				StatusCode: 200,
+				Message:    "OK",
+			})
+		}
+	} else {
+		http.Error(w, "Method not supported", http.StatusNotFound)
+	}
+}
+
+func handleImage(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	enc := json.NewEncoder(w)
+	if r.Method == http.MethodPost {
+		reqBody, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			err = enc.Encode(&schema.UpdateResponse{
+				StatusCode: 500,
+				Message:    err.Error(),
+			})
+			return
+		}
+		var request *schema.UploadImageRequest
+		err = json.Unmarshal(reqBody, &request)
+		if err != nil {
+			err = enc.Encode(&schema.UpdateResponse{
+				StatusCode: 500,
+				Message:    err.Error(),
+			})
+			return
+		}
+		err = ctrl.UploadImage(ctx, request)
+		if err != nil {
+			err = enc.Encode(&schema.UpdateResponse{
+				StatusCode: 500,
+				Message:    err.Error(),
+			})
+		} else {
+			err = enc.Encode(&schema.UpdateResponse{
+				StatusCode: 200,
+				Message:    "OK",
+			})
+		}
+	} else {
+		http.Error(w, "Method not supported", http.StatusNotFound)
+	}
+}
+
+func handleDeleteImage(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	enc := json.NewEncoder(w)
+	customerId := mux.Vars(r)["customerId"]
+	if r.Method == http.MethodDelete {
+		err := ctrl.DeleteImage(ctx, customerId)
 		if err != nil {
 			err = enc.Encode(&schema.UpdateResponse{
 				StatusCode: 500,
