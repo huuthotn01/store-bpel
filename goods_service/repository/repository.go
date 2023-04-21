@@ -37,7 +37,7 @@ func NewRepository(db *gorm.DB) IGoodsServiceRepository {
 
 func (r *goodsServiceRepository) FilterGoods(ctx context.Context, name string, newAdded bool) ([]string, error) {
 	var result []string
-	query := r.db.WithContext(ctx).Table(r.goodsTableName).Where("goods_name like '%" + name + "%'").Select("goods_code")
+	query := r.db.WithContext(ctx).Table(r.goodsTableName).Where("goods_name like '%" + name + "%'").Select("distinct goods_code")
 	if newAdded {
 		query = query.Where("created_at >= date_sub(curdate(), interval 30 day)").Order("created_at desc")
 	}

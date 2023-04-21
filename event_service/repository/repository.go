@@ -18,6 +18,7 @@ type IEventServiceRepository interface {
 	DeleteGoods(ctx context.Context, eventId int) error
 	DeleteEvent(ctx context.Context, eventId int) error
 	GetEventByGoods(ctx context.Context, goodsId string) ([]*EventModel, error)
+	UpdateImage(ctx context.Context, eventId string, imageUrl string) error
 }
 
 func NewRepository(db *gorm.DB) IEventServiceRepository {
@@ -46,6 +47,10 @@ type ByDiscount []*EventModel
 func (b ByDiscount) Len() int           { return len(b) }
 func (b ByDiscount) Swap(i, j int)      { b[i], b[j] = b[j], b[i] }
 func (b ByDiscount) Less(i, j int) bool { return b[i].Discount > b[j].Discount }
+
+func (r *eventServiceRepository) UpdateImage(ctx context.Context, eventId string, imageUrl string) error {
+	return r.db.WithContext(ctx).Table(r.eventTableName).Where("event_id = ?", eventId).Update("image", imageUrl).Error
+}
 
 func (r *eventServiceRepository) GetAllEvent(ctx context.Context) ([]*EventModel, error) {
 

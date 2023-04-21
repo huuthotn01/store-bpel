@@ -9,5 +9,6 @@ create table if not exists customer (
     ward varchar(50),
     district varchar(50),
     province varchar(50),
+    image varchar(100),
     constraint PK_customer primary key (username)
 ) engine = InnoDB default charset = utf8mb4 collate = utf8mb4_unicode_ci ;

@@ -17,3 +17,8 @@ type UpdateEventRequest struct {
 	Image     string
 	Goods     []string
 }
+
+type UploadImageRequest struct {
+	EventId  string
+	ImageUrl string
+}
