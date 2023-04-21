@@ -6,7 +6,7 @@ import (
 	"store-bpel/event_service/schema"
 )
 
-func (s *eventServiceController) UpdateEvent(ctx context.Context, eventId int, request *schema.UpdateEventRequest) error {
+func (s *eventServiceController) UpdateEvent(ctx context.Context, eventId string, request *schema.UpdateEventRequest) error {
 	// call repository
 	eventModel := &repository.EventModel{
 		Name:      request.Name,

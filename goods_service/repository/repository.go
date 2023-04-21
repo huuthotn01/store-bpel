@@ -68,7 +68,7 @@ func (r *goodsServiceRepository) GetGoodsImages(ctx context.Context, goodsId str
 
 func (r *goodsServiceRepository) GetGoodsImageUrls(ctx context.Context, goodsId string) ([]string, error) {
 	var result []string
-	query := r.db.WithContext(ctx).Table(r.goodsImgTableName).Where("goods_code = ?", goodsId).Select("goods_img").Find(&result)
+	query := r.db.WithContext(ctx).Table(r.goodsImgTableName).Where("goods_code = ?", goodsId).Select("goods_img").Order("is_default DESC").Find(&result)
 	return result, query.Error
 }
 
@@ -94,7 +94,6 @@ func (r *goodsServiceRepository) AddGoods(ctx context.Context, data []*GoodsMode
 		}
 		return nil
 	})
-
 }
 
 func (r *goodsServiceRepository) UpdateGoods(ctx context.Context, data []*GoodsModel) error {

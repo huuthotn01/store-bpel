@@ -181,13 +181,8 @@ func handleEventDetail(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 
 	if r.Method == "GET" {
-		eventId, err := strconv.Atoi(vars["eventId"])
-		if err != nil {
-			err = enc.Encode(&schema.GetEventDetailResponse{
-				StatusCode: 500,
-				Message:    err.Error(),
-			})
-		}
+		eventId := vars["eventId"]
+
 		resp, err := ctrl.GetEventDetail(ctx, eventId)
 		if err != nil {
 			err = enc.Encode(&schema.GetEventDetailResponse{
@@ -202,14 +197,8 @@ func handleEventDetail(w http.ResponseWriter, r *http.Request) {
 			})
 		}
 	} else if r.Method == "PUT" {
-		eventId, err := strconv.Atoi(vars["eventId"])
-		if err != nil {
-			err = enc.Encode(&schema.UpdateResponse{
-				StatusCode: 500,
-				Message:    err.Error(),
-			})
-			return
-		}
+		eventId := vars["eventId"]
+
 		reqBody, err := ioutil.ReadAll(r.Body)
 		if err != nil {
 			err = enc.Encode(&schema.UpdateResponse{
@@ -241,16 +230,9 @@ func handleEventDetail(w http.ResponseWriter, r *http.Request) {
 			})
 		}
 	} else if r.Method == "DELETE" {
-		eventId, err := strconv.Atoi(vars["eventId"])
-		if err != nil {
-			err = enc.Encode(&schema.UpdateResponse{
-				StatusCode: 500,
-				Message:    err.Error(),
-			})
-			return
-		}
+		eventId := vars["eventId"]
 
-		err = ctrl.DeleteEvent(ctx, eventId)
+		err := ctrl.DeleteEvent(ctx, eventId)
 		if err != nil {
 			err = enc.Encode(&schema.UpdateResponse{
 				StatusCode: 500,

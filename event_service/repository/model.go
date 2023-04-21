@@ -11,7 +11,7 @@ type eventServiceRepository struct {
 }
 
 type EventModel struct {
-	EventId   int `gorm:"primarykey"`
+	EventId   string `gorm:"primarykey"`
 	Name      string
 	Discount  float32
 	StartTime string
@@ -20,6 +20,6 @@ type EventModel struct {
 }
 
 type GoodsModel struct {
-	EventId int
+	EventId string
 	GoodsId string
 }

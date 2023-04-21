@@ -1,5 +1,5 @@
 create table if not exists event (
-    event_id int auto_increment,
+    event_id  varchar(100),
     name varchar(100),
     discount float,
     start_time timestamp default current_timestamp,
