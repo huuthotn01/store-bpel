@@ -13,10 +13,10 @@ import (
 type IEventServiceController interface {
 	GetEvent(ctx context.Context) ([]*schema.GetEventData, error)
 	GetEventCurrent(ctx context.Context, date int) ([]*schema.GetEventData, error)
-	GetEventDetail(ctx context.Context, eventId int) (*schema.GetEventData, error)
+	GetEventDetail(ctx context.Context, eventId string) (*schema.GetEventData, error)
 	AddEvent(ctx context.Context, data *schema.AddEventRequest) error
-	UpdateEvent(ctx context.Context, eventId int, data *schema.UpdateEventRequest) error
-	DeleteEvent(ctx context.Context, eventId int) error
+	UpdateEvent(ctx context.Context, eventId string, data *schema.UpdateEventRequest) error
+	DeleteEvent(ctx context.Context, eventId string) error
 	GetEventByGoods(ctx context.Context, goodsId string) ([]*schema.GetEventByGoodsData, error)
 	UploadImage(ctx context.Context, request *schema.UploadImageRequest) error
 	DeleteImage(ctx context.Context, eventId string) error

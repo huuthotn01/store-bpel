@@ -24,7 +24,7 @@ type GetEventByGoodsResponse struct {
 }
 
 type GetEventData struct {
-	Id        int
+	Id        string
 	Name      string
 	Discount  float32
 	StartTime string
@@ -34,7 +34,7 @@ type GetEventData struct {
 }
 
 type GetEventByGoodsData struct {
-	Id        int
+	Id        string
 	Name      string
 	Discount  float32
 	StartTime string

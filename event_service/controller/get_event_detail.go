@@ -5,7 +5,7 @@ import (
 	"store-bpel/event_service/schema"
 )
 
-func (s *eventServiceController) GetEventDetail(ctx context.Context, eventId int) (*schema.GetEventData, error) {
+func (s *eventServiceController) GetEventDetail(ctx context.Context, eventId string) (*schema.GetEventData, error) {
 	// call repository
 	event, err := s.repository.GetEvent(ctx, eventId)
 

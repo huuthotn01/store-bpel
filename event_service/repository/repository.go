@@ -10,13 +10,13 @@ import (
 type IEventServiceRepository interface {
 	GetAllEvent(ctx context.Context) ([]*EventModel, error)
 	GetAllEventCurrent(ctx context.Context, date int) ([]*EventModel, error)
-	GetGoods(ctx context.Context, eventId int) ([]string, error)
-	GetEvent(ctx context.Context, eventId int) (*EventModel, error)
+	GetGoods(ctx context.Context, eventId string) ([]string, error)
+	GetEvent(ctx context.Context, eventId string) (*EventModel, error)
 	AddEvent(ctx context.Context, data *AddEventData) error
-	AddGoods(ctx context.Context, eventId int, listGoods []string) error
+	AddGoods(ctx context.Context, eventId string, listGoods []string) error
 	UpdateEvent(ctx context.Context, data *UpdateEventData) error
-	DeleteGoods(ctx context.Context, eventId int) error
-	DeleteEvent(ctx context.Context, eventId int) error
+	DeleteGoods(ctx context.Context, eventId string) error
+	DeleteEvent(ctx context.Context, eventId string) error
 	GetEventByGoods(ctx context.Context, goodsId string) ([]*EventModel, error)
 	UpdateImage(ctx context.Context, eventId string, imageUrl string) error
 }
@@ -37,7 +37,7 @@ type (
 
 	UpdateEventData struct {
 		EventModel *EventModel
-		EventId    int
+		EventId    string
 		GoodsList  []string
 	}
 )
@@ -68,7 +68,7 @@ func (r *eventServiceRepository) GetAllEventCurrent(ctx context.Context, date in
 	return result, query.Error
 }
 
-func (r *eventServiceRepository) GetGoods(ctx context.Context, eventId int) ([]string, error) {
+func (r *eventServiceRepository) GetGoods(ctx context.Context, eventId string) ([]string, error) {
 	var goodsList []*GoodsModel
 
 	query := r.db.WithContext(ctx).Table(r.goodsTableName).Where("event_id = ?", eventId).Find(&goodsList)
@@ -81,7 +81,7 @@ func (r *eventServiceRepository) GetGoods(ctx context.Context, eventId int) ([]s
 	return result, query.Error
 }
 
-func (r *eventServiceRepository) GetEvent(ctx context.Context, eventId int) (*EventModel, error) {
+func (r *eventServiceRepository) GetEvent(ctx context.Context, eventId string) (*EventModel, error) {
 	var result *EventModel
 
 	query := r.db.WithContext(ctx).Table(r.eventTableName).Where("event_id = ?", eventId).First(&result)
@@ -107,7 +107,7 @@ func (r *eventServiceRepository) AddEvent(ctx context.Context, data *AddEventDat
 	})
 }
 
-func (r *eventServiceRepository) AddGoods(ctx context.Context, eventId int, listGoods []string) error {
+func (r *eventServiceRepository) AddGoods(ctx context.Context, eventId string, listGoods []string) error {
 	var data []*GoodsModel
 	for _, goods := range listGoods {
 		data = append(data, &GoodsModel{
@@ -142,12 +142,12 @@ func (r *eventServiceRepository) UpdateEvent(ctx context.Context, data *UpdateEv
 	})
 }
 
-func (r *eventServiceRepository) DeleteGoods(ctx context.Context, eventId int) error {
+func (r *eventServiceRepository) DeleteGoods(ctx context.Context, eventId string) error {
 	//delete all current goods
 	return r.db.WithContext(ctx).Table(r.goodsTableName).Where("event_id = ?", eventId).Delete(eventId).Error
 }
 
-func (r *eventServiceRepository) DeleteEvent(ctx context.Context, eventId int) error {
+func (r *eventServiceRepository) DeleteEvent(ctx context.Context, eventId string) error {
 	return r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
 		err := tx.Table(r.eventTableName).Where("event_id = ?", eventId).Delete(eventId).Error
 		if err != nil {
