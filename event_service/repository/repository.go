@@ -55,7 +55,7 @@ func (r *eventServiceRepository) UpdateImage(ctx context.Context, eventId string
 func (r *eventServiceRepository) GetAllEvent(ctx context.Context) ([]*EventModel, error) {
 
 	var result []*EventModel
-	query := r.db.WithContext(ctx).Table(r.eventTableName).Find(&result)
+	query := r.db.WithContext(ctx).Table(r.eventTableName).Order("created_at DESC").Find(&result)
 
 	return result, query.Error
 }
