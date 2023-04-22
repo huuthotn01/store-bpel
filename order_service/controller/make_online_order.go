@@ -2,15 +2,21 @@ package controller
 
 import (
 	"context"
+	"encoding/json"
 	"math/rand"
+	"store-bpel/library/kafka_lib"
 	"store-bpel/order_service/repository"
 	"store-bpel/order_service/schema"
+	stat_schema "store-bpel/statistic_service/schema"
 )
 
 func (c *orderServiceController) CreateOnlineOrder(ctx context.Context, request *schema.MakeOnlineOrderRequest) error {
 	orderPublicCode := c.generateOrderPublicCode()
 
-	orderGoods := make([]*repository.GoodsModel, 0, len(request.GoodsList))
+	var (
+		orderGoods    = make([]*repository.GoodsModel, 0, len(request.GoodsList))
+		statGoodsData = make([]*stat_schema.AddOrderDataRequest_GoodsData, 0, len(request.GoodsList))
+	)
 	for _, data := range request.GoodsList {
 		orderGoods = append(orderGoods, &repository.GoodsModel{
 			GoodsCode:  data.GoodsId,
@@ -24,9 +30,25 @@ func (c *orderServiceController) CreateOnlineOrder(ctx context.Context, request 
 			GoodsName:  data.Name,
 			Promotion:  data.Discount,
 		})
+
+		goodsDetail, err := c.goodsAdapter.GetProductDetail(ctx, data.GoodsId)
+		if err != nil {
+			return err
+		}
+
+		statGoodsData = append(statGoodsData, &stat_schema.AddOrderDataRequest_GoodsData{
+			GoodsId:     data.GoodsId,
+			GoodsSize:   data.Size,
+			GoodsColor:  data.Color,
+			GoodsType:   goodsDetail.GoodsType,
+			GoodsGender: goodsDetail.GoodsGender,
+			GoodsCost:   goodsDetail.UnitCost,
+			UnitPrice:   data.UnitPrice,
+			Quantity:    data.Quantity,
+		})
 	}
 
-	return c.repository.CreateOnlineOrder(ctx, &repository.OnlineOrdersData{
+	err := c.repository.CreateOnlineOrder(ctx, &repository.OnlineOrdersData{
 		PublicOrderCode: orderPublicCode,
 		TransactionDate: request.TransactionDate,
 		TotalPrice:      request.TotalPrice,
@@ -46,6 +68,23 @@ func (c *orderServiceController) CreateOnlineOrder(ctx context.Context, request 
 			Status:           0, // initial status
 		},
 	})
+	if err != nil {
+		return err
+	}
+
+	// call stat service to add order data by kafka
+	addOrderDataRequest := &stat_schema.AddOrderDataRequest{
+		OrderId:         orderPublicCode,
+		TransactionDate: request.TransactionDate,
+		ShopCode:        "", // no shop in online order
+		GoodsData:       statGoodsData,
+	}
+	addOrderDataReqByte, err := json.Marshal(addOrderDataRequest)
+	if err != nil {
+		return err
+	}
+
+	return c.kafkaAdapter.Publish(ctx, kafka_lib.STATISTIC_SERVICE_TOPIC, addOrderDataReqByte)
 }
 
 func (c *orderServiceController) generateOrderPublicCode() string {

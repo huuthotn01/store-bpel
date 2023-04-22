@@ -30,6 +30,9 @@ func main() {
 
 	ctrl = controller.NewController(cfg, db)
 
+	ctx := context.Background()
+	go Consume(ctx, ctrl)
+
 	r := mux.NewRouter()
 	registerEndpoint(r)
 

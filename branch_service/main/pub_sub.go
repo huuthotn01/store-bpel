@@ -5,15 +5,15 @@ import (
 	"encoding/json"
 	"github.com/segmentio/kafka-go"
 	"log"
-	"store-bpel/customer_service/controller"
-	"store-bpel/customer_service/schema"
+	"store-bpel/branch_service/controller"
+	"store-bpel/branch_service/schema"
 	"store-bpel/library/kafka_lib"
 )
 
-func Consume(ctx context.Context, ctrl controller.ICustomerServiceController) {
+func Consume(ctx context.Context, ctrl controller.IBranchServiceController) {
 	r := kafka.NewReader(kafka.ReaderConfig{
 		Brokers: []string{"localhost:9092"},
-		Topic:   kafka_lib.CUSTOMER_SERVICE_TOPIC,
+		Topic:   kafka_lib.BRANCH_SERVICE_TOPIC,
 		GroupID: "group-1",
 	})
 
@@ -23,16 +23,16 @@ func Consume(ctx context.Context, ctrl controller.ICustomerServiceController) {
 			panic("Could not consume message " + err.Error())
 		}
 
-		var request *schema.AddCustomerRequest
+		var request *schema.AddBranchStaffRequest
 		err = json.Unmarshal(msg.Value, &request)
 		if err != nil {
 			panic("Could not unmarshal value " + err.Error())
 		}
 
-		err = ctrl.AddCustomer(ctx, request)
+		err = ctrl.AddBranchStaff(ctx, request)
 		if err != nil {
-			panic("Cannot process AddCustomer" + err.Error())
+			panic("Cannot process AddAccount" + err.Error())
 		}
-		log.Println("Done processing AddCustomer")
+		log.Println("Done processing AddBranchStaff")
 	}
 }

@@ -13,3 +13,21 @@ type FilterGetStatisticRequest struct {
 	Start    string
 	End      string
 }
+
+type AddOrderDataRequest struct {
+	OrderId         string
+	TransactionDate string
+	ShopCode        string
+	GoodsData       []*AddOrderDataRequest_GoodsData
+}
+
+type AddOrderDataRequest_GoodsData struct {
+	GoodsId     string
+	GoodsSize   string
+	GoodsColor  string
+	GoodsType   string
+	GoodsGender int
+	GoodsCost   int
+	UnitPrice   int
+	Quantity    int
+}

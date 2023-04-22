@@ -7,14 +7,9 @@ import (
 )
 
 func (c *accountServiceController) AddAccount(ctx context.Context, request *schema.AddAccountRequest) error {
-	var rawPass string
-	if request.Password != "" {
-		rawPass = request.Password
-	} else {
-		// in case add staff account, staff service doesn't provide password
-		// => account service generate random initial password for account
-		rawPass = c.generateRandomPassword()
-	}
+	// only used in add staff account, staff service doesn't provide password
+	// => account service generate random initial password for account
+	rawPass := c.generateRandomPassword()
 	hashedPass, err := c.hashPasswordBcrypt(rawPass)
 	if err != nil {
 		return err

@@ -15,6 +15,7 @@ type IStatisticServiceController interface {
 	GetRevenueOneGoods(ctx context.Context, request *schema.CommonGetStatisticRequest, goodsId string) ([]*schema.GetRevenueResponseData, error)
 	GetProfit(ctx context.Context, request *schema.FilterGetStatisticRequest) ([]*schema.GetProfitResponseData, error)
 	GetProfitOneGoods(ctx context.Context, request *schema.CommonGetStatisticRequest, goodsId string) ([]*schema.GetProfitResponseData, error)
+	AddOrderData(ctx context.Context, request *schema.AddOrderDataRequest) error
 }
 
 type statisticServiceController struct {

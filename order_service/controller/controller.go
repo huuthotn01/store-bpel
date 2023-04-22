@@ -3,6 +3,7 @@ package controller
 import (
 	"context"
 	"gorm.io/gorm"
+	"store-bpel/library/kafka_lib"
 	"store-bpel/order_service/adapter"
 	"store-bpel/order_service/config"
 	repo "store-bpel/order_service/repository"
@@ -32,19 +33,24 @@ type orderServiceController struct {
 	cfg        *config.Config
 	repository repo.IOrderServiceRepository
 
-	kafkaAdapter adapter.IKafkaAdapter
+	goodsAdapter adapter.IGoodsServiceAdapter
+	kafkaAdapter kafka_lib.IKafkaLib
 }
 
 func NewController(cfg *config.Config, db *gorm.DB) IOrderServiceController {
 	// init repository
 	repository := repo.NewRepository(db)
 
+	// init goods adapter
+	goodsAdapter := adapter.NewGoodsAdapter(cfg)
+
 	// init kafka adapter
-	kafkaAdapter := adapter.NewKafkaAdapter()
+	kafkaAdapter := kafka_lib.NewKafkaLib()
 
 	return &orderServiceController{
 		cfg:          cfg,
 		repository:   repository,
+		goodsAdapter: goodsAdapter,
 		kafkaAdapter: kafkaAdapter,
 	}
 }

@@ -23,3 +23,8 @@ type UpdateBranchRequest struct {
 type UpdateBranchManagerRequest struct {
 	StaffId string
 }
+
+type AddBranchStaffRequest struct {
+	StaffId  string
+	BranchId string
+}

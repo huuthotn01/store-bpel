@@ -43,6 +43,7 @@ func (c *goodsServiceController) getEachProductDetail(ctx context.Context, goods
 		GoodsId:   goodsId,
 		Name:      goodsDetail[0].GoodsName,
 		UnitPrice: goodsDetail[0].UnitPrice,
+		UnitCost:  goodsDetail[0].UnitCost,
 		// Discount:     discount,
 		// Price:        salePrice,
 		GoodsType:    goodsDetail[0].GoodsType,

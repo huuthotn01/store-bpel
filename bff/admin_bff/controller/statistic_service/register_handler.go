@@ -22,6 +22,45 @@ func RegisterEndpointHandler(mux *mux.Router, cfg *config.Config) {
 	mux.HandleFunc("/api/bff/statistic-service/revenue-goods", handleGetRevenueOneGoods)
 	mux.HandleFunc("/api/bff/statistic-service/profit", handleGetProfit)
 	mux.HandleFunc("/api/bff/statistic-service/profit-goods", handleGetProfitOneGoods)
+	mux.HandleFunc("/api/bff/statistic-service/order:add", handleAddOrderData)
+}
+
+func handleAddOrderData(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
+	w.Header().Set("Content-Type", "application/xml")
+	enc := xml.NewEncoder(w)
+	payload, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		err = enc.Encode(&statistic_service.UpdateResponse{
+			StatusCode: 500,
+			Message:    fmt.Sprintf("BFF-Statistic-handleAddOrderData-ioutil.ReadAll err %v", err),
+		})
+		return
+	}
+	if r.Method == http.MethodPost {
+		var request = new(statistic_service.AddOrderDataRequest)
+		err = xml.Unmarshal(payload, request)
+		if err != nil {
+			err = enc.Encode(&statistic_service.UpdateResponse{
+				StatusCode: 500,
+				Message:    fmt.Sprintf("BFF-Statistic-handleAddOrderData-xml.Unmarshal err %v", err),
+			})
+		}
+		err = statisticController.AddOrderData(ctx, request)
+		if err != nil {
+			err = enc.Encode(&statistic_service.UpdateResponse{
+				StatusCode: 500,
+				Message:    fmt.Sprintf("BFF-Statistic-handleAddOrderData-GetOverallStat err %v", err),
+			})
+		} else {
+			err = enc.Encode(&statistic_service.UpdateResponse{
+				StatusCode: 200,
+				Message:    "OK",
+			})
+		}
+	} else {
+		http.Error(w, "Method not supported", http.StatusNotFound)
+	}
 }
 
 func handleGetOverallStat(w http.ResponseWriter, r *http.Request) {
