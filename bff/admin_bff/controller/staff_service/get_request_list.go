@@ -14,11 +14,26 @@ func (c *staffBffController) GetRequestList(ctx context.Context) ([]*staff_servi
 	respRequests := make([]*staff_service.GetRequestResponseData, 0, len(requests))
 	for _, data := range requests {
 		respRequests = append(respRequests, &staff_service.GetRequestResponseData{
-			Id:          data.Id,
-			RequestType: data.RequestType,
-			RequestDate: data.RequestDate,
-			StaffId:     data.StaffId,
-			Status:      data.Status,
+			Id:            data.Id,
+			RequestDate:   data.RequestDate,
+			RequestType:   data.RequestType, // ADD or DELETE
+			Status:        data.Status,
+			StaffId:       data.StaffId,
+			StaffName:     data.StaffName,
+			Province:      data.Province,
+			District:      data.District,
+			Ward:          data.Ward,
+			Street:        data.Street,
+			Hometown:      data.Hometown,
+			CitizenId:     data.CitizenId,
+			StaffPosition: data.StaffPosition,
+			Birthdate:     data.Birthdate,
+			StartDate:     data.StartDate,
+			Salary:        data.Salary,
+			Gender:        data.Gender,
+			Phone:         data.Phone,
+			Email:         data.Email,
+			BranchId:      data.BranchId,
 		})
 	}
 

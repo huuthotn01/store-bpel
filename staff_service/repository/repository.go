@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"time"
 
 	"gorm.io/gorm"
 )
@@ -18,7 +19,30 @@ type IStaffServiceRepository interface {
 	CreateStaffRequest(ctx context.Context, request *RequestsModel) error
 	UpdateRequestStatus(ctx context.Context, status, requestId string) error
 	GetStaffRequest(ctx context.Context, requestId string) (*RequestsModel, error)
-	GetListRequest(ctx context.Context) ([]*RequestsModel, error)
+	GetListRequest(ctx context.Context) ([]*GetRequestResponseData, error)
+}
+
+type GetRequestResponseData struct {
+	Id            string
+	RequestDate   time.Time
+	RequestType   string // ADD or DELETE
+	Status        string
+	StaffId       string
+	StaffName     string
+	Province      string
+	District      string
+	Ward          string
+	Street        string
+	Hometown      string
+	CitizenId     string
+	StaffPosition string
+	Birthdate     string
+	StartDate     time.Time
+	Salary        int
+	Gender        string
+	Phone         string
+	Email         string
+	BranchId      string
 }
 
 func NewRepository(db *gorm.DB) IStaffServiceRepository {
@@ -33,7 +57,7 @@ func NewRepository(db *gorm.DB) IStaffServiceRepository {
 
 func (r *staffServiceRepository) GetStaff(ctx context.Context, staffName, staffId string) ([]*StaffModel, error) {
 	var result []*StaffModel
-	query := r.db.WithContext(ctx).Table(r.staffTableName)
+	query := r.db.WithContext(ctx).Where("status = 'APPROVED'").Table(r.staffTableName)
 	if staffName != "" && staffId != "" {
 		query = query.Where("staff_name LIKE ? OR staff_id LIKE ?", "%"+staffName+"%", "%"+staffId+"%")
 	} else if staffName != "" {
@@ -93,8 +117,13 @@ func (r *staffServiceRepository) GetStaffRequest(ctx context.Context, requestId 
 	return result, query.Error
 }
 
-func (r *staffServiceRepository) GetListRequest(ctx context.Context) ([]*RequestsModel, error) {
-	var result []*RequestsModel
-	query := r.db.WithContext(ctx).Table(r.requestsTaleName).Find(&result)
+func (r *staffServiceRepository) GetListRequest(ctx context.Context) ([]*GetRequestResponseData, error) {
+	var result []*GetRequestResponseData
+	query := r.db.WithContext(ctx).Table(r.requestsTaleName).Select("`requests`.`id`,`requests`.`request_date`," +
+		"`requests`.`request_type`,`requests`.`status`,`requests`.`staff_id`,`staff`.`staff_name`,`staff`.`province`," +
+		"`staff`.`district`,`staff`.`ward`,`staff`.`street`,`staff`.`hometown`,`staff`.`citizen_id`," +
+		"`staff`.`staff_position`,`staff`.`birthdate`,`staff`.`start_date`,`staff`.`salary`,`staff`.`gender`," +
+		"`staff`.`phone`,`staff`.`email`,`staff`.`branch_id`").Joins("JOIN `staff` on requests.staff_id = staff.staff_id").
+		Where("requests.status = 'PENDING'").Find(&result)
 	return result, query.Error
 }

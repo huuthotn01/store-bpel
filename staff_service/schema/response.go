@@ -55,9 +55,24 @@ type GetRequestResponse struct {
 }
 
 type GetRequestResponseData struct {
-	Id          string
-	RequestDate time.Time
-	RequestType string // ADD or DELETE
-	StaffId     string
-	Status      string
+	Id            string
+	RequestDate   time.Time
+	RequestType   string // ADD or DELETE
+	Status        string
+	StaffId       string
+	StaffName     string
+	Province      string
+	District      string
+	Ward          string
+	Street        string
+	Hometown      string
+	CitizenId     string
+	StaffPosition string
+	Birthdate     string
+	StartDate     time.Time
+	Salary        int
+	Gender        string
+	Phone         string
+	Email         string
+	BranchId      string
 }
