@@ -13,6 +13,7 @@ type IStatisticBffController interface {
 	GetRevenueOneGoods(ctx context.Context, request *statistic_service.GetStatOneGoodsRequest) ([]*statistic_service.GetRevenueResponseData, error)
 	GetProfit(ctx context.Context, request *statistic_service.FilterGetStatisticRequest) ([]*statistic_service.GetProfitResponseData, error)
 	GetProfitOneGoods(ctx context.Context, request *statistic_service.GetStatOneGoodsRequest) ([]*statistic_service.GetProfitResponseData, error)
+	AddOrderData(ctx context.Context, request *statistic_service.AddOrderDataRequest) error
 }
 
 type statisticBffController struct {

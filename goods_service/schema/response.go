@@ -18,6 +18,7 @@ type GetGoodsDefaultResponseData struct {
 	GoodsId      string
 	Name         string
 	UnitPrice    int
+	UnitCost     int
 	Price        int
 	Images       []string
 	ListQuantity []*GetGoodsDefault_QuantityList

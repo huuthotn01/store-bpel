@@ -19,11 +19,6 @@ func (c *customerServiceController) AddCustomer(ctx context.Context, request *sc
 		return err
 	}
 
-	err = c.cartAdapter.AddCart(ctx, request.Username)
-	if err != nil {
-		return err
-	}
-
 	return c.repository.AddCustomer(ctx, &repository.CustomerModel{
 		Username:       request.Username,
 		CustomerEmail:  request.Email,

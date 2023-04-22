@@ -7,6 +7,7 @@ import (
 )
 
 type IStatisticServiceRepository interface {
+	AddOrderData(ctx context.Context, goodsModel []*GoodsModel, orderModel *OrdersModel) error
 	GetOverallStat(ctx context.Context, start, end string, goodsId string, branchId []string, gender []int, goodsType []string) ([]*OverallStatData, error)
 }
 
@@ -22,6 +23,17 @@ func NewRepository(db *gorm.DB) IStatisticServiceRepository {
 		goodsTableName:  "goods",
 		ordersTableName: "orders",
 	}
+}
+
+func (r *statisticServiceRepository) AddOrderData(ctx context.Context, goodsModel []*GoodsModel, orderModel *OrdersModel) error {
+	return r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+		err := tx.Table(r.ordersTableName).Create(&orderModel).Error
+		if err != nil {
+			return err
+		}
+
+		return tx.Table(r.goodsTableName).Create(&goodsModel).Error
+	})
 }
 
 func (r *statisticServiceRepository) GetOverallStat(ctx context.Context, start, end string, goodsId string, branchId []string, gender []int, goodsType []string) ([]*OverallStatData, error) {

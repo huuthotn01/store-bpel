@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"errors"
 
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -11,6 +12,7 @@ type IBranchServiceRepository interface {
 	GetBranch(ctx context.Context) ([]*BranchModel, error)
 	GetBranchDetail(ctx context.Context, branchId string) (*BranchModel, error)
 	GetBranchStaff(ctx context.Context, branchId string) ([]*BranchStaffModel, error)
+	AddBranchStaff(ctx context.Context, data *BranchStaffModel) error
 	AddBranch(ctx context.Context, data *BranchModel) error
 	UpdateBranch(ctx context.Context, data *BranchModel) error
 	UpdateBranchManager(ctx context.Context, branchId string, managerId string) error
@@ -43,6 +45,18 @@ func (r *branchServiceRepository) GetBranchStaff(ctx context.Context, branchId s
 	result := make([]*BranchStaffModel, 0)
 	query := r.db.WithContext(ctx).Table(r.branchStaffTableName).Where("branch_code = ?", branchId).Find(&result)
 	return result, query.Error
+}
+
+func (r *branchServiceRepository) AddBranchStaff(ctx context.Context, data *BranchStaffModel) error {
+	// check if working place sent by staff exists
+	_, err := r.GetBranchDetail(ctx, data.BranchCode)
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil
+	}
+	if err != nil {
+		return err
+	}
+	return r.db.WithContext(ctx).Table(r.branchStaffTableName).Select("branch_code", "staff_code").Create(&data).Error
 }
 
 func (r *branchServiceRepository) AddBranch(ctx context.Context, data *BranchModel) error {

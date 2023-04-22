@@ -2,7 +2,10 @@ package controller
 
 import (
 	"context"
+	"encoding/json"
 	accountSchema "store-bpel/account_service/schema"
+	branchSchema "store-bpel/branch_service/schema"
+	"store-bpel/library/kafka_lib"
 	"store-bpel/staff_service/repository"
 	"store-bpel/staff_service/schema"
 	"strconv"
@@ -48,13 +51,30 @@ func (s *staffServiceController) AddStaff(ctx context.Context, request *schema.A
 			return err
 		}
 
-		s.accountAdapter.CreateAccount(ctx, &accountSchema.AddAccountRequest{
+		// call account service to add account
+		// not provide password, let account service generate
+		addAccountRequest := &accountSchema.AddAccountRequest{
 			Username: staffId,
-			Password: "123456",
 			Role:     role,
-		})
-		// TODO call to branch service to add new staff and current working place
+		}
+		addAccReqByte, err := json.Marshal(addAccountRequest)
+		if err != nil {
+			return err
+		}
+		err = s.kafkaAdapter.Publish(ctx, kafka_lib.ACCOUNT_SERVICE_TOPIC, addAccReqByte)
+		if err != nil {
+			return err
+		}
 
-		return nil
+		// call branch service to add new staff and current working place
+		addBranchStaff := &branchSchema.AddBranchStaffRequest{
+			StaffId:  staffId,
+			BranchId: request.WorkingPlace,
+		}
+		addBranchReqByte, err := json.Marshal(addBranchStaff)
+		if err != nil {
+			return err
+		}
+		return s.kafkaAdapter.Publish(ctx, kafka_lib.BRANCH_SERVICE_TOPIC, addBranchReqByte)
 	})
 }

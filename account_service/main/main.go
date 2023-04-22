@@ -33,7 +33,7 @@ func main() {
 	registerEndpoint(r)
 
 	ctx := context.Background()
-	go Consume(ctx)
+	go Consume(ctx, ctrl)
 
 	if err = http.ListenAndServe(":"+cast.ToString(cfg.HttpPort), r); err != nil {
 		log.Fatal(err)

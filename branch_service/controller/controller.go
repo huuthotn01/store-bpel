@@ -14,6 +14,7 @@ type IBranchServiceController interface {
 	GetBranch(ctx context.Context) ([]*schema.GetBranchResponseData, error)
 	GetBranchDetail(ctx context.Context, branchId string) (*schema.GetBranchResponseData, error)
 	GetBranchStaff(ctx context.Context, branchId string) ([]string, error)
+	AddBranchStaff(ctx context.Context, request *schema.AddBranchStaffRequest) error
 	UpdateBranch(ctx context.Context, request *schema.UpdateBranchRequest, branchId string) error
 	UpdateBranchManager(ctx context.Context, request *schema.UpdateBranchManagerRequest, branchId string) error
 	AddBranch(ctx context.Context, request *schema.AddBranchRequest) error

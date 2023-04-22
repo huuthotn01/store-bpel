@@ -2,6 +2,7 @@ package controller
 
 import (
 	"context"
+	"store-bpel/library/kafka_lib"
 	"store-bpel/staff_service/adapter"
 	"store-bpel/staff_service/config"
 	repo "store-bpel/staff_service/repository"
@@ -27,6 +28,7 @@ type staffServiceController struct {
 	db             *gorm.DB
 	config         *config.Config
 	accountAdapter adapter.IAccountServiceAdapter
+	kafkaAdapter   kafka_lib.IKafkaLib
 	repository     repo.IStaffServiceRepository
 }
 
@@ -37,10 +39,14 @@ func NewController(config *config.Config, db *gorm.DB) IStaffServiceController {
 	// init account adapter
 	accountAdapter := adapter.NewAccountAdapter(config)
 
+	// init kafka adapter
+	kafkaAdapter := kafka_lib.NewKafkaLib()
+
 	return &staffServiceController{
 		db:             db,
 		config:         config,
 		accountAdapter: accountAdapter,
+		kafkaAdapter:   kafkaAdapter,
 		repository:     repository,
 	}
 }

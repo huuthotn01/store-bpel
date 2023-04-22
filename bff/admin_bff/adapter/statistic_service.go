@@ -19,6 +19,7 @@ type IStatisticServiceAdapter interface {
 	GetRevenueOneGoods(ctx context.Context, request *schema.CommonGetStatisticRequest, goodsId string) ([]*schema.GetRevenueResponseData, error)
 	GetProfit(ctx context.Context, request *schema.FilterGetStatisticRequest) ([]*schema.GetProfitResponseData, error)
 	GetProfitOneGoods(ctx context.Context, request *schema.CommonGetStatisticRequest, goodsId string) ([]*schema.GetProfitResponseData, error)
+	AddOrderData(ctx context.Context, request *schema.AddOrderDataRequest) error
 }
 
 type statisticServiceAdapter struct {
@@ -31,6 +32,50 @@ func NewStatisticAdapter(cfg *config.Config) IStatisticServiceAdapter {
 		httpClient: &http.Client{},
 		port:       cfg.StatisticServicePort,
 	}
+}
+
+func (a *statisticServiceAdapter) AddOrderData(ctx context.Context, request *schema.AddOrderDataRequest) error {
+	log.Println("Start to call statistic service for AddOrderData")
+	defer log.Println("End call statistic service for AddOrderData")
+
+	var result *schema.UpdateResponse
+	url := fmt.Sprintf("http://localhost:%d/api/statistic-service/order", a.port)
+	data, err := json.Marshal(request)
+	if err != nil {
+		log.Printf("BFF-Adapter-StatisticServiceAdapter-AddOrderData-Marshal error %v", err)
+		return err
+	}
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, bytes.NewReader(data))
+	if err != nil {
+		log.Printf("BFF-Adapter-StatisticServiceAdapter-AddOrderData-NewRequestWithContext error %v", err)
+		return err
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+	resp, err := a.httpClient.Do(req)
+	if err != nil {
+		log.Printf("BFF-Adapter-StatisticServiceAdapter-AddOrderData-httpClient.Do error %v", err)
+		return err
+	}
+
+	respByteArr, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Printf("BFF-Adapter-StatisticServiceAdapter-AddOrderData-ioutil.ReadAll error %v", err)
+		return err
+	}
+
+	err = json.Unmarshal(respByteArr, &result)
+	if err != nil {
+		log.Printf("BFF-Adapter-StatisticServiceAdapter-AddOrderData-json.Unmarshal error %v", err)
+		return err
+	}
+
+	if result.StatusCode != http.StatusOK {
+		return errors.New(result.Message)
+	}
+
+	return nil
 }
 
 func (a *statisticServiceAdapter) GetOverallStat(ctx context.Context, request *schema.CommonGetStatisticRequest) ([]*schema.GetOverallStatisticResponseData, error) {
