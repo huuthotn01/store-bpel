@@ -23,7 +23,6 @@ type cartServiceController struct {
 	cfg        *config.Config
 	repository repo.ICartServiceRepository
 
-	kafkaAdapter adapter.IKafkaAdapter
 	goodsAdapter adapter.IGoodsServiceAdapter
 }
 
@@ -31,15 +30,11 @@ func NewController(cfg *config.Config, db *gorm.DB) ICartServiceController {
 	// init repository
 	repository := repo.NewRepository(db)
 
-	// init kafka adapter
-	kafkaAdapter := adapter.NewKafkaAdapter()
-
 	goodsAdapter := adapter.NewGoodsAdapter(cfg)
 
 	return &cartServiceController{
 		cfg:          cfg,
 		repository:   repository,
-		kafkaAdapter: kafkaAdapter,
 		goodsAdapter: goodsAdapter,
 	}
 }

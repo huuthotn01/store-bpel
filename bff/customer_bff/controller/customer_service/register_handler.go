@@ -10,8 +10,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
-	"store-bpel/bff/admin_bff/common"
-	"store-bpel/bff/admin_bff/schema/event_service"
+	"store-bpel/bff/customer_bff/common"
 	"store-bpel/bff/customer_bff/config"
 	"store-bpel/bff/customer_bff/schema/customer_service"
 	"time"
@@ -207,12 +206,12 @@ func handleUploadImage(w http.ResponseWriter, r *http.Request) {
 			ImageUrl: imgPath,
 		})
 		if err != nil {
-			err = enc.Encode(&event_service.UpdateResponse{
+			err = enc.Encode(&customer_service.UpdateResponse{
 				StatusCode: 500,
 				Message:    fmt.Sprintf("BFF-Customer-handleUploadImage-UploadImage err %v", err),
 			})
 		} else {
-			err = enc.Encode(&event_service.UpdateResponse{
+			err = enc.Encode(&customer_service.UpdateResponse{
 				StatusCode: 200,
 				Message:    "OK",
 			})

@@ -13,7 +13,6 @@ import (
 )
 
 type IStaffServiceAdapter interface {
-	GetStaff(ctx context.Context) ([]*schema.GetStaffResponseData, error)
 	GetDetailStaff(ctx context.Context, staffId string) (*schema.GetStaffResponseData, error)
 }
 
@@ -27,27 +26,6 @@ func NewStaffAdapter(cfg *config.Config) IStaffServiceAdapter {
 		httpClient: &http.Client{},
 		port:       cfg.StaffServicePort,
 	}
-}
-
-func (a *staffServiceAdapter) GetStaff(ctx context.Context) ([]*schema.GetStaffResponseData, error) {
-	log.Println("Start to call staff service for GetStaff")
-	defer log.Println("End call staff service for GetStaff")
-	var result *schema.GetStaffResponse
-	url := fmt.Sprintf("http://localhost:%d/api/staff-service/staff", a.port)
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
-	if err != nil {
-		return nil, err
-	}
-	resp, err := a.httpClient.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	respByteArr, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-	err = json.Unmarshal(respByteArr, &result)
-	return result.Data, err
 }
 
 func (a *staffServiceAdapter) GetDetailStaff(ctx context.Context, staffId string) (*schema.GetStaffResponseData, error) {
