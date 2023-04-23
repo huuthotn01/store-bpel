@@ -7,20 +7,20 @@ import (
 )
 
 func (c *orderBffController) CreateOnlineOrder(ctx context.Context, request *order_service.MakeOnlineOrderRequest) error {
-	coreGoods := make([]*schema.OrderGoodsRequest, 0, len(request.GoodsList))
+	coreGoods := make([]*schema.OrderGoodsRequest, 0, len(request.ListElements))
 
-	for _, data := range request.GoodsList {
+	for _, data := range request.ListElements {
 		coreGoods = append(coreGoods, &schema.OrderGoodsRequest{
-			GoodsId:   data.GoodsId,
-			UnitPrice: data.UnitPrice,
-			Price:     data.Price,
-			Name:      data.Name,
-			Image:     data.Image,
-			Quantity:  data.Quantity,
-			Size:      data.Size,
-			Color:     data.Color,
-			Discount:  data.Discount,
-			Tax:       data.Tax,
+			GoodsId:   data.Elements.GoodsCode,
+			UnitPrice: data.Elements.UnitPrice,
+			Price:     data.Elements.Price,
+			Name:      data.Elements.Name,
+			Image:     data.Elements.Image,
+			Quantity:  data.Elements.Quantity,
+			Size:      data.Elements.GoodsSize,
+			Color:     data.Elements.GoodsColor,
+			Discount:  data.Elements.Discount,
+			Tax:       data.Elements.Tax,
 		})
 	}
 

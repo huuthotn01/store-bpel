@@ -7,8 +7,10 @@ start server:
 show list topics:
     .\bin\windows\kafka-topics.bat --bootstrap-server localhost:9092 --list
 
-# create topic:
-#     .\bin\windows\kafka-topics.bat --bootstrap-server localhost:9092 --create --replication-factor 1 --partitions 1 --topic AccountService
+create topic:
+    .\bin\windows\kafka-topics.bat --bootstrap-server localhost:9092 --create --replication-factor 1 --partitions 1 --topic AccountService
+    .\bin\windows\kafka-topics.bat --bootstrap-server localhost:9092 --create --replication-factor 1 --partitions 1 --topic StatisticService
+
 
 # create Producer:
 #     .\bin\windows\kafka-console-producer.bat --bootstrap-server localhost:9092 --topic AccountService
