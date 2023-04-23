@@ -15,7 +15,7 @@ type GetOrderDetailCustomerRequest struct {
 type MakeOnlineOrderRequest struct {
 	CustomerId      string
 	PaymentMethod   string
-	GoodsList       []*OrderGoodsRequest
+	ListElements    []*ElementsGoods
 	TotalPrice      int
 	ShipFee         int
 	TransactionDate string
@@ -26,17 +26,21 @@ type MakeOnlineOrderRequest struct {
 	Address         *Address
 }
 
+type ElementsGoods struct {
+	Elements *OrderGoodsRequest
+}
+
 type OrderGoodsRequest struct {
-	GoodsId   string
-	UnitPrice int
-	Price     int
-	Name      string
-	Image     string
-	Quantity  int
-	Size      string
-	Color     string
-	Discount  float32
-	Tax       float32
+	GoodsCode  string
+	GoodsColor string
+	GoodsSize  string
+	UnitPrice  int
+	Price      int
+	Name       string
+	Image      string
+	Quantity   int
+	Discount   float32
+	Tax        float32
 }
 
 type Address struct {
