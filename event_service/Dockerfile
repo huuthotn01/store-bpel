@@ -1,7 +1,10 @@
-FROM base-image:latest AS build-stage
+FROM golang:1.18 AS build-stage
 
 # working directory
 WORKDIR /app/event_service/main
+
+COPY go.mod go.sum ../../
+RUN go mod download
 
 # copy admin-bff folder to working directory
 COPY ./event_service ../
@@ -10,14 +13,14 @@ COPY ./event_service ../
 RUN go get .
 
 # build
-RUN CGO_ENABLED=0 GOOS=linux go build -o /event-service
+RUN CGO_ENABLED=0 GOOS=linux go build -o event-service
 
 # Deploy the application binary into a lean image
-FROM gcr.io/distroless/base-debian11 AS build-release-stage
+FROM alpine:3 AS build-release-stage
 
-WORKDIR /event-service/main
+WORKDIR /app/event-service/main
 
-COPY --from=build-stage /event-service ../
+COPY --from=build-stage /app/event_service/main/event-service /event-service
 
 # expose port, use event service port (14060)
 EXPOSE 14060
