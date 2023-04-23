@@ -2,7 +2,6 @@ package controller
 
 import (
 	"context"
-	"store-bpel/branch_service/adapter"
 	"store-bpel/branch_service/config"
 	repo "store-bpel/branch_service/repository"
 	"store-bpel/branch_service/schema"
@@ -25,20 +24,14 @@ type IBranchServiceController interface {
 type branchServiceController struct {
 	cfg        *config.Config
 	repository repo.IBranchServiceRepository
-
-	kafkaAdapter adapter.IKafkaAdapter
 }
 
 func NewController(cfg *config.Config, db *gorm.DB) IBranchServiceController {
 	// init repository
 	repository := repo.NewRepository(db)
 
-	// init kafka adapter
-	kafkaAdapter := adapter.NewKafkaAdapter()
-
 	return &branchServiceController{
-		cfg:          cfg,
-		repository:   repository,
-		kafkaAdapter: kafkaAdapter,
+		cfg:        cfg,
+		repository: repository,
 	}
 }

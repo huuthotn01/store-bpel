@@ -1,0 +1,28 @@
+version: "3.7"
+
+services:
+  mysql:
+    image: mysql:8.0.32
+    container_name: mysql
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - init-db:/home/tnhtho/store-bpel/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: bpel
+      MYSQL_DATABASE: event_service
+  event-service:
+    image: event-service:latest
+    network_mode: "host"
+    configs:
+      - source: event-service-config
+        target: /app/event-service/config.yaml
+    ports:
+      - 14060:14060
+
+configs:
+  event-service-config:
+    file: ./event_service/config.yaml
+
+volumes:
+  mysql-data:
+  init-db:

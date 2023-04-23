@@ -33,7 +33,6 @@ type goodsServiceController struct {
 	warehouseServiceAdapter adapter.IWarehouseServiceAdapter
 	eventServiceAdapter     adapter.IEventServiceAdapter
 	orderServiceAdapter     adapter.IOrderServiceAdapter
-	kafkaAdapter            adapter.IKafkaAdapter
 }
 
 func NewController(cfg *config.Config, db *gorm.DB) IGoodsServiceController {
@@ -49,14 +48,10 @@ func NewController(cfg *config.Config, db *gorm.DB) IGoodsServiceController {
 	// init order service adapter
 	orderAdapter := adapter.NewOrderAdapter(cfg)
 
-	// init kafka adapter
-	kafkaAdapter := adapter.NewKafkaAdapter(cfg)
-
 	return &goodsServiceController{
 		cfg:                     cfg,
 		repository:              repository,
 		warehouseServiceAdapter: whAdapter,
-		kafkaAdapter:            kafkaAdapter,
 		orderServiceAdapter:     orderAdapter,
 		eventServiceAdapter:     eventAdapter,
 	}

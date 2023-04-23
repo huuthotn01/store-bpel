@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/gorilla/mux"
+	"github.com/spf13/cast"
 
 	"log"
 	"net/http"
@@ -15,8 +16,6 @@ import (
 	staff_controller "store-bpel/bff/admin_bff/controller/staff_service"
 	statistic_controller "store-bpel/bff/admin_bff/controller/statistic_service"
 	warehouse_controller "store-bpel/bff/admin_bff/controller/warehouse_service"
-
-	"github.com/spf13/cast"
 )
 
 func main() {
@@ -26,9 +25,9 @@ func main() {
 	}
 	log.Printf("Admin BFF server started at port %d", cfg.HttpPort)
 
-	r := newSOAPMux(cfg)
+	//r := newSOAPMux(cfg)
 
-	if err = http.ListenAndServe(":"+cast.ToString(cfg.HttpPort), r); err != nil {
+	if err = http.ListenAndServe(":"+cast.ToString(cfg.HttpPort), nil); err != nil {
 		log.Fatal(err)
 	}
 	log.Printf("Admin BFF initialized successfully at port %d", cfg.HttpPort)
