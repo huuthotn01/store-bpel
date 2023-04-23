@@ -56,8 +56,8 @@ func (c *goodsServiceController) processCheckWarehouse(ctx context.Context, data
 	}
 	destWarehouse := mapIntWhData[quantities[0]][0].WhCode
 	requestQuantity -= quantities[0]
-	quantities = quantities[1:]
 	mapIntWhData[quantities[0]] = mapIntWhData[quantities[0]][1:]
+	quantities = quantities[1:]
 
 	whActions := make([]*schema.WarehouseActions, 0)
 	for requestQuantity > 0 {
