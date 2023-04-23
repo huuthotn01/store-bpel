@@ -6,7 +6,7 @@ WORKDIR /app/event_service/main
 COPY go.mod go.sum ../../
 RUN go mod download
 
-# copy admin-bff folder to working directory
+# copy event_service folder to working directory
 COPY ./event_service ../
 
 # install dependencies
@@ -15,7 +15,6 @@ RUN go get .
 # build
 RUN CGO_ENABLED=0 GOOS=linux go build -o event-service
 
-# Deploy the application binary into a lean image
 FROM alpine:3 AS build-release-stage
 
 WORKDIR /app/event-service/main

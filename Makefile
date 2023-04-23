@@ -13,3 +13,6 @@ build_admin_bff_image:
 
 build_event_service_image:
 	docker build -f event_service/Dockerfile -t event-service:latest .
+
+build_customer_service_image:
+	docker build -f customer_service/Dockerfile -t customer-service:latest .
