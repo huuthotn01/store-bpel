@@ -18,8 +18,17 @@ func Load() (config *Config, err error) {
 
 	err = viper.ReadInConfig()
 	if err != nil {
-		return nil, err
+		return loadDefaultConfig(), nil
 	}
 	err = viper.Unmarshal(&config)
 	return config, err
+}
+
+func loadDefaultConfig() *Config {
+	return &Config{
+		HttpPort:            20000,
+		CustomerServicePort: 14050,
+		OrderServicePort:    14070,
+		CartServicePort:     14061,
+	}
 }
