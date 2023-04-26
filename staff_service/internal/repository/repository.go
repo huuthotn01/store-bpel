@@ -77,7 +77,7 @@ func (r *staffServiceRepository) GetStaffDetail(ctx context.Context, staffId str
 func (r *staffServiceRepository) AddStaff(ctx context.Context, staff *StaffModel) error {
 	// add to staff table
 	return r.db.WithContext(ctx).Table(r.staffTableName).Select(`staff_id`, `staff_name`, `province`, `district`, `ward`, `street`, `hometown`, `citizen_id`, `staff_position`, `birthdate`, `salary`,
-		`gender`, `phone`, `email`, `status`).Create(staff).Error
+		`gender`, `phone`, `email`, `status`, `branch_id`).Create(staff).Error
 }
 
 func (r *staffServiceRepository) UpdateStaff(ctx context.Context, data *StaffModel) error {

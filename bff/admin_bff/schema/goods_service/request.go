@@ -41,6 +41,7 @@ type AddGoodsRequestData struct {
 	Manufacturer string
 	IsForSale    bool
 	UnitPrice    int
+	UnitCost     int
 	Description  string
 }
 
