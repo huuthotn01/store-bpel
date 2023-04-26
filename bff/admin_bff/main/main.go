@@ -25,9 +25,9 @@ func main() {
 	}
 	log.Printf("Admin BFF server started at port %d", cfg.HttpPort)
 
-	//r := newSOAPMux(cfg)
+	r := newSOAPMux(cfg)
 
-	if err = http.ListenAndServe(":"+cast.ToString(cfg.HttpPort), nil); err != nil {
+	if err = http.ListenAndServe(":"+cast.ToString(cfg.HttpPort), r); err != nil {
 		log.Fatal(err)
 	}
 	log.Printf("Admin BFF initialized successfully at port %d", cfg.HttpPort)
