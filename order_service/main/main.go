@@ -9,7 +9,7 @@ import (
 	"log"
 	"net/http"
 	"store-bpel/order_service/config"
-	"store-bpel/order_service/controller"
+	"store-bpel/order_service/internal/controller"
 	"store-bpel/order_service/schema"
 	"strconv"
 )

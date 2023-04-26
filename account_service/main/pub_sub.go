@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"github.com/segmentio/kafka-go"
 	"log"
-	"store-bpel/account_service/controller"
+	"store-bpel/account_service/internal/controller"
 	"store-bpel/account_service/schema"
 	"store-bpel/library/kafka_lib"
 )

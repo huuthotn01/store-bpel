@@ -6,7 +6,7 @@ import (
 	"github.com/segmentio/kafka-go"
 	"log"
 	"store-bpel/library/kafka_lib"
-	"store-bpel/statistic_service/controller"
+	"store-bpel/statistic_service/internal/controller"
 	"store-bpel/statistic_service/schema"
 )
 

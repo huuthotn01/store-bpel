@@ -9,7 +9,7 @@ import (
 	"log"
 	"net/http"
 	"store-bpel/customer_service/config"
-	"store-bpel/customer_service/controller"
+	"store-bpel/customer_service/internal/controller"
 	"store-bpel/customer_service/schema"
 )
 

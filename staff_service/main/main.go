@@ -7,7 +7,7 @@ import (
 	"log"
 	"net/http"
 	"store-bpel/staff_service/config"
-	"store-bpel/staff_service/controller"
+	"store-bpel/staff_service/internal/controller"
 	"store-bpel/staff_service/schema"
 
 	"github.com/gorilla/mux"

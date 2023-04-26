@@ -9,7 +9,7 @@ import (
 	"log"
 	"net/http"
 	"store-bpel/statistic_service/config"
-	"store-bpel/statistic_service/controller"
+	"store-bpel/statistic_service/internal/controller"
 	"store-bpel/statistic_service/schema"
 )
 
