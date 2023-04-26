@@ -7,7 +7,7 @@ import (
 	"log"
 	"net/http"
 	"store-bpel/cart_service/config"
-	"store-bpel/cart_service/controller"
+	"store-bpel/cart_service/internal/controller"
 	"store-bpel/cart_service/schema"
 
 	"github.com/gorilla/mux"

@@ -7,7 +7,7 @@ import (
 	"log"
 	"net/http"
 	"store-bpel/event_service/config"
-	"store-bpel/event_service/controller"
+	"store-bpel/event_service/internal/controller"
 	"store-bpel/event_service/schema"
 	"strconv"
 

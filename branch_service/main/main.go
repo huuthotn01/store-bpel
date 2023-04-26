@@ -7,7 +7,7 @@ import (
 	"log"
 	"net/http"
 	"store-bpel/branch_service/config"
-	"store-bpel/branch_service/controller"
+	"store-bpel/branch_service/internal/controller"
 	"store-bpel/branch_service/schema"
 
 	"github.com/gorilla/mux"

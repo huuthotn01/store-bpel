@@ -3,19 +3,19 @@ package main
 import (
 	"github.com/gorilla/mux"
 	"github.com/spf13/cast"
+	"store-bpel/bff/admin_bff/internal/controller"
+	account_controller "store-bpel/bff/admin_bff/internal/controller/account_service"
+	branch_controller "store-bpel/bff/admin_bff/internal/controller/branch_service"
+	event_controller "store-bpel/bff/admin_bff/internal/controller/event_service"
+	goods_controller "store-bpel/bff/admin_bff/internal/controller/goods_service"
+	order_controller "store-bpel/bff/admin_bff/internal/controller/order_service"
+	staff_controller "store-bpel/bff/admin_bff/internal/controller/staff_service"
+	statistic_controller "store-bpel/bff/admin_bff/internal/controller/statistic_service"
+	warehouse_controller "store-bpel/bff/admin_bff/internal/controller/warehouse_service"
 
 	"log"
 	"net/http"
 	"store-bpel/bff/admin_bff/config"
-	"store-bpel/bff/admin_bff/controller"
-	account_controller "store-bpel/bff/admin_bff/controller/account_service"
-	branch_controller "store-bpel/bff/admin_bff/controller/branch_service"
-	event_controller "store-bpel/bff/admin_bff/controller/event_service"
-	goods_controller "store-bpel/bff/admin_bff/controller/goods_service"
-	order_controller "store-bpel/bff/admin_bff/controller/order_service"
-	staff_controller "store-bpel/bff/admin_bff/controller/staff_service"
-	statistic_controller "store-bpel/bff/admin_bff/controller/statistic_service"
-	warehouse_controller "store-bpel/bff/admin_bff/controller/warehouse_service"
 )
 
 func main() {

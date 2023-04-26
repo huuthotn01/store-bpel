@@ -5,10 +5,10 @@ import (
 	"log"
 	"net/http"
 	"store-bpel/bff/shared_bff/config"
-	"store-bpel/bff/shared_bff/controller/account_service"
-	"store-bpel/bff/shared_bff/controller/event_service"
-	"store-bpel/bff/shared_bff/controller/goods_service"
-	"store-bpel/bff/shared_bff/controller/order_service"
+	"store-bpel/bff/shared_bff/internal/controller/account_service"
+	"store-bpel/bff/shared_bff/internal/controller/event_service"
+	"store-bpel/bff/shared_bff/internal/controller/goods_service"
+	"store-bpel/bff/shared_bff/internal/controller/order_service"
 
 	"github.com/spf13/cast"
 )

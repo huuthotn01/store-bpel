@@ -7,7 +7,7 @@ import (
 	"log"
 	"net/http"
 	"store-bpel/warehouse_service/config"
-	"store-bpel/warehouse_service/controller"
+	"store-bpel/warehouse_service/internal/controller"
 	"store-bpel/warehouse_service/schema"
 
 	"github.com/gorilla/mux"
