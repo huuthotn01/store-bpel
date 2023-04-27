@@ -19,6 +19,7 @@ func (c *goodsBffController) AddGoods(ctx context.Context, request []*goods_serv
 			Manufacturer: goods.Manufacturer,
 			IsForSale:    goods.IsForSale,
 			UnitPrice:    goods.UnitPrice,
+			UnitCost:     goods.UnitCost,
 			Description:  goods.Description,
 		})
 	}

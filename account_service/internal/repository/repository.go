@@ -40,7 +40,8 @@ func (r *accountServiceRepository) AddAccount(ctx context.Context, data *Account
 		return r.db.Exec("INSERT INTO `account` (`username`, `password`, `user_role`, `is_activated`) VALUES (?, ?, ?, '0');",
 			data.Username, data.Password, data.UserRole).Error
 	}
-	return r.db.WithContext(ctx).Table(r.accountTableName).Select("username", "password", "user_role").Create(data).Error
+	return r.db.Exec("INSERT INTO `account` (`username`, `password`, `user_role`, `is_activated`) VALUES (?, ?, ?, '1');",
+		data.Username, data.Password, data.UserRole).Error
 }
 
 func (r *accountServiceRepository) UpdateRole(ctx context.Context, username string, role int) error {
