@@ -4,25 +4,67 @@ services:
   mysql:
     image: mysql:8.0.32
     container_name: mysql
+    hostname: mysql
+    networks:
+      - store-bpel
     volumes:
-      - mysql-data:/var/lib/mysql
-      - init-db:/home/tnhtho/store-bpel/mysql
+      - init-mysql
     environment:
-      MYSQL_ROOT_PASSWORD: bpel
-      MYSQL_DATABASE: event_service
+      - MYSQL_ALLOW_EMPTY_PASSWORD=1
+    ports:
+      - 3306:3306
+
+  admin-bff:
+    image: public.ecr.aws/h3x4i1u8/admin-bff:20230428055958
+    container_name: admin-bff
+    hostname: admin-bff
+    networks:
+      - store-bpel
+    ports:
+      - 10000:10000
+
+  customer-bff:
+    image: public.ecr.aws/h3x4i1u8/customer-bff:20230428060052
+    container_name: customer-bff
+    hostname: customer-bff
+    networks:
+      - store-bpel
+    ports:
+      - 20000:20000
+
+  shared-bff:
+    image: public.ecr.aws/h3x4i1u8/shared-bff:20230428060137
+    container_name: shared-bff
+    hostname: shared-bff
+    networks:
+      - store-bpel
+    ports:
+      - 30000:30000
+
   event-service:
-    image: event-service:latest
-    network_mode: "host"
-    configs:
-      - source: event-service-config
-        target: /app/event-service/config.yaml
+    image: public.ecr.aws/h3x4i1u8/event-service:20230428021514
+    container_name: event-service
+    hostname: event-service
+    depends_on:
+      - mysql
+    restart: on-failure
+    networks:
+      - store-bpel
+#    configs:
+#      - source: event-service-config
+#        target: /app/event-service/config.yaml
     ports:
       - 14060:14060
 
-configs:
-  event-service-config:
-    file: ./event_service/config.yaml
+networks:
+  store-bpel:
+    name: store-bpel
+    driver: bridge
+
+#configs:
+#  event-service-config:
+#    file: ./event_service/config.yaml
 
 volumes:
-  mysql-data:
-  init-db:
+  init-mysql:
+    name: init-mysql
