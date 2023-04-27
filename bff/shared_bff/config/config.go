@@ -1,6 +1,9 @@
 package config
 
-import "github.com/spf13/viper"
+import (
+	"github.com/spf13/viper"
+	"log"
+)
 
 type Config struct {
 	HttpPort int `json:"http_port" mapstructure:"http_port"`
@@ -19,6 +22,7 @@ func Load() (config *Config, err error) {
 
 	err = viper.ReadInConfig()
 	if err != nil {
+		log.Println("Shared BFF load default config")
 		return loadDefaultConfig(), nil
 	}
 	err = viper.Unmarshal(&config)
