@@ -10,8 +10,8 @@ import (
 func (c *accountServiceController) AddAccount(ctx context.Context, request *schema.AddAccountRequest) error {
 	// only used in add staff account, staff service doesn't provide password
 	// => account service generate random initial password for account
-	// rawPass := util.GenerateRandomPassword()
-	rawPass := "123456"
+	rawPass := util.GenerateRandomPassword()
+	// rawPass := "123456"
 	hashedPass, err := util.HashPasswordBcrypt(rawPass)
 	if err != nil {
 		return err

@@ -135,7 +135,7 @@ func (r *orderServiceRepository) GetOnlineOrders(ctx context.Context) ([]*Online
 	query := r.db.WithContext(ctx).Table(r.onlineOrdersTableName).
 		Joins(" JOIN goods ON online_orders.order_code = goods.order_code").
 		Joins("JOIN orders ON online_orders.order_code = orders.order_code").
-		Select("orders.*, online_orders.*, goods.goods_code, goods.image, goods.goods_name, goods.unit_price, goods.total_price as price, goods.tax, goods.quantity, goods.goods_size, goods.goods_color, goods.promotion")
+		Select("orders.*, online_orders.*, goods.goods_code, goods.image, goods.goods_name, goods.unit_price, goods.total_price as price, goods.tax as tax, goods.quantity, goods.goods_size, goods.goods_color, goods.promotion")
 	return result, query.Find(&result).Error
 }
 
@@ -144,7 +144,7 @@ func (r *orderServiceRepository) GetOfflineOrders(ctx context.Context) ([]*Offli
 	query := r.db.WithContext(ctx).Table(r.storeOrdersTableName).
 		Joins("JOIN goods ON store_orders.order_code = goods.order_code").
 		Joins("JOIN orders ON store_orders.order_code = orders.order_code").
-		Select("orders.*, goods.goods_code, goods.image, goods.goods_name, goods.unit_price, goods.total_price as price, goods.tax, goods.quantity, goods.goods_size, goods.goods_color, goods.promotion, store_orders.*")
+		Select("orders.*, goods.goods_code, goods.image, goods.goods_name, goods.unit_price, goods.total_price as price, goods.tax as tax, goods.quantity, goods.goods_size, goods.goods_color, goods.promotion, store_orders.*")
 	return result, query.Find(&result).Error
 }
 
