@@ -2,6 +2,7 @@ package config
 
 import (
 	"github.com/spf13/viper"
+	"log"
 )
 
 type Config struct {
@@ -9,7 +10,6 @@ type Config struct {
 	WarehouseServicePort int          `json:"warehouse_service_port" mapstructure:"warehouse_service_port"`
 	EventServicePort     int          `json:"event_service_port" mapstructure:"event_service_port"`
 	OrderServicePort     int          `json:"order_service_port" mapstructure:"order_service_port"`
-	KafkaPort            int          `json:"kafka_port" mapstructure:"kafka_port"`
 	MySQL                *MySQLConfig `json:"mysql" mapstructure:"mysql"`
 }
 
@@ -29,8 +29,25 @@ func Load() (config *Config, err error) {
 
 	err = viper.ReadInConfig()
 	if err != nil {
-		return nil, err
+		log.Println("Goods Service load default config")
+		return loadDefaultConfig(), nil
 	}
 	err = viper.Unmarshal(&config)
 	return config, err
+}
+
+func loadDefaultConfig() *Config {
+	return &Config{
+		HttpPort:             14080,
+		WarehouseServicePort: 14081,
+		EventServicePort:     14060,
+		OrderServicePort:     14070,
+		MySQL: &MySQLConfig{
+			Host:     "mysql",
+			Port:     3306,
+			Username: "bpel",
+			Password: "bpel",
+			Database: "goods_service",
+		},
+	}
 }
