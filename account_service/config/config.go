@@ -2,6 +2,7 @@ package config
 
 import (
 	"github.com/spf13/viper"
+	"log"
 )
 
 type Config struct {
@@ -33,8 +34,27 @@ func Load() (config *Config, err error) {
 
 	err = viper.ReadInConfig()
 	if err != nil {
-		return nil, err
+		log.Println("Account Service load default config")
+		return loadDefaultConfig(), nil
 	}
 	err = viper.Unmarshal(&config)
 	return config, err
+}
+
+func loadDefaultConfig() *Config {
+	return &Config{
+		HttpPort: 14083,
+		MySQL: &MySQLConfig{
+			Host:     "mysql",
+			Port:     3306,
+			Username: "bpel",
+			Password: "bpel",
+			Database: "account_service",
+		},
+		ServiceFlags: &ServiceFlags{
+			IsEnableAsync: true,
+		},
+		StaffServicePort:    14082,
+		CustomerServicePort: 14050,
+	}
 }

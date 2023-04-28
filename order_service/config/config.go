@@ -2,13 +2,13 @@ package config
 
 import (
 	"github.com/spf13/viper"
+	"log"
 )
 
 type Config struct {
 	HttpPort int          `json:"http_port" mapstructure:"http_port"`
 	MySQL    *MySQLConfig `json:"mysql" mapstructure:"mysql"`
 
-	StaffServicePort int `json:"staff_service_port" mapstructure:"staff_service_port"`
 	GoodsServicePort int `json:"goods_service_port" mapstructure:"goods_service_port"`
 }
 
@@ -28,8 +28,23 @@ func Load() (config *Config, err error) {
 
 	err = viper.ReadInConfig()
 	if err != nil {
-		return nil, err
+		log.Println("Order Service load default config")
+		return loadDefaultConfig(), nil
 	}
 	err = viper.Unmarshal(&config)
 	return config, err
+}
+
+func loadDefaultConfig() *Config {
+	return &Config{
+		HttpPort:         14070,
+		GoodsServicePort: 14080,
+		MySQL: &MySQLConfig{
+			Host:     "mysql",
+			Port:     3306,
+			Username: "bpel",
+			Password: "bpel",
+			Database: "order_service",
+		},
+	}
 }
