@@ -1,8 +1,9 @@
 package config
 
 import (
-	"github.com/spf13/viper"
 	"log"
+
+	"github.com/spf13/viper"
 )
 
 type Config struct {
@@ -11,6 +12,7 @@ type Config struct {
 	CustomerServicePort int `json:"customer_service_port" mapstructure:"customer_service_port"`
 	OrderServicePort    int `json:"order_service_port" mapstructure:"order_service_port"`
 	CartServicePort     int `json:"cart_service_port" mapstructure:"cart_service_port"`
+	AccountServicePort  int `json:"account_service_port" mapstructure:"account_service_port"`
 }
 
 func Load() (config *Config, err error) {
@@ -34,5 +36,6 @@ func loadDefaultConfig() *Config {
 		CustomerServicePort: 14050,
 		OrderServicePort:    14070,
 		CartServicePort:     14061,
+		AccountServicePort:  14083,
 	}
 }

@@ -18,3 +18,12 @@ type SignInRequest struct {
 	Username string
 	Password string
 }
+
+type CreateResetPasswordRequest struct {
+	Username string
+}
+
+type ConfirmOTPRequest struct {
+	Username string
+	Otp      string
+}

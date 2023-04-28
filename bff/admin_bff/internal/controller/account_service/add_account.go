@@ -9,7 +9,7 @@ import (
 func (c *accountBffController) AddAccount(ctx context.Context, request *account_service.AddAccountRequest) error {
 	return c.accountAdapter.AddAccount(ctx, &schema.AddAccountRequest{
 		Username: request.Username,
-		Password: request.Password,
+		Email:    request.Email,
 		Role:     request.Role,
 	})
 }

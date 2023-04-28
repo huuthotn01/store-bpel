@@ -2,50 +2,55 @@ package controller
 
 import (
 	"context"
+	"errors"
 	"store-bpel/account_service/internal/util"
 	"store-bpel/account_service/schema"
-	"time"
-
-	"github.com/golang-jwt/jwt/v4"
 )
 
-func (c *accountServiceController) ResetPassword(ctx context.Context, request *schema.SignInRequest) (*schema.SignInResponseData, error) {
+func (c *accountServiceController) CreateResetPassword(ctx context.Context, request *schema.CreateResetPasswordRequest) error {
 	account, err := c.repository.GetAccount(ctx, request.Username)
 	if err != nil {
-		return nil, err
-	}
-	err = util.CheckPasswordBcrypt([]byte(account.Password), []byte(request.Password))
-	if err != nil {
-		return nil, err
+		return err
 	}
 
-	jwtToken, err := c.generateJwtToken(request.Username, account.UserRole)
+	otpCode := util.GenerateOTPCode()
+	err = c.repository.UpdateOTPCode(ctx, request.Username, otpCode)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	return &schema.SignInResponseData{
-		UserId: account.Username,
-		Role:   account.UserRole,
-		Token:  jwtToken,
-	}, nil
+	to := []string{account.Email}
+	title := "MÃ XÁC THỰC PTH FASHION"
+	message := "Lưu ý: Không tiết lộ mã OTP với bất kì ai, mã OTP có thời hạn 5 phút:" +
+		"\nMã OTP: " + otpCode
+
+	util.SendEmail(to, title, message)
+	return nil
 }
 
-func (c *accountServiceController) generateOTPCode(username string, role int) (string, error) {
-	var (
-		token  = jwt.New(jwt.SigningMethodHS256)
-		claims = token.Claims.(jwt.MapClaims)
-	)
-
-	// assign username, role and expiration time
-	claims["username"] = username
-	claims["userrole"] = role
-	claims["expired"] = time.Now().UTC().Add(time.Hour * 24).Unix()
-
-	tokenString, err := token.SignedString([]byte("secretkey"))
+func (c *accountServiceController) ConfirmOTP(ctx context.Context, request *schema.ConfirmOTPRequest) error {
+	account, err := c.repository.ConfirmOTP(ctx, request.Username, request.Otp)
 	if err != nil {
-		return "", err
+		return errors.New("OTP is not correct")
 	}
 
-	return tokenString, nil
+	rawPass := util.GenerateRandomPassword()
+	hashedPass, err := util.HashPasswordBcrypt(rawPass)
+	if err != nil {
+		return err
+	}
+
+	err = c.repository.UpdatePassword(ctx, request.Username, hashedPass)
+
+	if err != nil {
+		return err
+	}
+
+	to := []string{account.Email}
+	title := "MẬT KHẨU MỚI TRUY CẬP HỆ THỐNG PTH FASHION ADMIN"
+	message := "Thông tin tài khoản của bạn:" +
+		"\nUsername: " + request.Username +
+		"\nPassword: " + rawPass
+
+	return util.SendEmail(to, title, message)
 }

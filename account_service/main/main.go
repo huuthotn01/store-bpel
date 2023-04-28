@@ -48,6 +48,8 @@ func registerEndpoint(r *mux.Router) {
 	r.HandleFunc("/api/account-service/role/{username}", handleRole)
 	r.HandleFunc("/api/account-service", handleAccount)
 	r.HandleFunc("/api/account-service/password", handlePassword)
+	r.HandleFunc("/api/account-service/reset-password", handleResetPassword)
+	r.HandleFunc("/api/account-service/reset-password/otp", handleOTP)
 }
 
 func handleAccount(w http.ResponseWriter, r *http.Request) {
@@ -255,6 +257,86 @@ func handlePassword(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		err = ctrl.ChangePassword(ctx, request)
+		if err != nil {
+			err = enc.Encode(&schema.UpdateResponse{
+				StatusCode: 500,
+				Message:    err.Error(),
+			})
+		} else {
+			err = enc.Encode(&schema.UpdateResponse{
+				StatusCode: 200,
+				Message:    "OK",
+			})
+		}
+	} else {
+		http.Error(w, "Method not supported", http.StatusNotFound)
+	}
+}
+
+func handleResetPassword(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	enc := json.NewEncoder(w)
+	if r.Method == "POST" {
+		reqBody, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			err = enc.Encode(&schema.UpdateResponse{
+				StatusCode: 500,
+				Message:    err.Error(),
+			})
+			return
+		}
+		var request *schema.CreateResetPasswordRequest
+		err = json.Unmarshal(reqBody, &request)
+		if err != nil {
+			err = enc.Encode(&schema.UpdateResponse{
+				StatusCode: 500,
+				Message:    err.Error(),
+			})
+			return
+		}
+		err = ctrl.CreateResetPassword(ctx, request)
+		if err != nil {
+			err = enc.Encode(&schema.UpdateResponse{
+				StatusCode: 500,
+				Message:    err.Error(),
+			})
+		} else {
+			err = enc.Encode(&schema.UpdateResponse{
+				StatusCode: 200,
+				Message:    "OK",
+			})
+		}
+	} else {
+		http.Error(w, "Method not supported", http.StatusNotFound)
+	}
+}
+
+func handleOTP(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	enc := json.NewEncoder(w)
+	if r.Method == "POST" {
+		reqBody, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			err = enc.Encode(&schema.UpdateResponse{
+				StatusCode: 500,
+				Message:    err.Error(),
+			})
+			return
+		}
+		var request *schema.ConfirmOTPRequest
+		err = json.Unmarshal(reqBody, &request)
+		if err != nil {
+			err = enc.Encode(&schema.UpdateResponse{
+				StatusCode: 500,
+				Message:    err.Error(),
+			})
+			return
+		}
+		err = ctrl.ConfirmOTP(ctx, request)
 		if err != nil {
 			err = enc.Encode(&schema.UpdateResponse{
 				StatusCode: 500,

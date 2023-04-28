@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"store-bpel/bff/customer_bff/config"
 	"store-bpel/bff/customer_bff/internal/controller"
+	account_controller "store-bpel/bff/customer_bff/internal/controller/account_service"
 	cart_controller "store-bpel/bff/customer_bff/internal/controller/cart_service"
 	customer_controller "store-bpel/bff/customer_bff/internal/controller/customer_service"
 	order_controller "store-bpel/bff/customer_bff/internal/controller/order_service"
@@ -37,5 +38,6 @@ func newSOAPMux(cfg *config.Config) *mux.Router {
 	customer_controller.RegisterEndpointHandler(r, cfg)
 	order_controller.RegisterEndpointHandler(r, cfg)
 	cart_controller.RegisterEndpointHandler(r, cfg)
+	account_controller.RegisterEndpointHandler(r, cfg)
 	return r
 }

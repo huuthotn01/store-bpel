@@ -16,6 +16,8 @@ type AccountModel struct {
 	Password    string
 	UserRole    int
 	Email       string
+	Otp         string
+	OtpTimeout  time.Time
 	IsActivated int
 	CreatedAt   time.Time
 }

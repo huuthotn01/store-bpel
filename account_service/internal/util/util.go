@@ -2,8 +2,10 @@ package util
 
 import (
 	"errors"
+	"fmt"
 	"math/rand"
 	"net/smtp"
+	"time"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -57,4 +59,10 @@ func SendEmail(to []string, title string, message string) error {
 	// send email
 	return smtp.SendMail(smtpServer+":"+string(smtpPort), auth, smtpUsername, to, smg)
 
+}
+
+func GenerateOTPCode() string {
+	rand.Seed(time.Now().UnixNano())
+	randomNum := rand.Intn(1000000)
+	return fmt.Sprintf("%06d", randomNum)
 }

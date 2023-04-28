@@ -15,6 +15,7 @@ func (c *accountServiceController) SignIn(ctx context.Context, request *schema.S
 	if err != nil {
 		return nil, err
 	}
+
 	if account.IsActivated == 0 {
 		return nil, errors.New("record not found")
 	}

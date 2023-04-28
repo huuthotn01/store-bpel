@@ -35,3 +35,12 @@ type ChangePasswordRequest struct {
 	OldPassword string
 	NewPassword string
 }
+
+type CreateResetPasswordRequest struct {
+	Username string
+}
+
+type ConfirmOTPRequest struct {
+	Username string
+	Otp      string
+}

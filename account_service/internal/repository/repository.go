@@ -11,7 +11,9 @@ type IAccountServiceRepository interface {
 	GetAccount(ctx context.Context, username string) (*AccountModel, error)
 	AddAccount(ctx context.Context, data *AccountModel) error
 	UpdateRole(ctx context.Context, username string, role int, password string) error
-	UpdatePassword(ctx context.Context, password string) error
+	UpdatePassword(ctx context.Context, username string, password string) error
+	UpdateOTPCode(ctx context.Context, username string, otp string) error
+	ConfirmOTP(ctx context.Context, username string, otp string) (*AccountModel, error)
 }
 
 func NewRepository(db *gorm.DB) IAccountServiceRepository {
@@ -23,7 +25,7 @@ func NewRepository(db *gorm.DB) IAccountServiceRepository {
 
 func (r *accountServiceRepository) GetListAccount(ctx context.Context, username string) ([]*AccountModel, error) {
 	var result []*AccountModel
-	query := r.db.WithContext(ctx).Table(r.accountTableName).Where("is_activated=1")
+	query := r.db.WithContext(ctx).Table(r.accountTableName).Where("is_activated = 1")
 	if username != "" {
 		query = query.Where("username LIKE ?", "%"+username+"%")
 	}
@@ -32,7 +34,7 @@ func (r *accountServiceRepository) GetListAccount(ctx context.Context, username 
 
 func (r *accountServiceRepository) GetAccount(ctx context.Context, username string) (*AccountModel, error) {
 	var result *AccountModel
-	query := r.db.WithContext(ctx).Table(r.accountTableName).Where("username = ?", username)
+	query := r.db.WithContext(ctx).Table(r.accountTableName).Where("username = ? AND is_activated = 1", username)
 	return result, query.First(&result).Error
 }
 
@@ -60,7 +62,19 @@ func (r *accountServiceRepository) UpdateRole(ctx context.Context, username stri
 	return err
 }
 
-func (r *accountServiceRepository) UpdatePassword(ctx context.Context, password string) error {
+func (r *accountServiceRepository) UpdatePassword(ctx context.Context, username string, password string) error {
+	return r.db.Exec("UPDATE `account` SET `password` = ? WHERE `username` = ?;", password, username).Error
+}
 
-	return r.db.Exec("UPDATE `account` SET `password` = ?;", password).Error
+func (r *accountServiceRepository) UpdateOTPCode(ctx context.Context, username string, otp string) error {
+	return r.db.Exec("UPDATE `account` SET `otp` = ?, otp_timeout = DATE_ADD(NOW(), INTERVAL 5 MINUTE) WHERE `username` = ?;", otp, username).Error
+}
+
+func (r *accountServiceRepository) ConfirmOTP(ctx context.Context, username string, otp string) (*AccountModel, error) {
+	var record *AccountModel
+	err := r.db.Table(r.accountTableName).Where(" NOW() <= otp_timeout AND username = ? AND otp = ?", username, otp).First(&record).Error
+	if err != nil {
+		return nil, err
+	}
+	return record, r.db.Exec("UPDATE `account` SET otp_timeout = NOW() WHERE `username` = ?;", username).Error
 }

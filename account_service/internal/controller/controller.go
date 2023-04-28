@@ -20,6 +20,8 @@ type IAccountServiceController interface {
 	SignIn(ctx context.Context, request *schema.SignInRequest) (*schema.SignInResponseData, error)
 	SignUp(ctx context.Context, request *schema.SignUpRequest) error
 	ChangePassword(ctx context.Context, request *schema.ChangePasswordRequest) error
+	CreateResetPassword(ctx context.Context, request *schema.CreateResetPasswordRequest) error
+	ConfirmOTP(ctx context.Context, request *schema.ConfirmOTPRequest) error
 }
 
 type accountServiceController struct {

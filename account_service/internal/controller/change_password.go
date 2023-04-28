@@ -22,5 +22,5 @@ func (c *accountServiceController) ChangePassword(ctx context.Context, request *
 		return err
 	}
 
-	return c.repository.UpdatePassword(ctx, hashedPass)
+	return c.repository.UpdatePassword(ctx, request.Username, hashedPass)
 }
