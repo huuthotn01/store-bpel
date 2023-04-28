@@ -10,6 +10,8 @@ import (
 type IAccountBffController interface {
 	SignIn(ctx context.Context, request *account_service.SignInRequest) (*account_service.SignInResponseData, error)
 	SignUp(ctx context.Context, request *account_service.SignUpRequest) error
+	CreateResetPassword(ctx context.Context, request *account_service.CreateResetPasswordRequest) error
+	ConfirmOTP(ctx context.Context, request *account_service.ConfirmOTPRequest) error
 }
 
 type accountBffController struct {

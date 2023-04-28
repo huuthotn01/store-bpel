@@ -11,6 +11,12 @@ type UpdateRoleRequest struct {
 
 type AddAccountRequest struct {
 	Username string
-	Password string
+	Email    string
 	Role     int
+}
+
+type ChangePasswordRequest struct {
+	Username    string
+	OldPassword string
+	NewPassword string
 }

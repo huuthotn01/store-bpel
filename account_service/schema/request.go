@@ -27,4 +27,20 @@ type AddAccountRequest struct {
 	Username string
 	Password string
 	Role     int
+	Email    string
+}
+
+type ChangePasswordRequest struct {
+	Username    string
+	OldPassword string
+	NewPassword string
+}
+
+type CreateResetPasswordRequest struct {
+	Username string
+}
+
+type ConfirmOTPRequest struct {
+	Username string
+	Otp      string
 }

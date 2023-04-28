@@ -2,7 +2,6 @@ package controller
 
 import (
 	"context"
-	"gorm.io/gorm"
 	"math/rand"
 	"store-bpel/account_service/config"
 	adapter2 "store-bpel/account_service/internal/adapter"
@@ -10,6 +9,8 @@ import (
 	"store-bpel/account_service/schema"
 	"store-bpel/library/kafka_lib"
 	"time"
+
+	"gorm.io/gorm"
 )
 
 type IAccountServiceController interface {
@@ -18,6 +19,9 @@ type IAccountServiceController interface {
 	UpdateRole(ctx context.Context, username string, request *schema.UpdateRoleRequest) error
 	SignIn(ctx context.Context, request *schema.SignInRequest) (*schema.SignInResponseData, error)
 	SignUp(ctx context.Context, request *schema.SignUpRequest) error
+	ChangePassword(ctx context.Context, request *schema.ChangePasswordRequest) error
+	CreateResetPassword(ctx context.Context, request *schema.CreateResetPasswordRequest) error
+	ConfirmOTP(ctx context.Context, request *schema.ConfirmOTPRequest) error
 }
 
 type accountServiceController struct {

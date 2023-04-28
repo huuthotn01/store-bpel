@@ -2,6 +2,7 @@ package controller
 
 import (
 	"context"
+	"errors"
 	"store-bpel/account_service/internal/util"
 	"store-bpel/account_service/schema"
 	"time"
@@ -14,6 +15,11 @@ func (c *accountServiceController) SignIn(ctx context.Context, request *schema.S
 	if err != nil {
 		return nil, err
 	}
+
+	if account.IsActivated == 0 {
+		return nil, errors.New("record not found")
+	}
+
 	err = util.CheckPasswordBcrypt([]byte(account.Password), []byte(request.Password))
 	if err != nil {
 		return nil, err

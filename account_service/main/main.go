@@ -3,14 +3,15 @@ package main
 import (
 	"context"
 	"encoding/json"
-	"github.com/gorilla/mux"
-	"github.com/spf13/cast"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"store-bpel/account_service/config"
 	"store-bpel/account_service/internal/controller"
 	"store-bpel/account_service/schema"
+
+	"github.com/gorilla/mux"
+	"github.com/spf13/cast"
 )
 
 var ctrl controller.IAccountServiceController
@@ -46,6 +47,9 @@ func registerEndpoint(r *mux.Router) {
 	r.HandleFunc("/api/account-service/sign-up", handleSignUp)
 	r.HandleFunc("/api/account-service/role/{username}", handleRole)
 	r.HandleFunc("/api/account-service", handleAccount)
+	r.HandleFunc("/api/account-service/password", handlePassword)
+	r.HandleFunc("/api/account-service/reset-password", handleResetPassword)
+	r.HandleFunc("/api/account-service/reset-password/otp", handleOTP)
 }
 
 func handleAccount(w http.ResponseWriter, r *http.Request) {
@@ -213,6 +217,126 @@ func handleRole(w http.ResponseWriter, r *http.Request) {
 		}
 		username := mux.Vars(r)["username"]
 		err = ctrl.UpdateRole(ctx, username, request)
+		if err != nil {
+			err = enc.Encode(&schema.UpdateResponse{
+				StatusCode: 500,
+				Message:    err.Error(),
+			})
+		} else {
+			err = enc.Encode(&schema.UpdateResponse{
+				StatusCode: 200,
+				Message:    "OK",
+			})
+		}
+	} else {
+		http.Error(w, "Method not supported", http.StatusNotFound)
+	}
+}
+
+func handlePassword(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	enc := json.NewEncoder(w)
+	if r.Method == "PUT" {
+		reqBody, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			err = enc.Encode(&schema.UpdateResponse{
+				StatusCode: 500,
+				Message:    err.Error(),
+			})
+			return
+		}
+		var request *schema.ChangePasswordRequest
+		err = json.Unmarshal(reqBody, &request)
+		if err != nil {
+			err = enc.Encode(&schema.UpdateResponse{
+				StatusCode: 500,
+				Message:    err.Error(),
+			})
+			return
+		}
+		err = ctrl.ChangePassword(ctx, request)
+		if err != nil {
+			err = enc.Encode(&schema.UpdateResponse{
+				StatusCode: 500,
+				Message:    err.Error(),
+			})
+		} else {
+			err = enc.Encode(&schema.UpdateResponse{
+				StatusCode: 200,
+				Message:    "OK",
+			})
+		}
+	} else {
+		http.Error(w, "Method not supported", http.StatusNotFound)
+	}
+}
+
+func handleResetPassword(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	enc := json.NewEncoder(w)
+	if r.Method == "POST" {
+		reqBody, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			err = enc.Encode(&schema.UpdateResponse{
+				StatusCode: 500,
+				Message:    err.Error(),
+			})
+			return
+		}
+		var request *schema.CreateResetPasswordRequest
+		err = json.Unmarshal(reqBody, &request)
+		if err != nil {
+			err = enc.Encode(&schema.UpdateResponse{
+				StatusCode: 500,
+				Message:    err.Error(),
+			})
+			return
+		}
+		err = ctrl.CreateResetPassword(ctx, request)
+		if err != nil {
+			err = enc.Encode(&schema.UpdateResponse{
+				StatusCode: 500,
+				Message:    err.Error(),
+			})
+		} else {
+			err = enc.Encode(&schema.UpdateResponse{
+				StatusCode: 200,
+				Message:    "OK",
+			})
+		}
+	} else {
+		http.Error(w, "Method not supported", http.StatusNotFound)
+	}
+}
+
+func handleOTP(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	enc := json.NewEncoder(w)
+	if r.Method == "POST" {
+		reqBody, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			err = enc.Encode(&schema.UpdateResponse{
+				StatusCode: 500,
+				Message:    err.Error(),
+			})
+			return
+		}
+		var request *schema.ConfirmOTPRequest
+		err = json.Unmarshal(reqBody, &request)
+		if err != nil {
+			err = enc.Encode(&schema.UpdateResponse{
+				StatusCode: 500,
+				Message:    err.Error(),
+			})
+			return
+		}
+		err = ctrl.ConfirmOTP(ctx, request)
 		if err != nil {
 			err = enc.Encode(&schema.UpdateResponse{
 				StatusCode: 500,
