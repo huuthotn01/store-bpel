@@ -56,6 +56,7 @@ func (s *staffServiceController) AddStaff(ctx context.Context, request *schema.A
 		addAccountRequest := &accountSchema.AddAccountRequest{
 			Username: staffId,
 			Role:     role,
+			Email:    request.Email,
 		}
 		addAccReqByte, err := json.Marshal(addAccountRequest)
 		if err != nil {

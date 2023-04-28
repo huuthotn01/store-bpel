@@ -2,8 +2,10 @@ package util
 
 import (
 	"errors"
-	"golang.org/x/crypto/bcrypt"
 	"math/rand"
+	"net/smtp"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 /*
@@ -12,7 +14,7 @@ import (
 
 func GenerateRandomPassword() string {
 	const letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-	res := make([]byte, 10) // generate random password fixed in 10-char size
+	res := make([]byte, 6) // generate random password fixed in 10-char size
 	for i := range res {
 		res[i] = letters[rand.Intn(52)] // 52 is total number of english alphabet letters
 	}
@@ -36,4 +38,23 @@ func HashPasswordBcrypt(password string) (string, error) {
 
 func CheckPasswordBcrypt(hashedPassword, password []byte) error {
 	return bcrypt.CompareHashAndPassword(hashedPassword, password)
+}
+
+func SendEmail(to []string, title string, message string) error {
+	smtpServer := "smtp.gmail.com"
+	smtpPort := "587"
+	smtpUsername := "gaokotrang@gmail.com"
+	smtpPassword := "ugresofpeawzmuds"
+
+	auth := smtp.PlainAuth("", smtpUsername, smtpPassword, smtpServer)
+
+	// convert message to byte][]
+	smg := []byte("To: " + to[0] + "\r\n" +
+		"Subject: " + title + "\r\n" +
+		"\r\n" +
+		message + "\r\n")
+
+	// send email
+	return smtp.SendMail(smtpServer+":"+string(smtpPort), auth, smtpUsername, to, smg)
+
 }

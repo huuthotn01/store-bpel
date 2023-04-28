@@ -10,7 +10,8 @@ type IAccountServiceRepository interface {
 	GetListAccount(ctx context.Context, username string) ([]*AccountModel, error)
 	GetAccount(ctx context.Context, username string) (*AccountModel, error)
 	AddAccount(ctx context.Context, data *AccountModel) error
-	UpdateRole(ctx context.Context, username string, role int) error
+	UpdateRole(ctx context.Context, username string, role int, password string) error
+	UpdatePassword(ctx context.Context, password string) error
 }
 
 func NewRepository(db *gorm.DB) IAccountServiceRepository {
@@ -37,20 +38,29 @@ func (r *accountServiceRepository) GetAccount(ctx context.Context, username stri
 
 func (r *accountServiceRepository) AddAccount(ctx context.Context, data *AccountModel) error {
 	if data.UserRole == 7 {
-		return r.db.Exec("INSERT INTO `account` (`username`, `password`, `user_role`, `is_activated`) VALUES (?, ?, ?, '0');",
-			data.Username, data.Password, data.UserRole).Error
+		return r.db.Exec("INSERT INTO `account` (`username`, `password`, `user_role`, `email`, `is_activated`) VALUES (?, ?, ?, ?, '0');",
+			data.Username, data.Password, data.UserRole, data.Email).Error
 	}
-	return r.db.Exec("INSERT INTO `account` (`username`, `password`, `user_role`, `is_activated`) VALUES (?, ?, ?, '1');",
-		data.Username, data.Password, data.UserRole).Error
+	return r.db.Exec("INSERT INTO `account` (`username`, `password`, `user_role`, `email`, `is_activated`) VALUES (?, ?, ?, ?, '1');",
+		data.Username, data.Password, data.UserRole, data.Email).Error
 }
 
-func (r *accountServiceRepository) UpdateRole(ctx context.Context, username string, role int) error {
+func (r *accountServiceRepository) UpdateRole(ctx context.Context, username string, role int, password string) error {
 	var err error
 	if role == 7 {
 		err = r.db.Exec("UPDATE `account` SET `user_role` = ?, `is_activated` = '0' WHERE `account`.`username` = ?;", role, username).Error
 	} else {
-		err = r.db.Exec("UPDATE `account` SET `user_role` = ?, `is_activated` = '1' WHERE `account`.`username` = ?;", role, username).Error
+		if password != "" {
+			err = r.db.Exec("UPDATE `account` SET `user_role` = ?, `is_activated` = '1', `password` = ? WHERE `account`.`username` = ?", role, password, username).Error
+		} else {
+			err = r.db.Exec("UPDATE `account` SET `user_role` = ?, `is_activated` = '1' WHERE `account`.`username` = ?;", role, username).Error
+		}
 	}
 
 	return err
+}
+
+func (r *accountServiceRepository) UpdatePassword(ctx context.Context, password string) error {
+
+	return r.db.Exec("UPDATE `account` SET `password` = ?;", password).Error
 }
