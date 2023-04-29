@@ -46,10 +46,92 @@ services:
     ports:
       - "30000:30000"
 
-  event-service-db-migration:
-    image: public.ecr.aws/h3x4i1u8/event-service-db-migration:20230429174130
-    container_name: event-service-db-migration
-    hostname: event-service-db-migration
+  account-service:
+    image: public.ecr.aws/h3x4i1u8/account-service:20230430005558
+    container_name: account-service
+    hostname: account-service
+    depends_on:
+      mysql:
+        condition: service_healthy
+    restart: on-failure
+    networks:
+      - store-bpel
+    ports:
+      - "14083:14083"
+
+  account-service-db-migration:
+    image: public.ecr.aws/h3x4i1u8/account-service-db-migration:20230430011722
+    container_name: account-service-db-migration
+    hostname: account-service-db-migration
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - store-bpel
+
+  branch-service:
+    image: public.ecr.aws/h3x4i1u8/branch-service:20230430012139
+    container_name: branch-service
+    hostname: branch-service
+    depends_on:
+      mysql:
+        condition: service_healthy
+    restart: on-failure
+    networks:
+      - store-bpel
+    ports:
+      - "14000:14000"
+
+  branch-service-db-migration:
+    image: public.ecr.aws/h3x4i1u8/branch-service-db-migration:20230430012355
+    container_name: branch-service-db-migration
+    hostname: branch-service-db-migration
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - store-bpel
+
+  cart-service:
+    image: public.ecr.aws/h3x4i1u8/cart-service:20230430013050
+    container_name: cart-service
+    hostname: cart-service
+    depends_on:
+      mysql:
+        condition: service_healthy
+    restart: on-failure
+    networks:
+      - store-bpel
+    ports:
+      - "14061:14061"
+
+  cart-service-db-migration:
+    image: public.ecr.aws/h3x4i1u8/cart-service-db-migration:20230430013108
+    container_name: cart-service-db-migration
+    hostname: cart-service-db-migration
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - store-bpel
+
+  customer-service:
+    image: public.ecr.aws/h3x4i1u8/customer-service:20230430013805
+    container_name: customer-service
+    hostname: customer-service
+    depends_on:
+      mysql:
+        condition: service_healthy
+    restart: on-failure
+    networks:
+      - store-bpel
+    ports:
+      - "14050:14050"
+
+  customer-service-db-migration:
+    image: public.ecr.aws/h3x4i1u8/customer-service-db-migration:20230430013817
+    container_name: customer-service-db-migration
+    hostname: customer-service-db-migration
     depends_on:
       mysql:
         condition: service_healthy
@@ -71,6 +153,131 @@ services:
 #        target: /app/event-service/config.yaml
     ports:
       - "14060:14060"
+
+  event-service-db-migration:
+    image: public.ecr.aws/h3x4i1u8/event-service-db-migration:20230429174130
+    container_name: event-service-db-migration
+    hostname: event-service-db-migration
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - store-bpel
+
+  goods-service:
+    image: public.ecr.aws/h3x4i1u8/goods-service:20230430014550
+    container_name: goods-service
+    hostname: goods-service
+    depends_on:
+      mysql:
+        condition: service_healthy
+    restart: on-failure
+    networks:
+      - store-bpel
+    ports:
+      - "14080:14080"
+
+  goods-service-db-migration:
+    image: public.ecr.aws/h3x4i1u8/goods-service-db-migration:20230430014602
+    container_name: goods-service-db-migration
+    hostname: goods-service-db-migration
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - store-bpel
+
+  order-service:
+    image: public.ecr.aws/h3x4i1u8/order-service:20230430015230
+    container_name: order-service
+    hostname: order-service
+    depends_on:
+      mysql:
+        condition: service_healthy
+    restart: on-failure
+    networks:
+      - store-bpel
+    ports:
+      - "14070:14070"
+
+  order-service-db-migration:
+    image: public.ecr.aws/h3x4i1u8/order-service-db-migration:20230430015238
+    container_name: order-service-db-migration
+    hostname: order-service-db-migration
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - store-bpel
+
+  staff-service:
+    image: public.ecr.aws/h3x4i1u8/staff-service:20230430015549
+    container_name: staff-service
+    hostname: staff-service
+    depends_on:
+      mysql:
+        condition: service_healthy
+    restart: on-failure
+    networks:
+      - store-bpel
+    ports:
+      - "14082:14082"
+
+  staff-service-db-migration:
+    image: public.ecr.aws/h3x4i1u8/staff-service-db-migration:20230430015731
+    container_name: staff-service-db-migration
+    hostname: staff-service-db-migration
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - store-bpel
+
+  statistic-service:
+    image: public.ecr.aws/h3x4i1u8/statistic-service:20230430015833
+    container_name: statistic-service
+    hostname: statistic-service
+    depends_on:
+      mysql:
+        condition: service_healthy
+    restart: on-failure
+    networks:
+      - store-bpel
+    ports:
+      - "14090:14090"
+
+  statistic-service-db-migration:
+    image: public.ecr.aws/h3x4i1u8/statistic-service-db-migration:20230430020041
+    container_name: statistic-service-db-migration
+    hostname: statistic-service-db-migration
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - store-bpel
+
+  warehouse-service:
+    image: public.ecr.aws/h3x4i1u8/warehouse-service:20230430020115
+    container_name: warehouse-service
+    hostname: warehouse-service
+    depends_on:
+      mysql:
+        condition: service_healthy
+    restart: on-failure
+    networks:
+      - store-bpel
+    ports:
+      - "14081:14081"
+
+  warehouse-service-db-migration:
+    image: public.ecr.aws/h3x4i1u8/warehouse-service-db-migration:20230430020424
+    container_name: warehouse-service-db-migration
+    hostname: warehouse-service-db-migration
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - store-bpel
 
 networks:
   store-bpel:
