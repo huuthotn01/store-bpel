@@ -8,11 +8,16 @@ services:
     networks:
       - store-bpel
     volumes:
-      - init-mysql
+      - ./init_db:/docker-entrypoint-initdb.d
     environment:
       - MYSQL_ALLOW_EMPTY_PASSWORD=1
     ports:
-      - 3306:3306
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root"]
+      interval: 20s
+      timeout: 5s
+      retries: 5
 
   admin-bff:
     image: public.ecr.aws/h3x4i1u8/admin-bff:20230428055958
@@ -21,7 +26,7 @@ services:
     networks:
       - store-bpel
     ports:
-      - 10000:10000
+      - "10000:10000"
 
   customer-bff:
     image: public.ecr.aws/h3x4i1u8/customer-bff:20230428060052
@@ -30,7 +35,7 @@ services:
     networks:
       - store-bpel
     ports:
-      - 20000:20000
+      - "20000:20000"
 
   shared-bff:
     image: public.ecr.aws/h3x4i1u8/shared-bff:20230428060137
@@ -39,14 +44,25 @@ services:
     networks:
       - store-bpel
     ports:
-      - 30000:30000
+      - "30000:30000"
+
+  event-service-db-migration:
+    image: public.ecr.aws/h3x4i1u8/event-service-db-migration:20230429174130
+    container_name: event-service-db-migration
+    hostname: event-service-db-migration
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - store-bpel
 
   event-service:
     image: public.ecr.aws/h3x4i1u8/event-service:20230428021514
     container_name: event-service
     hostname: event-service
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
     restart: on-failure
     networks:
       - store-bpel
@@ -54,7 +70,7 @@ services:
 #      - source: event-service-config
 #        target: /app/event-service/config.yaml
     ports:
-      - 14060:14060
+      - "14060:14060"
 
 networks:
   store-bpel:
@@ -64,7 +80,3 @@ networks:
 #configs:
 #  event-service-config:
 #    file: ./event_service/config.yaml
-
-volumes:
-  init-mysql:
-    name: init-mysql

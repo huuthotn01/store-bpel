@@ -1,0 +1,15 @@
+FROM ubuntu:20.04
+
+WORKDIR /event-service/migration
+
+COPY ./event_service/migration .
+
+RUN apt-get update && apt-get -y -qq install sudo
+
+RUN apt-get -y -qq install curl
+
+RUN curl -s https://packagecloud.io/install/repositories/golang-migrate/migrate/script.deb.sh | sudo bash
+
+RUN sudo apt-get install -y -qq migrate
+
+CMD ["migrate", "-path", ".", "-database", "mysql://bpel:bpel@tcp(mysql:3306)/event_service", "-verbose", "up"]

@@ -28,6 +28,9 @@ build_customer_service_image:
 build_event_service_image:
 	docker build -f event_service/Dockerfile -t public.ecr.aws/h3x4i1u8/event-service:$(shell date '+%Y%m%d%H%M%S') .
 
+build_event_service_migration:
+	docker build -f event_service/Dockerfile.migration -t public.ecr.aws/h3x4i1u8/event-service-db-migration:$(shell date '+%Y%m%d%H%M%S') .
+
 build_goods_service_image:
 	docker build -f goods_service/Dockerfile -t public.ecr.aws/h3x4i1u8/goods-service:$(shell date '+%Y%m%d%H%M%S') .
 
