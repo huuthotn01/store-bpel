@@ -155,7 +155,7 @@ services:
       - "14060:14060"
 
   event-service-db-migration:
-    image: huuthotn01/event-service-db-migration:20230429174130
+    image: huuthotn01/event-service-db-migration:20230503182111
     container_name: event-service-db-migration
     hostname: event-service-db-migration
     depends_on:
