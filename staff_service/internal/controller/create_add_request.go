@@ -49,6 +49,7 @@ func (s *staffServiceController) CreateAddRequest(ctx context.Context, request *
 			Salary:        request.Salary,
 			Email:         request.Email,
 			Status:        "PENDING",
+			BranchId: request.WorkingPlace,
 		})
 	})
 }
