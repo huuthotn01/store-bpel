@@ -31,6 +31,7 @@ func (c *accountServiceController) SignUp(ctx context.Context, request *schema.S
 		Username: request.Username,
 		Password: hashedPass,
 		UserRole: 1,
+		Email: request.Email,
 	})
 	if err != nil {
 		return err
