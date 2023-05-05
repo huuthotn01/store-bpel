@@ -10,6 +10,8 @@ RUN go mod download
 COPY ./bff/customer_bff ../
 
 # copy other dependencies
+## account service schema
+COPY ./account_service/schema /app/account_service/schema
 ## cart service schema
 COPY ./cart_service/schema /app/cart_service/schema
 ## customer service schema

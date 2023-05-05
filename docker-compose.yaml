@@ -20,7 +20,7 @@ services:
       retries: 5
 
   admin-bff:
-    image: huuthotn01/admin-bff:20230428055958
+    image: huuthotn01/admin-bff:20230505224633
     container_name: admin-bff
     hostname: admin-bff
     networks:
@@ -29,7 +29,7 @@ services:
       - "10000:10000"
 
   customer-bff:
-    image: huuthotn01/customer-bff:20230428060052
+    image: huuthotn01/customer-bff:20230505225851
     container_name: customer-bff
     hostname: customer-bff
     networks:
@@ -38,7 +38,7 @@ services:
       - "20000:20000"
 
   shared-bff:
-    image: huuthotn01/shared-bff:20230428060137
+    image: huuthotn01/shared-bff:20230505230108
     container_name: shared-bff
     hostname: shared-bff
     networks:
@@ -47,7 +47,7 @@ services:
       - "30000:30000"
 
   account-service:
-    image: huuthotn01/account-service:20230430005558
+    image: huuthotn01/account-service:20230505221715
     container_name: account-service
     hostname: account-service
     depends_on:
@@ -60,7 +60,7 @@ services:
       - "14083:14083"
 
   account-service-db-migration:
-    image: huuthotn01/account-service-db-migration:20230430011722
+    image: huuthotn01/account-service-db-migration:20230505223127
     container_name: account-service-db-migration
     hostname: account-service-db-migration
     depends_on:
@@ -70,7 +70,7 @@ services:
       - store-bpel
 
   branch-service:
-    image: huuthotn01/branch-service:20230430012139
+    image: huuthotn01/branch-service:20230505230445
     container_name: branch-service
     hostname: branch-service
     depends_on:
@@ -83,7 +83,7 @@ services:
       - "14000:14000"
 
   branch-service-db-migration:
-    image: huuthotn01/branch-service-db-migration:20230430012355
+    image: huuthotn01/branch-service-db-migration:20230505230649
     container_name: branch-service-db-migration
     hostname: branch-service-db-migration
     depends_on:
@@ -93,7 +93,7 @@ services:
       - store-bpel
 
   cart-service:
-    image: huuthotn01/cart-service:20230430013050
+    image: huuthotn01/cart-service:20230505231011
     container_name: cart-service
     hostname: cart-service
     depends_on:
@@ -106,7 +106,7 @@ services:
       - "14061:14061"
 
   cart-service-db-migration:
-    image: huuthotn01/cart-service-db-migration:20230430013108
+    image: huuthotn01/cart-service-db-migration:20230505231208
     container_name: cart-service-db-migration
     hostname: cart-service-db-migration
     depends_on:
@@ -116,7 +116,7 @@ services:
       - store-bpel
 
   customer-service:
-    image: huuthotn01/customer-service:20230430013805
+    image: huuthotn01/customer-service:20230505231521
     container_name: customer-service
     hostname: customer-service
     depends_on:
@@ -129,7 +129,7 @@ services:
       - "14050:14050"
 
   customer-service-db-migration:
-    image: huuthotn01/customer-service-db-migration:20230430013817
+    image: huuthotn01/customer-service-db-migration:20230505231716
     container_name: customer-service-db-migration
     hostname: customer-service-db-migration
     depends_on:
@@ -139,7 +139,7 @@ services:
       - store-bpel
 
   event-service:
-    image: huuthotn01/event-service:20230428021514
+    image: huuthotn01/event-service:20230505231956
     container_name: event-service
     hostname: event-service
     depends_on:
@@ -155,7 +155,7 @@ services:
       - "14060:14060"
 
   event-service-db-migration:
-    image: huuthotn01/event-service-db-migration:20230503182111
+    image: huuthotn01/event-service-db-migration:20230505232146
     container_name: event-service-db-migration
     hostname: event-service-db-migration
     depends_on:
@@ -165,7 +165,7 @@ services:
       - store-bpel
 
   goods-service:
-    image: huuthotn01/goods-service:20230430014550
+    image: huuthotn01/goods-service:20230505232338
     container_name: goods-service
     hostname: goods-service
     depends_on:
@@ -178,7 +178,7 @@ services:
       - "14080:14080"
 
   goods-service-db-migration:
-    image: huuthotn01/goods-service-db-migration:20230430014602
+    image: huuthotn01/goods-service-db-migration:20230505232525
     container_name: goods-service-db-migration
     hostname: goods-service-db-migration
     depends_on:
@@ -188,7 +188,7 @@ services:
       - store-bpel
 
   order-service:
-    image: huuthotn01/order-service:20230430015230
+    image: huuthotn01/order-service:20230505232843
     container_name: order-service
     hostname: order-service
     depends_on:
@@ -201,7 +201,7 @@ services:
       - "14070:14070"
 
   order-service-db-migration:
-    image: huuthotn01/order-service-db-migration:20230430015238
+    image: huuthotn01/order-service-db-migration:20230505233108
     container_name: order-service-db-migration
     hostname: order-service-db-migration
     depends_on:
@@ -211,7 +211,7 @@ services:
       - store-bpel
 
   staff-service:
-    image: huuthotn01/staff-service:20230430015549
+    image: huuthotn01/staff-service:20230505233324
     container_name: staff-service
     hostname: staff-service
     depends_on:
@@ -224,7 +224,7 @@ services:
       - "14082:14082"
 
   staff-service-db-migration:
-    image: huuthotn01/staff-service-db-migration:20230430015731
+    image: huuthotn01/staff-service-db-migration:20230505233523
     container_name: staff-service-db-migration
     hostname: staff-service-db-migration
     depends_on:
@@ -234,7 +234,7 @@ services:
       - store-bpel
 
   statistic-service:
-    image: huuthotn01/statistic-service:20230430015833
+    image: huuthotn01/statistic-service:20230505233803
     container_name: statistic-service
     hostname: statistic-service
     depends_on:
@@ -247,7 +247,7 @@ services:
       - "14090:14090"
 
   statistic-service-db-migration:
-    image: huuthotn01/statistic-service-db-migration:20230430020041
+    image: huuthotn01/statistic-service-db-migration:20230505234011
     container_name: statistic-service-db-migration
     hostname: statistic-service-db-migration
     depends_on:
@@ -257,7 +257,7 @@ services:
       - store-bpel
 
   warehouse-service:
-    image: huuthotn01/warehouse-service:20230430020115
+    image: huuthotn01/warehouse-service:20230505234223
     container_name: warehouse-service
     hostname: warehouse-service
     depends_on:
@@ -270,7 +270,7 @@ services:
       - "14081:14081"
 
   warehouse-service-db-migration:
-    image: huuthotn01/warehouse-service-db-migration:20230430020424
+    image: huuthotn01/warehouse-service-db-migration:20230505234422
     container_name: warehouse-service-db-migration
     hostname: warehouse-service-db-migration
     depends_on:
