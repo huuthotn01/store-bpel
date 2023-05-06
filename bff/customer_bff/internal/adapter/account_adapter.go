@@ -19,12 +19,18 @@ type IAccountServiceAdapter interface {
 
 type accountServiceAdapter struct {
 	httpClient *http.Client
+	host       string
 	port       int
 }
 
 func NewAccountAdapter(cfg *config.Config) IAccountServiceAdapter {
+	host := "localhost"
+	if cfg.Env != "local" {
+		host = "account-service"
+	}
 	return &accountServiceAdapter{
 		httpClient: &http.Client{},
+		host:       host,
 		port:       cfg.AccountServicePort,
 	}
 }
@@ -40,7 +46,7 @@ func (a *accountServiceAdapter) ChangePassword(ctx context.Context, request *sch
 	defer log.Println("End call account service for ChangePassword")
 
 	var result *schema.UpdateResponse
-	url := fmt.Sprintf("http://localhost:%d/api/account-service/password", a.port)
+	url := fmt.Sprintf("http://%s:%d/api/account-service/password", a.host, a.port)
 	data, err := json.Marshal(request)
 	if err != nil {
 		log.Printf("BFF-Adapter-AccountServiceAdapter-ChangePassword-Marshal error %v", err)

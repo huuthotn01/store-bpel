@@ -17,12 +17,18 @@ type IWarehouseServiceAdapter interface {
 
 type warehouseServiceAdapter struct {
 	httpClient *http.Client
+	host       string
 	port       int
 }
 
 func NewWarehouseAdapter(cfg *config.Config) IWarehouseServiceAdapter {
+	host := "localhost"
+	if cfg.Env != "local" {
+		host = "warehouse-service"
+	}
 	return &warehouseServiceAdapter{
 		httpClient: &http.Client{},
+		host:       host,
 		port:       cfg.WarehouseServicePort,
 	}
 }
@@ -31,7 +37,7 @@ func (a *warehouseServiceAdapter) GetWarehouse(ctx context.Context) (*schema.Upd
 	log.Println("Start to call warehouse service for GetWarehouse")
 	defer log.Println("End call warehouse service for GetWarehouse")
 	var result *schema.UpdateResponse
-	url := fmt.Sprintf("http://localhost:%d/api/warehouse-service/warehouse", a.port)
+	url := fmt.Sprintf("http://%s:%d/api/warehouse-service/warehouse", a.host, a.port)
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err

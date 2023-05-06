@@ -23,12 +23,18 @@ type ICartServiceAdapter interface {
 
 type cartServiceAdapter struct {
 	httpClient *http.Client
+	host       string
 	port       int
 }
 
 func NewCartAdapter(cfg *config.Config) ICartServiceAdapter {
+	host := "localhost"
+	if cfg.Env != "local" {
+		host = "cart-service"
+	}
 	return &cartServiceAdapter{
 		httpClient: &http.Client{},
+		host:       host,
 		port:       cfg.CartServicePort,
 	}
 }
@@ -43,7 +49,7 @@ func (a *cartServiceAdapter) GetCart(ctx context.Context, username string) (*sch
 
 	var result *schema.GetCartResponse
 
-	url := fmt.Sprintf("http://localhost:%d/api/cart-service/cart/%s", a.port, username)
+	url := fmt.Sprintf("http://%s:%d/api/cart-service/cart/%s", a.host, a.port, username)
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
 		log.Printf("BFF-Adapter-CartServiceAdapter-GetCart-NewRequestWithContext error %v", err)
@@ -90,7 +96,7 @@ func (a *cartServiceAdapter) AddGoods(ctx context.Context, cartId string, reques
 	}
 
 	var result *schema.UpdateResponse
-	url := fmt.Sprintf("http://localhost:%d/api/cart-service/goods/%s", a.port, cartId)
+	url := fmt.Sprintf("http://%s:%d/api/cart-service/goods/%s", a.host, a.port, cartId)
 	req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, bytes.NewReader(data))
 	if err != nil {
 		log.Printf("BFF-Adapter-CartServiceAdapter-AddGood-NewRequestWithContext error %v", err)
@@ -137,7 +143,7 @@ func (a *cartServiceAdapter) UpdateGoods(ctx context.Context, cartId string, req
 	}
 
 	var result *schema.UpdateResponse
-	url := fmt.Sprintf("http://localhost:%d/api/cart-service/goods/%s", a.port, cartId)
+	url := fmt.Sprintf("http://%s:%d/api/cart-service/goods/%s", a.host, a.port, cartId)
 	req, err := http.NewRequestWithContext(ctx, http.MethodPut, url, bytes.NewReader(data))
 	if err != nil {
 		log.Printf("BFF-Adapter-CartServiceAdapter-UpdateGoods-NewRequestWithContext error %v", err)
@@ -184,7 +190,7 @@ func (a *cartServiceAdapter) DeleteGoods(ctx context.Context, cartId string, req
 	}
 
 	var result *schema.UpdateResponse
-	url := fmt.Sprintf("http://localhost:%d/api/cart-service/goods/%s", a.port, cartId)
+	url := fmt.Sprintf("http://%s:%d/api/cart-service/goods/%s", a.host, a.port, cartId)
 	req, err := http.NewRequestWithContext(ctx, http.MethodDelete, url, bytes.NewReader(data))
 	if err != nil {
 		log.Printf("BFF-Adapter-CartServiceAdapter-DeleteGoods-NewRequestWithContext error %v", err)
@@ -225,7 +231,7 @@ func (a *cartServiceAdapter) DeleteAllGoods(ctx context.Context, cartId string) 
 	defer log.Println("End call cart service for DeleteAllGoods")
 
 	var result *schema.UpdateResponse
-	url := fmt.Sprintf("http://localhost:%d/api/cart-service/all-goods/%s", a.port, cartId)
+	url := fmt.Sprintf("http://%s:%d/api/cart-service/all-goods/%s", a.host, a.port, cartId)
 	req, err := http.NewRequestWithContext(ctx, http.MethodDelete, url, nil)
 	if err != nil {
 		log.Printf("BFF-Adapter-CartServiceAdapter-DeleteAllGoods-NewRequestWithContext error %v", err)

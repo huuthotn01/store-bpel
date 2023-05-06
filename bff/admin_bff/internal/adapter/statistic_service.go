@@ -24,12 +24,18 @@ type IStatisticServiceAdapter interface {
 
 type statisticServiceAdapter struct {
 	httpClient *http.Client
+	host       string
 	port       int
 }
 
 func NewStatisticAdapter(cfg *config.Config) IStatisticServiceAdapter {
+	host := "localhost"
+	if cfg.Env != "local" {
+		host = "statistic-service"
+	}
 	return &statisticServiceAdapter{
 		httpClient: &http.Client{},
+		host:       host,
 		port:       cfg.StatisticServicePort,
 	}
 }
@@ -39,7 +45,7 @@ func (a *statisticServiceAdapter) AddOrderData(ctx context.Context, request *sch
 	defer log.Println("End call statistic service for AddOrderData")
 
 	var result *schema.UpdateResponse
-	url := fmt.Sprintf("http://localhost:%d/api/statistic-service/order", a.port)
+	url := fmt.Sprintf("http://%s:%d/api/statistic-service/order", a.host, a.port)
 	data, err := json.Marshal(request)
 	if err != nil {
 		log.Printf("BFF-Adapter-StatisticServiceAdapter-AddOrderData-Marshal error %v", err)
@@ -83,7 +89,7 @@ func (a *statisticServiceAdapter) GetOverallStat(ctx context.Context, request *s
 	defer log.Println("End call statistic service for GetOverallStat")
 
 	var result *schema.GetOverallStatisticResponse
-	url := fmt.Sprintf("http://localhost:%d/api/statistic-service/overall-stat", a.port)
+	url := fmt.Sprintf("http://%s:%d/api/statistic-service/overall-stat", a.host, a.port)
 	data, err := json.Marshal(request)
 	if err != nil {
 		log.Printf("BFF-Adapter-StatisticServiceAdapter-GetOverallStat-Marshal error %v", err)
@@ -127,7 +133,7 @@ func (a *statisticServiceAdapter) GetRevenue(ctx context.Context, request *schem
 	defer log.Println("End call statistic service for GetRevenue")
 
 	var result *schema.GetRevenueResponse
-	url := fmt.Sprintf("http://localhost:%d/api/statistic-service/revenue", a.port)
+	url := fmt.Sprintf("http://%s:%d/api/statistic-service/revenue", a.host, a.port)
 	data, err := json.Marshal(request)
 	if err != nil {
 		log.Printf("BFF-Adapter-StatisticServiceAdapter-GetRevenue-Marshal error %v", err)
@@ -175,7 +181,7 @@ func (a *statisticServiceAdapter) GetRevenueOneGoods(ctx context.Context, reques
 	defer log.Println("End call statistic service for GetRevenueOneGoods")
 
 	var result *schema.GetRevenueResponse
-	url := fmt.Sprintf("http://localhost:%d/api/statistic-service/revenue/%s", a.port, goodsId)
+	url := fmt.Sprintf("http://%s:%d/api/statistic-service/revenue/%s", a.host, a.port, goodsId)
 	data, err := json.Marshal(request)
 	if err != nil {
 		log.Printf("BFF-Adapter-StatisticServiceAdapter-GetRevenueOneGoods-Marshal error %v", err)
@@ -219,7 +225,7 @@ func (a *statisticServiceAdapter) GetProfit(ctx context.Context, request *schema
 	defer log.Println("End call statistic service for GetProfit")
 
 	var result *schema.GetProfitResponse
-	url := fmt.Sprintf("http://localhost:%d/api/statistic-service/profit", a.port)
+	url := fmt.Sprintf("http://%s:%d/api/statistic-service/profit", a.host, a.port)
 	data, err := json.Marshal(request)
 	if err != nil {
 		log.Printf("BFF-Adapter-StatisticServiceAdapter-GetProfit-Marshal error %v", err)
@@ -267,7 +273,7 @@ func (a *statisticServiceAdapter) GetProfitOneGoods(ctx context.Context, request
 	defer log.Println("End call statistic service for GetProfitOneGoods")
 
 	var result *schema.GetProfitResponse
-	url := fmt.Sprintf("http://localhost:%d/api/statistic-service/profit/%s", a.port, goodsId)
+	url := fmt.Sprintf("http://%s:%d/api/statistic-service/profit/%s", a.host, a.port, goodsId)
 	data, err := json.Marshal(request)
 	if err != nil {
 		log.Printf("BFF-Adapter-StatisticServiceAdapter-GetProfitOneGoods-Marshal error %v", err)

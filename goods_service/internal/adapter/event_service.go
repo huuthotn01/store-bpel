@@ -18,12 +18,18 @@ type IEventServiceAdapter interface {
 
 type eventServiceAdapter struct {
 	httpClient *http.Client
+	host       string
 	port       int
 }
 
 func NewEventAdapter(cfg *config.Config) IEventServiceAdapter {
+	host := "localhost"
+	if cfg.Env != "local" {
+		host = "event-service"
+	}
 	return &eventServiceAdapter{
 		httpClient: &http.Client{},
+		host:       host,
 		port:       cfg.EventServicePort,
 	}
 }
@@ -38,7 +44,7 @@ func (a *eventServiceAdapter) GetEventByGoods(ctx context.Context, goodsId strin
 
 	// call http to event service
 	var result *schema.GetEventByGoodsResponse
-	url := fmt.Sprintf("http://localhost:%d/api/event-service/get-by-goods/%s", a.port, goodsId)
+	url := fmt.Sprintf("http://%s:%d/api/event-service/get-by-goods/%s", a.host, a.port, goodsId)
 
 	// create http request
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)

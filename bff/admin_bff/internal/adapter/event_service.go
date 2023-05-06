@@ -23,12 +23,18 @@ type IEventServiceAdapter interface {
 
 type eventServiceAdapter struct {
 	httpClient *http.Client
+	host       string
 	port       int
 }
 
 func NewEventAdapter(cfg *config.Config) IEventServiceAdapter {
+	host := "localhost"
+	if cfg.Env != "local" {
+		host = "event-service"
+	}
 	return &eventServiceAdapter{
 		httpClient: &http.Client{},
+		host:       host,
 		port:       cfg.EventServicePort,
 	}
 }
@@ -38,7 +44,7 @@ func (a *eventServiceAdapter) UploadImage(ctx context.Context, data *schema.Uplo
 	defer log.Println("End call event service for UploadImage")
 
 	// call http to event service
-	url := fmt.Sprintf("http://localhost:%d/api/event-service/image", a.port)
+	url := fmt.Sprintf("http://%s:%d/api/event-service/image", a.host, a.port)
 
 	payload, err := json.Marshal(data)
 	if err != nil {
@@ -92,7 +98,7 @@ func (a *eventServiceAdapter) DeleteImage(ctx context.Context, eventId string) e
 	defer log.Println("End call event service for DeleteImage")
 
 	// call http to event service
-	url := fmt.Sprintf("http://localhost:%d/api/event-service/image/%s", a.port, eventId)
+	url := fmt.Sprintf("http://%s:%d/api/event-service/image/%s", a.host, a.port, eventId)
 
 	// create http request
 	req, err := http.NewRequestWithContext(ctx, http.MethodDelete, url, nil)
@@ -137,7 +143,7 @@ func (a *eventServiceAdapter) AddEvent(ctx context.Context, data *schema.AddEven
 	defer log.Println("End call event service for AddEvent")
 
 	// call http to event service
-	url := fmt.Sprintf("http://localhost:%d/api/event-service/event", a.port)
+	url := fmt.Sprintf("http://%s:%d/api/event-service/event", a.host, a.port)
 
 	payload, err := json.Marshal(data)
 	if err != nil {
@@ -192,7 +198,7 @@ func (a *eventServiceAdapter) UpdateEvent(ctx context.Context, eventId string, d
 	}
 
 	// call http to event service
-	url := fmt.Sprintf("http://localhost:%d/api/event-service/event/%s", a.port, eventId)
+	url := fmt.Sprintf("http://%s:%d/api/event-service/event/%s", a.host, a.port, eventId)
 
 	payload, err := json.Marshal(data)
 	if err != nil {
@@ -247,7 +253,7 @@ func (a *eventServiceAdapter) DeleteEvent(ctx context.Context, eventId string) e
 	}
 
 	// call http to event service
-	url := fmt.Sprintf("http://localhost:%d/api/event-service/event/%s", a.port, eventId)
+	url := fmt.Sprintf("http://%s:%d/api/event-service/event/%s", a.host, a.port, eventId)
 
 	// create http request
 	req, err := http.NewRequestWithContext(ctx, http.MethodDelete, url, nil)

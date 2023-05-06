@@ -28,12 +28,18 @@ type IStaffServiceAdapter interface {
 
 type staffServiceAdapter struct {
 	httpClient *http.Client
+	host       string
 	port       int
 }
 
 func NewStaffAdapter(cfg *config.Config) IStaffServiceAdapter {
+	host := "localhost"
+	if cfg.Env != "local" {
+		host = "staff-service"
+	}
 	return &staffServiceAdapter{
 		httpClient: &http.Client{},
+		host:       host,
 		port:       cfg.StaffServicePort,
 	}
 }
@@ -44,7 +50,7 @@ func (a *staffServiceAdapter) GetStaff(ctx context.Context, staffName, staffId s
 
 	var result *schema.GetStaffResponse
 
-	url := fmt.Sprintf("http://localhost:%d/api/staff-service/staff?name=%s&id=%s", a.port, staffName, staffId)
+	url := fmt.Sprintf("http://%s:%d/api/staff-service/staff?name=%s&id=%s", a.host, a.port, staffName, staffId)
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
 		log.Printf("BFF-Adapter-StaffServiceAdapter-GetStaff-NewRequestWithContext error %v", err)
@@ -86,7 +92,7 @@ func (a *staffServiceAdapter) GetStaffDetail(ctx context.Context, staffId string
 
 	var result *schema.GetStaffResponse
 
-	url := fmt.Sprintf("http://localhost:%d/api/staff-service/staff/%s", a.port, staffId)
+	url := fmt.Sprintf("http://%s:%d/api/staff-service/staff/%s", a.host, a.port, staffId)
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
 		log.Printf("BFF-Adapter-StaffServiceAdapter-GetStaffDetail-NewRequestWithContext error %v", err)
@@ -124,7 +130,7 @@ func (a *staffServiceAdapter) AddStaff(ctx context.Context, request *schema.AddS
 
 	var result *schema.UpdateResponse
 
-	url := fmt.Sprintf("http://localhost:%d/api/staff-service/staff", a.port)
+	url := fmt.Sprintf("http://%s:%d/api/staff-service/staff", a.host, a.port)
 
 	data, err := json.Marshal(request)
 	if err != nil {
@@ -173,7 +179,7 @@ func (a *staffServiceAdapter) UpdateStaff(ctx context.Context, staffId string, r
 
 	var result *schema.UpdateResponse
 
-	url := fmt.Sprintf("http://localhost:%d/api/staff-service/staff/%s", a.port, staffId)
+	url := fmt.Sprintf("http://%s:%d/api/staff-service/staff/%s", a.host, a.port, staffId)
 
 	data, err := json.Marshal(request)
 	if err != nil {
@@ -222,7 +228,7 @@ func (a *staffServiceAdapter) DeleteStaff(ctx context.Context, staffId string) e
 
 	var result *schema.UpdateResponse
 
-	url := fmt.Sprintf("http://localhost:%d/api/staff-service/staff/%s", a.port, staffId)
+	url := fmt.Sprintf("http://%s:%d/api/staff-service/staff/%s", a.host, a.port, staffId)
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodDelete, url, nil)
 	if err != nil {
@@ -261,7 +267,7 @@ func (a *staffServiceAdapter) CreateAddRequest(ctx context.Context, request *sch
 
 	var result *schema.UpdateResponse
 
-	url := fmt.Sprintf("http://localhost:%d/api/staff-service/request/add", a.port)
+	url := fmt.Sprintf("http://%s:%d/api/staff-service/request/add", a.host, a.port)
 
 	data, err := json.Marshal(request)
 	if err != nil {
@@ -310,7 +316,7 @@ func (a *staffServiceAdapter) CreateDeleteRequest(ctx context.Context, staffId s
 
 	var result *schema.UpdateResponse
 
-	url := fmt.Sprintf("http://localhost:%d/api/staff-service/request/delete/%s", a.port, staffId)
+	url := fmt.Sprintf("http://%s:%d/api/staff-service/request/delete/%s", a.host, a.port, staffId)
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, nil)
 	if err != nil {
@@ -349,7 +355,7 @@ func (a *staffServiceAdapter) GetRequestList(ctx context.Context) ([]*schema.Get
 
 	var result *schema.GetRequestResponse
 
-	url := fmt.Sprintf("http://localhost:%d/api/staff-service/request", a.port)
+	url := fmt.Sprintf("http://%s:%d/api/staff-service/request", a.host, a.port)
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
 		log.Printf("BFF-Adapter-StaffServiceAdapter-GetRequestList-NewRequestWithContext error %v", err)
@@ -391,7 +397,7 @@ func (a *staffServiceAdapter) GetStaffAttendance(ctx context.Context, staffId st
 
 	var result *schema.GetStaffAttendanceResponse
 
-	url := fmt.Sprintf("http://localhost:%d/api/staff-service/staff/attendance/%s", a.port, staffId)
+	url := fmt.Sprintf("http://%s:%d/api/staff-service/staff/attendance/%s", a.host, a.port, staffId)
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
 		log.Printf("BFF-Adapter-StaffServiceAdapter-GetStaffAttendance-NewRequestWithContext error %v", err)
@@ -433,7 +439,7 @@ func (a *staffServiceAdapter) UpdateRequestStatus(ctx context.Context, requestId
 
 	var result *schema.UpdateResponse
 
-	url := fmt.Sprintf("http://localhost:%d/api/staff-service/request/%s", a.port, requestId)
+	url := fmt.Sprintf("http://%s:%d/api/staff-service/request/%s", a.host, a.port, requestId)
 
 	data, err := json.Marshal(request)
 	if err != nil {

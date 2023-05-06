@@ -22,12 +22,18 @@ type IOrderServiceAdapter interface {
 
 type orderServiceAdapter struct {
 	httpClient *http.Client
+	host       string
 	port       int
 }
 
 func NewOrderAdapter(cfg *config.Config) IOrderServiceAdapter {
+	host := "localhost"
+	if cfg.Env != "local" {
+		host = "order-service"
+	}
 	return &orderServiceAdapter{
 		httpClient: &http.Client{},
+		host:       host,
 		port:       cfg.OrderServicePort,
 	}
 }
@@ -42,7 +48,7 @@ func (a *orderServiceAdapter) GetOnlineOrdersStatus(ctx context.Context, orderId
 
 	var result *schema.GetOnlineOrdersStatusResponse
 
-	url := fmt.Sprintf("http://localhost:%d/api/order-service/online-order-status/%s", a.port, orderId)
+	url := fmt.Sprintf("http://%s:%d/api/order-service/online-order-status/%s", a.host, a.port, orderId)
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
 		log.Printf("BFF-Adapter-OrderServiceAdapter-GetOnlineOrdersStatus-NewRequestWithContext error %v", err)
@@ -84,7 +90,7 @@ func (a *orderServiceAdapter) GetListOrderCustomer(ctx context.Context, customer
 
 	var result *schema.GetListOrderCustomerResponse
 
-	url := fmt.Sprintf("http://localhost:%d/api/order-service/customer/%s", a.port, customerId)
+	url := fmt.Sprintf("http://%s:%d/api/order-service/customer/%s", a.host, a.port, customerId)
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
 		log.Printf("BFF-Adapter-OrderServiceAdapter-GetOnlineOrdersStatus-NewRequestWithContext error %v", err)
@@ -126,7 +132,7 @@ func (a *orderServiceAdapter) GetOrderCustomerDetail(ctx context.Context, orderI
 
 	var result *schema.GetOrderDetailCustomerResponse
 
-	url := fmt.Sprintf("http://localhost:%d/api/order-service/customer/order-detail/%s", a.port, orderId)
+	url := fmt.Sprintf("http://%s:%d/api/order-service/customer/order-detail/%s", a.host, a.port, orderId)
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
 		log.Printf("BFF-Adapter-OrderServiceAdapter-GetOrderCustomerDetail-NewRequestWithContext error %v", err)
@@ -163,7 +169,7 @@ func (a *orderServiceAdapter) CreateOnlineOrders(ctx context.Context, request *s
 	defer log.Println("End call order service for CreateOnlineOrders")
 
 	var result *schema.UpdateResponse
-	url := fmt.Sprintf("http://localhost:%d/api/order-service/customer/make-order", a.port)
+	url := fmt.Sprintf("http://%s:%d/api/order-service/customer/make-order", a.host, a.port)
 	data, err := json.Marshal(request)
 	if err != nil {
 		log.Printf("BFF-Adapter-OrderServiceAdapter-CreateOnlineOrders-Marshal error %v", err)

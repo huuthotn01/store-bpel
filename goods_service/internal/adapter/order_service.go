@@ -18,11 +18,17 @@ type IOrderServiceAdapter interface {
 
 type orderServiceAdapter struct {
 	httpClient *http.Client
+	host       string
 	port       int
 }
 
 func NewOrderAdapter(cfg *config.Config) IOrderServiceAdapter {
+	host := "localhost"
+	if cfg.Env != "local" {
+		host = "order-service"
+	}
 	return &orderServiceAdapter{
+		host:       host,
 		httpClient: &http.Client{},
 		port:       cfg.OrderServicePort,
 	}
@@ -34,7 +40,7 @@ func (a *orderServiceAdapter) GetBestSellingGoods(ctx context.Context) ([]string
 
 	var result *schema.GetBestSellingGoodsResponse
 
-	url := fmt.Sprintf("http://localhost:%d/api/order-service/best-goods", a.port)
+	url := fmt.Sprintf("http://%s:%d/api/order-service/best-goods", a.host, a.port)
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {

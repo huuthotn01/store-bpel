@@ -29,12 +29,18 @@ type IGoodsServiceAdapter interface {
 
 type goodsServiceAdapter struct {
 	httpClient *http.Client
+	host       string
 	port       int
 }
 
 func NewGoodsAdapter(cfg *config.Config) IGoodsServiceAdapter {
+	host := "localhost"
+	if cfg.Env != "local" {
+		host = "goods-service"
+	}
 	return &goodsServiceAdapter{
 		httpClient: &http.Client{},
+		host:       host,
 		port:       cfg.GoodsServicePort,
 	}
 }
@@ -44,7 +50,7 @@ func (a *goodsServiceAdapter) GetGoods(ctx context.Context) ([]*schema.GetGoodsR
 	defer log.Println("End call goods service for GetGoods")
 
 	var result *schema.GetGoodsResponse
-	url := fmt.Sprintf("http://localhost:%d/api/goods-service/goods", a.port)
+	url := fmt.Sprintf("http://%s:%d/api/goods-service/goods", a.host, a.port)
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
@@ -87,7 +93,7 @@ func (a *goodsServiceAdapter) GetGoodsDetail(ctx context.Context, goodsId string
 	}
 
 	var result *schema.GetGoodsDetailResponse
-	url := fmt.Sprintf("http://localhost:%d/api/goods-service/goods/%s", a.port, goodsId)
+	url := fmt.Sprintf("http://%s:%d/api/goods-service/goods/%s", a.host, a.port, goodsId)
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
@@ -127,7 +133,7 @@ func (a *goodsServiceAdapter) AddGoods(ctx context.Context, request []*schema.Ad
 
 	var result *schema.UpdateResponse
 
-	url := fmt.Sprintf("http://localhost:%d/api/goods-service/goods", a.port)
+	url := fmt.Sprintf("http://%s:%d/api/goods-service/goods", a.host, a.port)
 
 	data, err := json.Marshal(request)
 	if err != nil {
@@ -172,7 +178,7 @@ func (a *goodsServiceAdapter) Import(ctx context.Context, request *schema.Create
 
 	var result *schema.UpdateResponse
 
-	url := fmt.Sprintf("http://localhost:%d/api/goods-service/import", a.port)
+	url := fmt.Sprintf("http://%s:%d/api/goods-service/import", a.host, a.port)
 
 	data, err := json.Marshal(request)
 	if err != nil {
@@ -217,7 +223,7 @@ func (a *goodsServiceAdapter) Export(ctx context.Context, request *schema.Create
 
 	var result *schema.UpdateResponse
 
-	url := fmt.Sprintf("http://localhost:%d/api/goods-service/export", a.port)
+	url := fmt.Sprintf("http://%s:%d/api/goods-service/export", a.host, a.port)
 
 	data, err := json.Marshal(request)
 	if err != nil {
@@ -262,7 +268,7 @@ func (a *goodsServiceAdapter) ReturnManufacturer(ctx context.Context, request *s
 
 	var result *schema.UpdateResponse
 
-	url := fmt.Sprintf("http://localhost:%d/api/goods-service/return-manufact", a.port)
+	url := fmt.Sprintf("http://%s:%d/api/goods-service/return-manufact", a.host, a.port)
 
 	data, err := json.Marshal(request)
 	if err != nil {
@@ -307,7 +313,7 @@ func (a *goodsServiceAdapter) CustomerReturn(ctx context.Context, request *schem
 
 	var result *schema.UpdateResponse
 
-	url := fmt.Sprintf("http://localhost:%d/api/goods-service/cust-return", a.port)
+	url := fmt.Sprintf("http://%s:%d/api/goods-service/cust-return", a.host, a.port)
 
 	data, err := json.Marshal(request)
 	if err != nil {
@@ -355,7 +361,7 @@ func (a *goodsServiceAdapter) GetWarehouseByGoods(ctx context.Context, goodsId s
 	}
 
 	var result *schema.GetWarehouseByGoodsResponse
-	url := fmt.Sprintf("http://localhost:%d/api/goods-service/goods/warehouse/%s", a.port, goodsId)
+	url := fmt.Sprintf("http://%s:%d/api/goods-service/goods/warehouse/%s", a.host, a.port, goodsId)
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
@@ -399,7 +405,7 @@ func (a *goodsServiceAdapter) UpdateGoods(ctx context.Context, goodsId string, r
 
 	var result *schema.UpdateResponse
 
-	url := fmt.Sprintf("http://localhost:%d/api/goods-service/goods/%s", a.port, goodsId)
+	url := fmt.Sprintf("http://%s:%d/api/goods-service/goods/%s", a.host, a.port, goodsId)
 
 	data, err := json.Marshal(request)
 	if err != nil {
@@ -444,7 +450,7 @@ func (a *goodsServiceAdapter) UploadImage(ctx context.Context, request *schema.U
 
 	var result *schema.UpdateResponse
 
-	url := fmt.Sprintf("http://localhost:%d/api/goods-service/image", a.port)
+	url := fmt.Sprintf("http://%s:%d/api/goods-service/image", a.host, a.port)
 
 	data, err := json.Marshal(request)
 	if err != nil {
@@ -493,7 +499,7 @@ func (a *goodsServiceAdapter) DeleteImage(ctx context.Context, imgUrl string) er
 
 	var result *schema.UpdateResponse
 
-	url := fmt.Sprintf("http://localhost:%d/api/goods-service/image/%s", a.port, imgUrl)
+	url := fmt.Sprintf("http://%s:%d/api/goods-service/image/%s", a.host, a.port, imgUrl)
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodDelete, url, nil)
 	if err != nil {

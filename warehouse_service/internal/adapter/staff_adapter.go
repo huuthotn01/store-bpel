@@ -18,12 +18,18 @@ type IStaffServiceAdapter interface {
 
 type staffServiceAdapter struct {
 	httpClient *http.Client
+	host       string
 	port       int
 }
 
 func NewStaffAdapter(cfg *config.Config) IStaffServiceAdapter {
+	host := "localhost"
+	if cfg.Env != "local" {
+		host = "staff-service"
+	}
 	return &staffServiceAdapter{
 		httpClient: &http.Client{},
+		host:       host,
 		port:       cfg.StaffServicePort,
 	}
 }
@@ -35,7 +41,7 @@ func (a *staffServiceAdapter) GetDetailStaff(ctx context.Context, staffId string
 	log.Println("Start to call staff service for GetStaff")
 	defer log.Println("End call staff service for GetStaff")
 	var result *schema.GetStaffResponse
-	url := fmt.Sprintf("http://localhost:%d/api/staff-service/staff/%s", a.port, staffId)
+	url := fmt.Sprintf("http://%s:%d/api/staff-service/staff/%s", a.host, a.port, staffId)
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
