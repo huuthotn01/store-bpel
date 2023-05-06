@@ -18,12 +18,18 @@ type ICustomerServiceAdapter interface {
 
 type customerServiceAdapter struct {
 	httpClient *http.Client
+	host       string
 	port       int
 }
 
 func NewCustomerAdapter(cfg *config.Config) ICustomerServiceAdapter {
+	host := "localhost"
+	if cfg.Env != "local" {
+		host = "customer-service"
+	}
 	return &customerServiceAdapter{
 		httpClient: &http.Client{},
+		host:       host,
 		port:       cfg.CustomerServicePort,
 	}
 }
@@ -38,7 +44,7 @@ func (a *customerServiceAdapter) GetCustomer(ctx context.Context, username strin
 
 	var result *schema.GetCustomerInfoResponse
 
-	url := fmt.Sprintf("http://localhost:%d/api/customer-service/customer/%s", a.port, username)
+	url := fmt.Sprintf("http://%s:%d/api/customer-service/customer/%s", a.host, a.port, username)
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
 		log.Printf("AccountService-CustomerServiceAdapter-GetCustomer-NewRequestWithContext error %v", err)

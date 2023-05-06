@@ -22,12 +22,18 @@ type IAccountServiceAdapter interface {
 
 type accountServiceAdapter struct {
 	httpClient *http.Client
+	host       string
 	port       int
 }
 
 func NewAccountAdapter(cfg *config.Config) IAccountServiceAdapter {
+	host := "localhost"
+	if cfg.Env != "local" {
+		host = "account-service"
+	}
 	return &accountServiceAdapter{
 		httpClient: &http.Client{},
+		host:       host,
 		port:       cfg.AccountServicePort,
 	}
 }
@@ -38,7 +44,7 @@ func (a *accountServiceAdapter) GetListAccount(ctx context.Context, username str
 
 	var result *schema.GetListAccountResponse
 
-	url := fmt.Sprintf("http://localhost:%d/api/account-service", a.port)
+	url := fmt.Sprintf("http://%s:%d/api/account-service", a.host, a.port)
 	if username != "" {
 		url += fmt.Sprintf("?username=%s", username)
 	}
@@ -78,7 +84,7 @@ func (a *accountServiceAdapter) AddAccount(ctx context.Context, request *schema.
 	defer log.Println("End call account service for AddAccount")
 
 	var result *schema.UpdateResponse
-	url := fmt.Sprintf("http://localhost:%d/api/account-service", a.port)
+	url := fmt.Sprintf("http://%s:%d/api/account-service", a.host, a.port)
 	data, err := json.Marshal(request)
 	if err != nil {
 		log.Printf("BFF-Adapter-AccountServiceAdapter-AddAccount-Marshal error %v", err)
@@ -128,7 +134,7 @@ func (a *accountServiceAdapter) UpdateRole(ctx context.Context, username string,
 	defer log.Println("End call account service for UpdateRole")
 
 	var result *schema.UpdateResponse
-	url := fmt.Sprintf("http://localhost:%d/api/account-service/%s", a.port, username)
+	url := fmt.Sprintf("http://%s:%d/api/account-service/%s", a.host, a.port, username)
 	data, err := json.Marshal(request)
 	if err != nil {
 		log.Printf("BFF-Adapter-AccountServiceAdapter-UpdateRole-Marshal error %v", err)
@@ -178,7 +184,7 @@ func (a *accountServiceAdapter) ChangePassword(ctx context.Context, request *sch
 	defer log.Println("End call account service for ChangePassword")
 
 	var result *schema.UpdateResponse
-	url := fmt.Sprintf("http://localhost:%d/api/account-service/password", a.port)
+	url := fmt.Sprintf("http://%s:%d/api/account-service/password", a.host, a.port)
 	data, err := json.Marshal(request)
 	if err != nil {
 		log.Printf("BFF-Adapter-AccountServiceAdapter-ChangePassword-Marshal error %v", err)

@@ -6,7 +6,8 @@ import (
 )
 
 type Config struct {
-	HttpPort int `json:"http_port" mapstructure:"http_port"`
+	Env      string `json:"env" mapstructure:"env"`
+	HttpPort int    `json:"http_port" mapstructure:"http_port"`
 
 	BranchServicePort    int `json:"branch_service_port" mapstructure:"branch_service_port"`
 	AccountServicePort   int `json:"account_service_port" mapstructure:"account_service_port"`
@@ -35,6 +36,7 @@ func Load() (config *Config, err error) {
 
 func loadDefaultConfig() *Config {
 	return &Config{
+		Env:                  "docker",
 		HttpPort:             10000,
 		BranchServicePort:    14000,
 		AccountServicePort:   14083,

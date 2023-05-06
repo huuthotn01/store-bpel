@@ -23,12 +23,18 @@ type IGoodsServiceAdapter interface {
 
 type goodsServiceAdapter struct {
 	httpClient *http.Client
+	host       string
 	port       int
 }
 
 func NewGoodsAdapter(cfg *config.Config) IGoodsServiceAdapter {
+	host := "localhost"
+	if cfg.Env != "local" {
+		host = "goods-service"
+	}
 	return &goodsServiceAdapter{
 		httpClient: &http.Client{},
+		host:       host,
 		port:       cfg.GoodsServicePort,
 	}
 }
@@ -38,7 +44,7 @@ func (a *goodsServiceAdapter) GetGoodsDefault(ctx context.Context, request *sche
 	defer log.Println("End call goods service for GetGoodsDefault")
 
 	var result *schema.GetGoodsDefaultResponse
-	url := fmt.Sprintf("http://localhost:%d/api/goods-service/default-goods", a.port)
+	url := fmt.Sprintf("http://%s:%d/api/goods-service/default-goods", a.host, a.port)
 
 	data, err := json.Marshal(request)
 	if err != nil {
@@ -87,7 +93,7 @@ func (a *goodsServiceAdapter) GetProductDetail(ctx context.Context, productId st
 	defer log.Println("End call goods service for GetProductDetail")
 
 	var result *schema.GetDetailProductsResponse
-	url := fmt.Sprintf("http://localhost:%d/api/goods-service/product/%s", a.port, productId)
+	url := fmt.Sprintf("http://%s:%d/api/goods-service/product/%s", a.host, a.port, productId)
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
@@ -126,7 +132,7 @@ func (a *goodsServiceAdapter) CheckWarehouse(ctx context.Context, request *schem
 	defer log.Println("End call goods service for CheckWarehouse")
 
 	var result *schema.CheckWarehouseResponse
-	url := fmt.Sprintf("http://localhost:%d/api/goods-service/check-wh", a.port)
+	url := fmt.Sprintf("http://%s:%d/api/goods-service/check-wh", a.host, a.port)
 	data, err := json.Marshal(request)
 	if err != nil {
 		log.Printf("BFF-Adapter-GoodsServiceAdapter-CheckWarehouse-Marshal error %v", err)
@@ -170,7 +176,7 @@ func (a *goodsServiceAdapter) CreateWHTransfer(ctx context.Context, request *sch
 	defer log.Println("End call goods service for CreateWHTransfer")
 
 	var result *schema.UpdateResponse
-	url := fmt.Sprintf("http://localhost:%d/api/goods-service/wh-transfer", a.port)
+	url := fmt.Sprintf("http://%s:%d/api/goods-service/wh-transfer", a.host, a.port)
 	data, err := json.Marshal(request)
 	if err != nil {
 		log.Printf("BFF-Adapter-GoodsServiceAdapter-CreateWHTransfer-Marshal error %v", err)
@@ -214,7 +220,7 @@ func (a *goodsServiceAdapter) SearchGoods(ctx context.Context, request *schema.S
 	defer log.Println("End call goods service for SearchGoods")
 
 	var result *schema.SearchGoodsResponse
-	url := fmt.Sprintf("http://localhost:%d/api/goods-service/goods:search", a.port)
+	url := fmt.Sprintf("http://%s:%d/api/goods-service/goods:search", a.host, a.port)
 
 	data, err := json.Marshal(request)
 	if err != nil {

@@ -29,12 +29,18 @@ type IWarehouseServiceAdapter interface {
 
 type warehouseServiceAdapter struct {
 	httpClient *http.Client
+	host       string
 	port       int
 }
 
 func NewWarehouseAdapter(cfg *config.Config) IWarehouseServiceAdapter {
+	host := "localhost"
+	if cfg.Env != "local" {
+		host = "warehouse-service"
+	}
 	return &warehouseServiceAdapter{
 		httpClient: &http.Client{},
+		host:       host,
 		port:       cfg.WarehouseServicePort,
 	}
 }
@@ -49,7 +55,7 @@ func (a *warehouseServiceAdapter) GetManager(ctx context.Context, warehouseId st
 
 	var result *schema.GetWarehouseManagerResponse
 
-	url := fmt.Sprintf("http://localhost:%d/api/warehouse-service/manager/%s", a.port, warehouseId)
+	url := fmt.Sprintf("http://%s:%d/api/warehouse-service/manager/%s", a.host, a.port, warehouseId)
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
@@ -92,7 +98,7 @@ func (a *warehouseServiceAdapter) GetStaff(ctx context.Context, warehouseId stri
 
 	var result *schema.GetWarehouseStaffResponse
 
-	url := fmt.Sprintf("http://localhost:%d/api/warehouse-service/staff/%s", a.port, warehouseId)
+	url := fmt.Sprintf("http://%s:%d/api/warehouse-service/staff/%s", a.host, a.port, warehouseId)
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
@@ -135,7 +141,7 @@ func (a *warehouseServiceAdapter) GetWarehouse(ctx context.Context, warehouseId 
 
 	var result *schema.GetWarehouseResponse
 
-	url := fmt.Sprintf("http://localhost:%d/api/warehouse-service/warehouse/%s", a.port, warehouseId)
+	url := fmt.Sprintf("http://%s:%d/api/warehouse-service/warehouse/%s", a.host, a.port, warehouseId)
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
@@ -175,7 +181,7 @@ func (a *warehouseServiceAdapter) GetAllWarehouse(ctx context.Context) ([]*schem
 
 	var result *schema.GetAllWarehouseResponse
 
-	url := fmt.Sprintf("http://localhost:%d/api/warehouse-service/warehouse", a.port)
+	url := fmt.Sprintf("http://%s:%d/api/warehouse-service/warehouse", a.host, a.port)
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
@@ -213,7 +219,7 @@ func (a *warehouseServiceAdapter) AddStaff(ctx context.Context, request *schema.
 	defer log.Println("End call warehouse service for AddStaff")
 
 	var result *schema.UpdateResponse
-	url := fmt.Sprintf("http://localhost:%d/api/warehouse-service/staff", a.port)
+	url := fmt.Sprintf("http://%s:%d/api/warehouse-service/staff", a.host, a.port)
 	data, err := json.Marshal(request)
 	if err != nil {
 		log.Printf("BFF-Adapter-WarehouseServiceAdapter-AddStaff-Marshal error %v", err)
@@ -257,7 +263,7 @@ func (a *warehouseServiceAdapter) AddWarehouse(ctx context.Context, request *sch
 	defer log.Println("End call warehouse service for AddWarehouse")
 
 	var result *schema.UpdateResponse
-	url := fmt.Sprintf("http://localhost:%d/api/warehouse-service/warehouse", a.port)
+	url := fmt.Sprintf("http://%s:%d/api/warehouse-service/warehouse", a.host, a.port)
 	data, err := json.Marshal(request)
 	if err != nil {
 		log.Printf("BFF-Adapter-WarehouseServiceAdapter-AddWarehouse-Marshal error %v", err)
@@ -301,7 +307,7 @@ func (a *warehouseServiceAdapter) UpdateStaff(ctx context.Context, request *sche
 	defer log.Println("End call warehouse service for UpdateStaff")
 
 	var result *schema.UpdateResponse
-	url := fmt.Sprintf("http://localhost:%d/api/warehouse-service/staff", a.port)
+	url := fmt.Sprintf("http://%s:%d/api/warehouse-service/staff", a.host, a.port)
 	data, err := json.Marshal(request)
 	if err != nil {
 		log.Printf("BFF-Adapter-WarehouseServiceAdapter-UpdateStaff-Marshal error %v", err)
@@ -345,7 +351,7 @@ func (a *warehouseServiceAdapter) UpdateManager(ctx context.Context, request *sc
 	defer log.Println("End call warehouse service for UpdateManager")
 
 	var result *schema.UpdateResponse
-	url := fmt.Sprintf("http://localhost:%d/api/warehouse-service/manager", a.port)
+	url := fmt.Sprintf("http://%s:%d/api/warehouse-service/manager", a.host, a.port)
 	data, err := json.Marshal(request)
 	if err != nil {
 		log.Printf("BFF-Adapter-WarehouseServiceAdapter-UpdateManager-Marshal error %v", err)
@@ -389,7 +395,7 @@ func (a *warehouseServiceAdapter) UpdateWarehouse(ctx context.Context, request *
 	defer log.Println("End call warehouse service for UpdateWarehouse")
 
 	var result *schema.UpdateResponse
-	url := fmt.Sprintf("http://localhost:%d/api/warehouse-service/warehouse", a.port)
+	url := fmt.Sprintf("http://%s:%d/api/warehouse-service/warehouse", a.host, a.port)
 	data, err := json.Marshal(request)
 	if err != nil {
 		log.Printf("BFF-Adapter-WarehouseServiceAdapter-UpdateWarehouse-Marshal error %v", err)
@@ -433,7 +439,7 @@ func (a *warehouseServiceAdapter) DeleteStaff(ctx context.Context, request *sche
 	defer log.Println("End call warehouse service for DeleteStaff")
 
 	var result *schema.UpdateResponse
-	url := fmt.Sprintf("http://localhost:%d/api/warehouse-service/staff", a.port)
+	url := fmt.Sprintf("http://%s:%d/api/warehouse-service/staff", a.host, a.port)
 	data, err := json.Marshal(request)
 	if err != nil {
 		log.Printf("BFF-Adapter-WarehouseServiceAdapter-DeleteStaff-Marshal error %v", err)
@@ -477,7 +483,7 @@ func (a *warehouseServiceAdapter) DeleteWarehouse(ctx context.Context, request *
 	defer log.Println("End call warehouse service for DeleteWarehouse")
 
 	var result *schema.UpdateResponse
-	url := fmt.Sprintf("http://localhost:%d/api/warehouse-service/warehouse", a.port)
+	url := fmt.Sprintf("http://%s:%d/api/warehouse-service/warehouse", a.host, a.port)
 	data, err := json.Marshal(request)
 	if err != nil {
 		log.Printf("BFF-Adapter-WarehouseServiceAdapter-DeleteWarehouse-Marshal error %v", err)

@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"github.com/segmentio/kafka-go"
 	"log"
 	"store-bpel/account_service/internal/controller"
@@ -12,7 +13,7 @@ import (
 
 func Consume(ctx context.Context, ctrl controller.IAccountServiceController) {
 	r := kafka.NewReader(kafka.ReaderConfig{
-		Brokers: []string{"localhost:9092"},
+		Brokers: []string{fmt.Sprintf("%s:%s", kafka_lib.BROKER_HOST, kafka_lib.BROKER_PORT)},
 		Topic:   kafka_lib.ACCOUNT_SERVICE_TOPIC,
 		GroupID: "group-1",
 	})
@@ -20,18 +21,18 @@ func Consume(ctx context.Context, ctrl controller.IAccountServiceController) {
 	for {
 		msg, err := r.ReadMessage(ctx)
 		if err != nil {
-			panic("Could not consume message " + err.Error())
+			log.Printf("Could not consume message " + err.Error())
 		}
 
 		var request *schema.AddAccountRequest
 		err = json.Unmarshal(msg.Value, &request)
 		if err != nil {
-			panic("Could not unmarshal value " + err.Error())
+			log.Printf("Could not unmarshal value " + err.Error())
 		}
 
 		err = ctrl.AddAccount(ctx, request)
 		if err != nil {
-			panic("Cannot process AddAccount" + err.Error())
+			log.Printf("Cannot process AddAccount" + err.Error())
 		}
 		log.Println("Done processing AddAccount")
 	}

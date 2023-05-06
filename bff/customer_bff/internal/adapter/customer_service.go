@@ -23,12 +23,18 @@ type ICustomerServiceAdapter interface {
 
 type customerServiceAdapter struct {
 	httpClient *http.Client
+	host       string
 	port       int
 }
 
 func NewCustomerAdapter(cfg *config.Config) ICustomerServiceAdapter {
+	host := "localhost"
+	if cfg.Env != "local" {
+		host = "customer-service"
+	}
 	return &customerServiceAdapter{
 		httpClient: &http.Client{},
+		host:       host,
 		port:       cfg.CustomerServicePort,
 	}
 }
@@ -43,7 +49,7 @@ func (a *customerServiceAdapter) GetCustomer(ctx context.Context, username strin
 
 	var result *schema.GetCustomerInfoResponse
 
-	url := fmt.Sprintf("http://localhost:%d/api/customer-service/customer/%s", a.port, username)
+	url := fmt.Sprintf("http://%s:%d/api/customer-service/customer/%s", a.host, a.port, username)
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
 		log.Printf("BFF-Adapter-CustomerServiceAdapter-GetCustomer-NewRequestWithContext error %v", err)
@@ -80,7 +86,7 @@ func (a *customerServiceAdapter) AddCustomer(ctx context.Context, request *schem
 	defer log.Println("End call customer service for AddCustomer")
 
 	var result *schema.UpdateResponse
-	url := fmt.Sprintf("http://localhost:%d/api/customer-service/customer", a.port)
+	url := fmt.Sprintf("http://%s:%d/api/customer-service/customer", a.host, a.port)
 	data, err := json.Marshal(request)
 	if err != nil {
 		log.Printf("BFF-Adapter-CustomerServiceAdapter-AddCustomer-Marshal error %v", err)
@@ -130,7 +136,7 @@ func (a *customerServiceAdapter) UpdateCustomer(ctx context.Context, username st
 	defer log.Println("End call customer service for UpdateCustomer")
 
 	var result *schema.UpdateResponse
-	url := fmt.Sprintf("http://localhost:%d/api/customer-service/customer/%s", a.port, username)
+	url := fmt.Sprintf("http://%s:%d/api/customer-service/customer/%s", a.host, a.port, username)
 	data, err := json.Marshal(request)
 	if err != nil {
 		log.Printf("BFF-Adapter-CustomerServiceAdapter-UpdateCustomer-Marshal error %v", err)
@@ -174,7 +180,7 @@ func (a *customerServiceAdapter) UploadImage(ctx context.Context, request *schem
 	defer log.Println("End call customer service for UploadImage")
 
 	var result *schema.UpdateResponse
-	url := fmt.Sprintf("http://localhost:%d/api/customer-service/image", a.port)
+	url := fmt.Sprintf("http://%s:%d/api/customer-service/image", a.host, a.port)
 	data, err := json.Marshal(request)
 	if err != nil {
 		log.Printf("BFF-Adapter-CustomerServiceAdapter-UploadImage-Marshal error %v", err)
@@ -222,7 +228,7 @@ func (a *customerServiceAdapter) DeleteImage(ctx context.Context, username strin
 	defer log.Println("End call customer service for DeleteImage")
 
 	var result *schema.UpdateResponse
-	url := fmt.Sprintf("http://localhost:%d/api/customer-service/image/%s", a.port, username)
+	url := fmt.Sprintf("http://%s:%d/api/customer-service/image/%s", a.host, a.port, username)
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, nil)
 	if err != nil {

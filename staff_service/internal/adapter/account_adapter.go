@@ -19,12 +19,18 @@ type IAccountServiceAdapter interface {
 
 type accountServiceAdapter struct {
 	httpClient *http.Client
+	host       string
 	port       int
 }
 
 func NewAccountAdapter(cfg *config.Config) IAccountServiceAdapter {
+	host := "localhost"
+	if cfg.Env != "local" {
+		host = "account-service"
+	}
 	return &accountServiceAdapter{
 		httpClient: &http.Client{},
+		host:       host,
 		port:       cfg.AccountServicePort,
 	}
 }
@@ -34,7 +40,7 @@ func (a *accountServiceAdapter) UpdateRole(ctx context.Context, username string,
 	defer log.Println("End call account service for UpdateRole")
 
 	var result *schema.UpdateResponse
-	url := fmt.Sprintf("http://localhost:%d/api/account-service/role/%s", a.port, username)
+	url := fmt.Sprintf("http://%s:%d/api/account-service/role/%s", a.host, a.port, username)
 	data, err := json.Marshal(request)
 	if err != nil {
 		log.Printf("Staff Service-AccountServiceAdapter-UpdateRole-Marshal error %v", err)

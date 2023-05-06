@@ -21,12 +21,18 @@ type IEventServiceAdapter interface {
 
 type eventServiceAdapter struct {
 	httpClient *http.Client
+	host       string
 	port       int
 }
 
 func NewEventAdapter(cfg *config.Config) IEventServiceAdapter {
+	host := "localhost"
+	if cfg.Env != "local" {
+		host = "event-service"
+	}
 	return &eventServiceAdapter{
 		httpClient: &http.Client{},
+		host:       host,
 		port:       cfg.EventServicePort,
 	}
 }
@@ -41,7 +47,7 @@ func (a *eventServiceAdapter) GetEventDetail(ctx context.Context, eventId string
 
 	// call http to event service
 	var result *schema.GetEventDetailResponse
-	url := fmt.Sprintf("http://localhost:%d/api/event-service/event/%s", a.port, eventId)
+	url := fmt.Sprintf("http://%s:%d/api/event-service/event/%s", a.host, a.port, eventId)
 
 	// create http request
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
@@ -90,7 +96,7 @@ func (a *eventServiceAdapter) GetEventCurrent(ctx context.Context, date string) 
 
 	// call http to event service
 	var result *schema.GetEventResponse
-	url := fmt.Sprintf("http://localhost:%d/api/event-service/event/current?date=%s", a.port, date)
+	url := fmt.Sprintf("http://%s:%d/api/event-service/event/current?date=%s", a.host, a.port, date)
 
 	// create http request
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
@@ -135,7 +141,7 @@ func (a *eventServiceAdapter) GetEvent(ctx context.Context) ([]*schema.GetEventD
 
 	// call http to event service
 	var result *schema.GetEventResponse
-	url := fmt.Sprintf("http://localhost:%d/api/event-service/event", a.port)
+	url := fmt.Sprintf("http://%s:%d/api/event-service/event", a.host, a.port)
 
 	// create http request
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
@@ -184,7 +190,7 @@ func (a *eventServiceAdapter) GetEventByGoods(ctx context.Context, goodsId strin
 
 	// call http to event service
 	var result *schema.GetEventByGoodsResponse
-	url := fmt.Sprintf("http://localhost:%d/api/event-service/get-by-goods/%s", a.port, goodsId)
+	url := fmt.Sprintf("http://%s:%d/api/event-service/get-by-goods/%s", a.host, a.port, goodsId)
 
 	// create http request
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)

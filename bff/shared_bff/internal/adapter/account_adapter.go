@@ -22,12 +22,18 @@ type IAccountServiceAdapter interface {
 
 type accountServiceAdapter struct {
 	httpClient *http.Client
+	host       string
 	port       int
 }
 
 func NewAccountAdapter(cfg *config.Config) IAccountServiceAdapter {
+	host := "localhost"
+	if cfg.Env != "local" {
+		host = "account-service"
+	}
 	return &accountServiceAdapter{
 		httpClient: &http.Client{},
+		host:       host,
 		port:       cfg.AccountServicePort,
 	}
 }
@@ -37,7 +43,7 @@ func (a *accountServiceAdapter) SignIn(ctx context.Context, request *schema.Sign
 	defer log.Println("End call account service for SignIn")
 
 	var result *schema.SignInResponse
-	url := fmt.Sprintf("http://localhost:%d/api/account-service/sign-in", a.port)
+	url := fmt.Sprintf("http://%s:%d/api/account-service/sign-in", a.host, a.port)
 	data, err := json.Marshal(request)
 	if err != nil {
 		log.Printf("BFF-Adapter-AccountServiceAdapter-SignIn-Marshal error %v", err)
@@ -81,7 +87,7 @@ func (a *accountServiceAdapter) SignUp(ctx context.Context, request *schema.Sign
 	defer log.Println("End call account service for SignUp")
 
 	var result *schema.UpdateResponse
-	url := fmt.Sprintf("http://localhost:%d/api/account-service/sign-up", a.port)
+	url := fmt.Sprintf("http://%s:%d/api/account-service/sign-up", a.host, a.port)
 	data, err := json.Marshal(request)
 	if err != nil {
 		log.Printf("BFF-Adapter-AccountServiceAdapter-SignUp-Marshal error %v", err)
@@ -125,7 +131,7 @@ func (a *accountServiceAdapter) CreateResetPassword(ctx context.Context, request
 	defer log.Println("End call account service for SignUp")
 
 	var result *schema.UpdateResponse
-	url := fmt.Sprintf("http://localhost:%d/api/account-service/reset-password", a.port)
+	url := fmt.Sprintf("http://%s:%d/api/account-service/reset-password", a.host, a.port)
 	data, err := json.Marshal(request)
 	if err != nil {
 		log.Printf("BFF-Adapter-AccountServiceAdapter-CreateResetPassword-Marshal error %v", err)
@@ -169,7 +175,7 @@ func (a *accountServiceAdapter) ConfirmOTP(ctx context.Context, request *schema.
 	defer log.Println("End call account service for SignUp")
 
 	var result *schema.UpdateResponse
-	url := fmt.Sprintf("http://localhost:%d/api/account-service/reset-password/otp", a.port)
+	url := fmt.Sprintf("http://%s:%d/api/account-service/reset-password/otp", a.host, a.port)
 	data, err := json.Marshal(request)
 	if err != nil {
 		log.Printf("BFF-Adapter-AccountServiceAdapter-ConfirmOTP-Marshal error %v", err)

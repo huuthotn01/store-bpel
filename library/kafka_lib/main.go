@@ -8,9 +8,13 @@ import (
 	"time"
 )
 
+const (
+	BROKER_HOST = "broker"
+	BROKER_PORT = "29092"
+)
+
 type IKafkaLib interface {
 	Publish(ctx context.Context, topic string, msg []byte) error
-	Consume(ctx context.Context, topic string) ([]byte, error)
 }
 
 type kafkaLib struct {
@@ -19,18 +23,13 @@ type kafkaLib struct {
 
 func NewKafkaLib() IKafkaLib {
 	return &kafkaLib{
-		host: "localhost",
+		host: BROKER_HOST,
 	}
-}
-
-type TestMessage struct {
-	Counter int
-	IsOkay  string
 }
 
 func (k *kafkaLib) Publish(ctx context.Context, topic string, msg []byte) error {
 	w := kafka.NewWriter(kafka.WriterConfig{
-		Brokers: []string{"localhost:9092"},
+		Brokers: []string{fmt.Sprintf("%s:%s", BROKER_HOST, BROKER_PORT)},
 		Topic:   topic,
 	})
 
@@ -43,18 +42,4 @@ func (k *kafkaLib) Publish(ctx context.Context, topic string, msg []byte) error 
 	}
 	log.Printf("Published to topic %s", topic)
 	return nil
-}
-
-func (k *kafkaLib) Consume(ctx context.Context, topic string) ([]byte, error) {
-	r := kafka.NewReader(kafka.ReaderConfig{
-		Brokers: []string{fmt.Sprintf("localhost:9092")},
-		Topic:   topic,
-		GroupID: "group-1",
-	})
-
-	msg, err := r.ReadMessage(ctx)
-	if err != nil {
-		return nil, err
-	}
-	return msg.Value, nil
 }

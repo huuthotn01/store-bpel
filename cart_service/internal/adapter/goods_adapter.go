@@ -18,12 +18,18 @@ type IGoodsServiceAdapter interface {
 
 type goodsServiceAdapter struct {
 	httpClient *http.Client
+	host       string
 	port       int
 }
 
 func NewGoodsAdapter(cfg *config.Config) IGoodsServiceAdapter {
+	host := "localhost"
+	if cfg.Env != "local" {
+		host = "goods-service"
+	}
 	return &goodsServiceAdapter{
 		httpClient: &http.Client{},
+		host:       host,
 		port:       cfg.GoodsServicePort,
 	}
 }
@@ -37,7 +43,7 @@ func (a *goodsServiceAdapter) GetProductDetail(ctx context.Context, productId st
 	defer log.Println("End call goods service for GetProductDetail")
 
 	var result *schema.GetDetailProductsResponse
-	url := fmt.Sprintf("http://localhost:%d/api/goods-service/product/%s", a.port, productId)
+	url := fmt.Sprintf("http://%s:%d/api/goods-service/product/%s", a.host, a.port, productId)
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {

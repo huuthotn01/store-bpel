@@ -23,12 +23,18 @@ type IOrderServiceAdapter interface {
 
 type orderServiceAdapter struct {
 	httpClient *http.Client
+	host       string
 	port       int
 }
 
 func NewOrderAdapter(cfg *config.Config) IOrderServiceAdapter {
+	host := "localhost"
+	if cfg.Env != "local" {
+		host = "order-service"
+	}
 	return &orderServiceAdapter{
 		httpClient: &http.Client{},
+		host:       host,
 		port:       cfg.OrderServicePort,
 	}
 }
@@ -39,7 +45,7 @@ func (a *orderServiceAdapter) GetOrderDetail(ctx context.Context, orderId int) (
 
 	var result *schema.GetOrderDetailAdminResponse
 
-	url := fmt.Sprintf("http://localhost:%d/api/order-service/admin/order-detail/%d", a.port, orderId)
+	url := fmt.Sprintf("http://%s:%d/api/order-service/admin/order-detail/%d", a.host, a.port, orderId)
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
@@ -77,7 +83,7 @@ func (a *orderServiceAdapter) CreateOfflineOrders(ctx context.Context, request *
 	defer log.Println("End call order service for CreateOfflineOrders")
 
 	var result *schema.UpdateResponse
-	url := fmt.Sprintf("http://localhost:%d/api/order-service/admin/order", a.port)
+	url := fmt.Sprintf("http://%s:%d/api/order-service/admin/order", a.host, a.port)
 	data, err := json.Marshal(request)
 	if err != nil {
 		log.Printf("BFF-Adapter-OrderServiceAdapter-CreateOfflineOrders-Marshal error %v", err)
@@ -122,7 +128,7 @@ func (a *orderServiceAdapter) GetOnlineOrders(ctx context.Context) ([]*schema.Ge
 
 	var result *schema.GetOnlineOrdersResponse
 
-	url := fmt.Sprintf("http://localhost:%d/api/order-service/admin/online-order", a.port)
+	url := fmt.Sprintf("http://%s:%d/api/order-service/admin/online-order", a.host, a.port)
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
@@ -161,7 +167,7 @@ func (a *orderServiceAdapter) GetOfflineOrders(ctx context.Context) ([]*schema.G
 
 	var result *schema.GetOfflineOrdersResponse
 
-	url := fmt.Sprintf("http://localhost:%d/api/order-service/admin/offline-order", a.port)
+	url := fmt.Sprintf("http://%s:%d/api/order-service/admin/offline-order", a.host, a.port)
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
@@ -204,7 +210,7 @@ func (a *orderServiceAdapter) GetListOrderCustomer(ctx context.Context, customer
 
 	var result *schema.GetListOrderCustomerResponse
 
-	url := fmt.Sprintf("http://localhost:%d/api/order-service/customer/%s", a.port, customerId)
+	url := fmt.Sprintf("http://%s:%d/api/order-service/customer/%s", a.host, a.port, customerId)
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
 		log.Printf("BFF-Adapter-OrderServiceAdapter-GetOnlineOrdersStatus-NewRequestWithContext error %v", err)

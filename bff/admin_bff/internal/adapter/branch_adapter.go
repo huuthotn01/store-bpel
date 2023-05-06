@@ -25,12 +25,18 @@ type IBranchServiceAdapter interface {
 
 type branchServiceAdapter struct {
 	httpClient *http.Client
+	host       string
 	port       int
 }
 
 func NewBranchAdapter(cfg *config.Config) IBranchServiceAdapter {
+	host := "localhost"
+	if cfg.Env != "local" {
+		host = "branch-service"
+	}
 	return &branchServiceAdapter{
 		httpClient: &http.Client{},
+		host:       host,
 		port:       cfg.BranchServicePort,
 	}
 }
@@ -49,7 +55,7 @@ func (b *branchServiceAdapter) GetBranchDetail(ctx context.Context, branchId str
 		result = &schema.GetBranchDetailResponse{}
 	)
 
-	url := fmt.Sprintf("http://localhost:%d/api/branch-service/%s", b.port, branchId)
+	url := fmt.Sprintf("http://%s:%d/api/branch-service/%s", b.host, b.port, branchId)
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
 		log.Printf("BFF-Adapter-BranchServiceAdapter-GetBranchDetail-NewRequestWithContext error %v", err)
@@ -89,7 +95,7 @@ func (b *branchServiceAdapter) GetBranch(ctx context.Context) ([]*schema.GetBran
 		result = &schema.GetBranchResponse{}
 	)
 
-	url := fmt.Sprintf("http://localhost:%d/api/branch-service", b.port)
+	url := fmt.Sprintf("http://%s:%d/api/branch-service", b.host, b.port)
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
 		log.Printf("BFF-Adapter-BranchServiceAdapter-GetBranch-NewRequestWithContext error %v", err)
@@ -126,7 +132,7 @@ func (b *branchServiceAdapter) AddBranch(ctx context.Context, request *schema.Ad
 	defer log.Println("End call branch service for AddBranch")
 
 	var result *schema.UpdateResponse
-	url := fmt.Sprintf("http://localhost:%d/api/branch-service", b.port)
+	url := fmt.Sprintf("http://%s:%d/api/branch-service", b.host, b.port)
 	data, err := json.Marshal(request)
 	if err != nil {
 		log.Printf("BFF-Adapter-BranchServiceAdapter-AddBranch-Marshal error %v", err)
@@ -170,7 +176,7 @@ func (b *branchServiceAdapter) UpdateBranch(ctx context.Context, branchId string
 	defer log.Println("End call branch service for UpdateBranch")
 
 	var result *schema.UpdateResponse
-	url := fmt.Sprintf("http://localhost:%d/api/branch-service/%s", b.port, branchId)
+	url := fmt.Sprintf("http://%s:%d/api/branch-service/%s", b.host, b.port, branchId)
 	data, err := json.Marshal(request)
 	if err != nil {
 		log.Printf("BFF-Adapter-BranchServiceAdapter-UpdateBranch-Marshal error %v", err)
@@ -214,7 +220,7 @@ func (b *branchServiceAdapter) UpdateBranchManager(ctx context.Context, branchId
 	defer log.Println("End call branch service for UpdateBranchManager")
 
 	var result *schema.UpdateResponse
-	url := fmt.Sprintf("http://localhost:%d/api/branch-service/manager/%s", b.port, branchId)
+	url := fmt.Sprintf("http://%s:%d/api/branch-service/manager/%s", b.host, b.port, branchId)
 	data, err := json.Marshal(request)
 	if err != nil {
 		log.Printf("BFF-Adapter-BranchServiceAdapter-UpdateBranchManager-Marshal error %v", err)
@@ -258,7 +264,7 @@ func (b *branchServiceAdapter) DeleteBranch(ctx context.Context, branchId string
 	defer log.Println("End call branch service for DeleteBranch")
 
 	var result *schema.UpdateResponse
-	url := fmt.Sprintf("http://localhost:%d/api/branch-service/%s", b.port, branchId)
+	url := fmt.Sprintf("http://%s:%d/api/branch-service/%s", b.host, b.port, branchId)
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodDelete, url, nil)
 	if err != nil {
@@ -306,7 +312,7 @@ func (b *branchServiceAdapter) GetBranchStaff(ctx context.Context, branchId stri
 		result = &schema.GetBranchStaffResponse{}
 	)
 
-	url := fmt.Sprintf("http://localhost:%d/api/branch-service/staff/%s", b.port, branchId)
+	url := fmt.Sprintf("http://%s:%d/api/branch-service/staff/%s", b.host, b.port, branchId)
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
 		log.Printf("BFF-Adapter-BranchServiceAdapter-GetBranchStaff-NewRequestWithContext error %v", err)
