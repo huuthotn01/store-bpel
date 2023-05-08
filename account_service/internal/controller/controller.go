@@ -4,7 +4,7 @@ import (
 	"context"
 	"math/rand"
 	"store-bpel/account_service/config"
-	adapter2 "store-bpel/account_service/internal/adapter"
+	"store-bpel/account_service/internal/adapter"
 	"store-bpel/account_service/internal/repository"
 	"store-bpel/account_service/schema"
 	"store-bpel/library/kafka_lib"
@@ -28,8 +28,8 @@ type accountServiceController struct {
 	cfg        *config.Config
 	repository repository.IAccountServiceRepository
 
-	staffAdapter    adapter2.IStaffServiceAdapter
-	customerAdapter adapter2.ICustomerServiceAdapter
+	staffAdapter    adapter.IStaffServiceAdapter
+	customerAdapter adapter.ICustomerServiceAdapter
 	kafkaAdapter    kafka_lib.IKafkaLib
 }
 
@@ -41,10 +41,10 @@ func NewController(cfg *config.Config, db *gorm.DB) IAccountServiceController {
 	repo := repository.NewRepository(db)
 
 	// init staff adapter
-	staffAdapter := adapter2.NewStaffAdapter(cfg)
+	staffAdapter := adapter.NewStaffAdapter(cfg)
 
 	// init customer adapter
-	customerAdapter := adapter2.NewCustomerAdapter(cfg)
+	customerAdapter := adapter.NewCustomerAdapter(cfg)
 
 	// init kafka adapter
 	kafkaAdapter := kafka_lib.NewKafkaLib()

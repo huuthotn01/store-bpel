@@ -12,3 +12,6 @@ migrate-up:
 
 migrate-down:
 	migrate -path migration -database "mysql://bpel:bpel@tcp(localhost:3306)/goods_service" -verbose down
+
+test:
+	cd internal/controller && go test -cover

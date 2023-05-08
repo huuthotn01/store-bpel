@@ -24,8 +24,7 @@ func (c *accountServiceController) CreateResetPassword(ctx context.Context, requ
 	message := "Lưu ý: Không tiết lộ mã OTP với bất kì ai, mã OTP có thời hạn 5 phút:" +
 		"\nMã OTP: " + otpCode
 
-	util.SendEmail(to, title, message)
-	return nil
+	return util.SendEmail(to, title, message)
 }
 
 func (c *accountServiceController) ConfirmOTP(ctx context.Context, request *schema.ConfirmOTPRequest) error {
