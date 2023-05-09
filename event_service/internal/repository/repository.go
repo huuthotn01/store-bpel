@@ -2,8 +2,6 @@ package repository
 
 import (
 	"context"
-	"sort"
-
 	"gorm.io/gorm"
 )
 
@@ -41,12 +39,6 @@ type (
 		GoodsList  []string
 	}
 )
-
-type ByDiscount []*EventModel
-
-func (b ByDiscount) Len() int           { return len(b) }
-func (b ByDiscount) Swap(i, j int)      { b[i], b[j] = b[j], b[i] }
-func (b ByDiscount) Less(i, j int) bool { return b[i].Discount > b[j].Discount }
 
 func (r *eventServiceRepository) UpdateImage(ctx context.Context, eventId string, imageUrl string) error {
 	return r.db.WithContext(ctx).Table(r.eventTableName).Where("event_id = ?", eventId).Update("image", imageUrl).Error
@@ -166,18 +158,12 @@ func (r *eventServiceRepository) GetEventByGoods(ctx context.Context, goodsId st
 	}
 
 	var result []*EventModel
-	for _, eventId := range eventIdList {
-		var event *EventModel
-		err = r.db.WithContext(ctx).Table(r.eventTableName).Where("event_id = ?  AND start_time <= NOW() AND NOW() <= end_time", eventId).First(&event).Error
-		if err != nil {
-			continue
-		}
-		result = append(result, event)
+	err = r.db.WithContext(ctx).Table(r.eventTableName).Where("event_id IN ?  AND start_time <= NOW() AND NOW() <= end_time", eventIdList).
+		Order("discount ASC").Find(&result).Error
+	if err != nil {
+		return nil, err
 	}
-	if len(result) != 0 {
-		sort.Sort(ByDiscount(result))
-		return result[:1], nil
-	}
+
 	return result, nil
 
 }
