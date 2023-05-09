@@ -2,8 +2,6 @@ package controller
 
 import (
 	"context"
-	"errors"
-	"gorm.io/gorm"
 	"store-bpel/branch_service/schema"
 )
 
@@ -23,10 +21,6 @@ func (s *branchServiceController) GetBranch(ctx context.Context) ([]*schema.GetB
 func (s *branchServiceController) GetBranchDetail(ctx context.Context, branchId string) (*schema.GetBranchResponseData, error) {
 	branch, err := s.repository.GetBranchDetail(ctx, branchId)
 	if err != nil {
-		// no data with given branchId => return nothing
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, nil
-		}
 		return nil, err
 	}
 	converted := schema.GetBranchResponseData(*branch)

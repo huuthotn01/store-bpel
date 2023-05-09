@@ -3,7 +3,6 @@ package controller
 import (
 	"context"
 	"store-bpel/customer_service/config"
-	"store-bpel/customer_service/internal/adapter"
 	repo "store-bpel/customer_service/internal/repository"
 	"store-bpel/customer_service/schema"
 
@@ -21,20 +20,14 @@ type ICustomerServiceController interface {
 type customerServiceController struct {
 	cfg        *config.Config
 	repository repo.ICustomerServiceRepository
-
-	kafkaAdapter adapter.IKafkaAdapter
 }
 
 func NewController(cfg *config.Config, db *gorm.DB) ICustomerServiceController {
 	// init repository
 	repository := repo.NewRepository(db)
 
-	// init kafka adapter
-	kafkaAdapter := adapter.NewKafkaAdapter()
-
 	return &customerServiceController{
-		cfg:          cfg,
-		repository:   repository,
-		kafkaAdapter: kafkaAdapter,
+		cfg:        cfg,
+		repository: repository,
 	}
 }
