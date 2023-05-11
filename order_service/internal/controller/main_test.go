@@ -2,6 +2,7 @@ package controller
 
 import (
 	"context"
+	"gorm.io/gorm"
 	"os"
 	"store-bpel/goods_service/schema"
 	"store-bpel/order_service/internal/repository"
@@ -81,15 +82,167 @@ func NewTestRepo() TestRepository {
 }
 
 func (t *testRepo) GetOnlineOrders(ctx context.Context) ([]*repository.OnlineOrderJoiningResponse, error) {
-	return nil, nil
+	return []*repository.OnlineOrderJoiningResponse{
+		{
+			OrderCode:        5,
+			PublicOrderCode:  "MNOPQR",
+			GoodsCode:        "goods-1",
+			GoodsName:        "Goods One",
+			UnitPrice:        10000,
+			Price:            20000,
+			Quantity:         2,
+			Tax:              0.1,
+			ShippingFee:      5000,
+			GoodsColor:       "red",
+			GoodsSize:        "XL",
+			Promotion:        0.2,
+			TotalPrice:       40000,
+			TransactionDate:  "2023-01-01",
+			PaymentMethod:    "COD",
+			CustomerId:       "customer-1",
+			ExpectedDelivery: "2023-01-06",
+			Status:           3,
+			CustomerName:     "HTTN",
+			CustomerPhone:    "0123456789",
+			CustomerEmail:    "httn@gmail.com",
+			Street:           "THT",
+			Ward:             "Ward 11",
+			District:         "District 10",
+			Province:         "Ho Chi Minh City",
+		},
+		{
+			OrderCode:        6,
+			PublicOrderCode:  "AAAAAA",
+			GoodsCode:        "goods-2",
+			GoodsName:        "Goods Two",
+			UnitPrice:        20000,
+			Price:            22000,
+			Quantity:         1,
+			Tax:              0.1,
+			ShippingFee:      3000,
+			GoodsColor:       "blue",
+			GoodsSize:        "XXL",
+			Promotion:        0.2,
+			TotalPrice:       22000,
+			TransactionDate:  "2023-01-02",
+			PaymentMethod:    "momo",
+			CustomerId:       "customer-2",
+			ExpectedDelivery: "2023-01-08",
+			Status:           4,
+			CustomerName:     "Huu Tho",
+			CustomerPhone:    "0111111111",
+			CustomerEmail:    "tho@gmail.com",
+			Street:           "LTK",
+			Ward:             "P.11",
+			District:         "Q.10",
+			Province:         "HCMC",
+		},
+	}, nil
 }
 
 func (t *testRepo) GetOfflineOrders(ctx context.Context) ([]*repository.OfflineOrderJoiningResponse, error) {
-	return nil, nil
+	return []*repository.OfflineOrderJoiningResponse{
+		{
+			OrderCode:       3,
+			PublicOrderCode: "MNOPQR",
+			GoodsCode:       "goods-11",
+			GoodsName:       "Goods Eleven",
+			UnitPrice:       10000,
+			Price:           20000,
+			Quantity:        2,
+			Tax:             0.1,
+			GoodsColor:      "red",
+			GoodsSize:       "XL",
+			Promotion:       0.2,
+			TotalPrice:      40000,
+			TransactionDate: "2023-01-01",
+			StaffId:         "staff-1",
+			StoreCode:       "store-1",
+		},
+		{
+			OrderCode:       4,
+			PublicOrderCode: "AAAAAA",
+			GoodsCode:       "goods-12",
+			GoodsName:       "Goods Twelve",
+			UnitPrice:       20000,
+			Price:           22000,
+			Quantity:        1,
+			Tax:             0.1,
+			GoodsColor:      "blue",
+			GoodsSize:       "XXL",
+			Promotion:       0.2,
+			TotalPrice:      22000,
+			TransactionDate: "2023-01-02",
+			StaffId:         "staff-3",
+			StoreCode:       "store-2",
+		},
+	}, nil
 }
 
 func (t *testRepo) GetOnlineOrdersByCustomer(ctx context.Context, customerId string) ([]*repository.OnlineOrdersResponse, error) {
-	return nil, nil
+	return []*repository.OnlineOrdersResponse{
+		{
+			OrderGoods: []*repository.GoodsModel{
+				{
+					GoodsCode:  "goods-1",
+					GoodsColor: "red",
+					GoodsSize:  "XL",
+					GoodsName:  "Goods One",
+					OrderCode:  5,
+					Quantity:   3,
+					UnitPrice:  5000,
+					TotalPrice: 5500,
+					Tax:        0.1,
+					Promotion:  0.1,
+				},
+				{
+					GoodsCode:  "goods-2",
+					GoodsColor: "yellow",
+					GoodsSize:  "S",
+					GoodsName:  "Goods Two",
+					OrderCode:  5,
+					Quantity:   1,
+					UnitPrice:  5000,
+					TotalPrice: 5500,
+					Tax:        0.1,
+					Promotion:  0.1,
+				},
+			},
+			OrderData: &repository.OrdersModel{
+				OrderCode:       5,
+				TransactionDate: "2023-01-01",
+				TotalPrice:      11000,
+				PublicOrderCode: "ABCDEF",
+			},
+			OnlineOrderData: &repository.OnlineOrdersModel{
+				OrderCode:        5,
+				ExpectedDelivery: "2023-01-06",
+				ShippingFee:      1000,
+				CustomerId:       "customer-1",
+				PaymentMethod:    "COD",
+				Street:           "LTK",
+				Ward:             "11",
+				District:         "10",
+				Province:         "HCMC",
+				CustomerName:     "HTTN",
+				CustomerPhone:    "0123456789",
+				CustomerEmail:    "httn@gmail.com",
+				Status:           4,
+			},
+			ShippingState: []*repository.OrderStateModel{
+				{
+					OrderCode: 5,
+					State:     "Packed by seller",
+					StateTime: time.Date(2023, 1, 1, 15, 16, 17, 0, time.Local),
+				},
+				{
+					OrderCode: 5,
+					State:     "Picked by shipper",
+					StateTime: time.Date(2023, 1, 2, 8, 9, 10, 0, time.Local),
+				},
+			},
+		},
+	}, nil
 }
 
 func (t *testRepo) GetOrderByOrderId(ctx context.Context, orderId int) (*repository.OrdersModel, error) {
@@ -105,11 +258,115 @@ func (t *testRepo) GetOrdersByCustomer(ctx context.Context, customerId string) (
 }
 
 func (t *testRepo) GetOnlineOrderDetail(ctx context.Context, privateOrderId int) (*repository.OnlineOrdersResponse, error) {
-	return nil, nil
+	if privateOrderId == 3 || privateOrderId == 4 {
+		return nil, gorm.ErrRecordNotFound
+	}
+	return &repository.OnlineOrdersResponse{
+		OrderGoods: []*repository.GoodsModel{
+			{
+				GoodsCode:  "goods-1",
+				GoodsColor: "red",
+				GoodsSize:  "XL",
+				GoodsName:  "Goods One",
+				OrderCode:  5,
+				Quantity:   3,
+				UnitPrice:  5000,
+				TotalPrice: 5500,
+				Tax:        0.1,
+				Promotion:  0.1,
+			},
+			{
+				GoodsCode:  "goods-2",
+				GoodsColor: "yellow",
+				GoodsSize:  "S",
+				GoodsName:  "Goods Two",
+				OrderCode:  5,
+				Quantity:   1,
+				UnitPrice:  5000,
+				TotalPrice: 5500,
+				Tax:        0.1,
+				Promotion:  0.1,
+			},
+		},
+		OrderData: &repository.OrdersModel{
+			OrderCode:       5,
+			TransactionDate: "2023-01-01",
+			TotalPrice:      11000,
+			PublicOrderCode: "ABCDEF",
+		},
+		OnlineOrderData: &repository.OnlineOrdersModel{
+			OrderCode:        5,
+			ExpectedDelivery: "2023-01-06",
+			ShippingFee:      1000,
+			CustomerId:       "customer-1",
+			PaymentMethod:    "COD",
+			Street:           "LTK",
+			Ward:             "11",
+			District:         "10",
+			Province:         "HCMC",
+			CustomerName:     "HTTN",
+			CustomerPhone:    "0123456789",
+			CustomerEmail:    "httn@gmail.com",
+			Status:           4,
+		},
+		ShippingState: []*repository.OrderStateModel{
+			{
+				OrderCode: 5,
+				State:     "Packed by seller",
+				StateTime: time.Date(2023, 1, 1, 15, 16, 17, 0, time.Local),
+			},
+			{
+				OrderCode: 5,
+				State:     "Picked by shipper",
+				StateTime: time.Date(2023, 1, 2, 8, 9, 10, 0, time.Local),
+			},
+		},
+	}, nil
 }
 
 func (t *testRepo) GetOfflineOrderDetail(ctx context.Context, privateOrderId int) (*repository.OfflineOrdersResponse, error) {
-	return nil, nil
+	if privateOrderId == 5 || privateOrderId == 6 {
+		return nil, gorm.ErrRecordNotFound
+	}
+	return &repository.OfflineOrdersResponse{
+		OrderGoods: []*repository.GoodsModel{
+			{
+				GoodsCode:  "goods-1",
+				GoodsColor: "red",
+				GoodsSize:  "XL",
+				GoodsName:  "Goods One",
+				OrderCode:  3,
+				Quantity:   3,
+				UnitPrice:  5000,
+				TotalPrice: 5500,
+				Tax:        0.1,
+				Promotion:  0.1,
+			},
+			{
+				GoodsCode:  "goods-2",
+				GoodsColor: "yellow",
+				GoodsSize:  "S",
+				GoodsName:  "Goods Two",
+				OrderCode:  3,
+				Quantity:   1,
+				UnitPrice:  5000,
+				TotalPrice: 5500,
+				Tax:        0.1,
+				Promotion:  0.1,
+			},
+		},
+		OrderData: &repository.OrdersModel{
+			OrderCode:       3,
+			TransactionDate: "2023-01-01",
+			TotalPrice:      11000,
+			PublicOrderCode: "ABCDEF",
+		},
+		OfflineOrderData: &repository.StoreOrdersModel{
+			OrderCode: 3,
+			StoreCode: "store-1",
+			StaffId:   "staff-1",
+		},
+	}, nil
 }
 
 func (t *testRepo) GetPrivateOrderCode(ctx context.Context, orderId string) (int, error) {
