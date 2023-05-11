@@ -2,7 +2,6 @@ package controller
 
 import (
 	"context"
-	"store-bpel/statistic_service/config"
 	"store-bpel/statistic_service/schema"
 	"testing"
 )
@@ -51,15 +50,10 @@ func Test_statisticServiceController_AddOrderData(t *testing.T) {
 	}
 
 	ctx := context.Background()
-	cfg, err := config.Load()
-	if err != nil {
-		panic(err)
-	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			c := &statisticServiceController{
-				cfg:        cfg,
 				repository: testRepository,
 			}
 			if err := c.AddOrderData(ctx, tt.args.request); (err != nil) != tt.wantErr {

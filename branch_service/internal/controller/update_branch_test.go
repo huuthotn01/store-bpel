@@ -2,7 +2,6 @@ package controller
 
 import (
 	"context"
-	"store-bpel/branch_service/config"
 	"store-bpel/branch_service/schema"
 	"testing"
 )
@@ -35,15 +34,10 @@ func Test_branchServiceController_UpdateBranch(t *testing.T) {
 	}
 
 	ctx := context.Background()
-	cfg, err := config.Load()
-	if err != nil {
-		panic(err)
-	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			s := &branchServiceController{
-				cfg:        cfg,
 				repository: testRepository,
 			}
 			if err := s.UpdateBranch(ctx, tt.args.request, tt.args.branchId); (err != nil) != tt.wantErr {
@@ -75,15 +69,10 @@ func Test_branchServiceController_UpdateBranchManager(t *testing.T) {
 	}
 
 	ctx := context.Background()
-	cfg, err := config.Load()
-	if err != nil {
-		panic(err)
-	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			s := &branchServiceController{
-				cfg:        cfg,
 				repository: testRepository,
 			}
 			if err := s.UpdateBranchManager(ctx, tt.args.request, tt.args.branchId); (err != nil) != tt.wantErr {

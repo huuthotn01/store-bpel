@@ -2,7 +2,6 @@ package controller
 
 import (
 	"context"
-	"store-bpel/customer_service/config"
 	"store-bpel/customer_service/schema"
 	"testing"
 )
@@ -54,15 +53,10 @@ func Test_customerServiceController_AddCustomer(t *testing.T) {
 	}
 
 	ctx := context.Background()
-	cfg, err := config.Load()
-	if err != nil {
-		panic(err)
-	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			c := &customerServiceController{
-				cfg:        cfg,
 				repository: testRepository,
 			}
 			if err := c.AddCustomer(ctx, tt.args.request); (err != nil) != tt.wantErr {

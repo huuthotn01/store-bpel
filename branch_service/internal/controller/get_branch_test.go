@@ -3,7 +3,6 @@ package controller
 import (
 	"context"
 	"reflect"
-	"store-bpel/branch_service/config"
 	"store-bpel/branch_service/schema"
 	"testing"
 	"time"
@@ -47,15 +46,10 @@ func Test_branchServiceController_GetBranch(t *testing.T) {
 	}
 
 	ctx := context.Background()
-	cfg, err := config.Load()
-	if err != nil {
-		panic(err)
-	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			s := &branchServiceController{
-				cfg:        cfg,
 				repository: testRepository,
 			}
 			got, err := s.GetBranch(ctx)
@@ -108,15 +102,10 @@ func Test_branchServiceController_GetBranchDetail(t *testing.T) {
 	}
 
 	ctx := context.Background()
-	cfg, err := config.Load()
-	if err != nil {
-		panic(err)
-	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			s := &branchServiceController{
-				cfg:        cfg,
 				repository: testRepository,
 			}
 			got, err := s.GetBranchDetail(ctx, tt.args.branchId)
@@ -151,15 +140,10 @@ func Test_branchServiceController_GetBranchStaff(t *testing.T) {
 	}
 
 	ctx := context.Background()
-	cfg, err := config.Load()
-	if err != nil {
-		panic(err)
-	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			s := &branchServiceController{
-				cfg:        cfg,
 				repository: testRepository,
 			}
 			got, err := s.GetBranchStaff(ctx, tt.args.branchId)

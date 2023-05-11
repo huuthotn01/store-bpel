@@ -3,7 +3,7 @@ package controller
 import (
 	"context"
 	"errors"
-	repository2 "store-bpel/order_service/internal/repository"
+	"store-bpel/order_service/internal/repository"
 	"store-bpel/order_service/schema"
 )
 
@@ -50,7 +50,7 @@ func (c *orderServiceController) GetOrderDetailAdmin(ctx context.Context, orderI
 	}
 
 	// order not exists
-	if errors.Is(err, repository2.ErrOrderNotFound) {
+	if errors.Is(err, repository.ErrOrderNotFound) {
 		return nil, err
 	}
 
@@ -78,7 +78,7 @@ func (c *orderServiceController) GetOrderDetailAdmin(ctx context.Context, orderI
 	}, nil
 }
 
-func (c *orderServiceController) mapListGoods(data []*repository2.GoodsModel) *OrderGoodsAndMoneyData {
+func (c *orderServiceController) mapListGoods(data []*repository.GoodsModel) *OrderGoodsAndMoneyData {
 	var (
 		listGoods     = make([]*schema.OrderGoodsResponse, 0, len(data))
 		goodsNum      = 0

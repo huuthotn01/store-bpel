@@ -2,7 +2,6 @@ package controller
 
 import (
 	"context"
-	"store-bpel/warehouse_service/config"
 	"store-bpel/warehouse_service/schema"
 	"testing"
 )
@@ -28,15 +27,10 @@ func Test_warehouseServiceController_UpdateWarehouseManager(t *testing.T) {
 	}
 
 	ctx := context.Background()
-	cfg, err := config.Load()
-	if err != nil {
-		panic(err)
-	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			c := &warehouseServiceController{
-				config:     cfg,
 				repository: testRepository,
 			}
 			if err := c.UpdateWarehouseManager(ctx, tt.args.request); (err != nil) != tt.wantErr {

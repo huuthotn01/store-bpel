@@ -3,7 +3,6 @@ package controller
 import (
 	"context"
 	"reflect"
-	"store-bpel/statistic_service/config"
 	"store-bpel/statistic_service/schema"
 	"testing"
 )
@@ -46,15 +45,10 @@ func Test_statisticServiceController_GetProfit(t *testing.T) {
 	}
 
 	ctx := context.Background()
-	cfg, err := config.Load()
-	if err != nil {
-		panic(err)
-	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			c := &statisticServiceController{
-				cfg:        cfg,
 				repository: testRepository,
 			}
 			got, err := c.GetProfit(ctx, tt.args.request)

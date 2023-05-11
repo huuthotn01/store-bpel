@@ -2,7 +2,6 @@ package controller
 
 import (
 	"context"
-	"store-bpel/account_service/config"
 	"store-bpel/account_service/schema"
 	"testing"
 )
@@ -39,15 +38,10 @@ func Test_accountServiceController_AddAccount(t *testing.T) {
 	}
 
 	ctx := context.Background()
-	cfg, err := config.Load()
-	if err != nil {
-		panic(err)
-	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			c := &accountServiceController{
-				cfg:        cfg,
 				repository: testRepository,
 			}
 			if err := c.AddAccount(ctx, tt.args.request); (err != nil) != tt.wantErr {
