@@ -22,17 +22,20 @@ func Consume(ctx context.Context, ctrl controller.IAccountServiceController) {
 		msg, err := r.ReadMessage(ctx)
 		if err != nil {
 			log.Printf("Could not consume message " + err.Error())
+			continue
 		}
 
 		var request *schema.AddAccountRequest
 		err = json.Unmarshal(msg.Value, &request)
 		if err != nil {
 			log.Printf("Could not unmarshal value " + err.Error())
+			continue
 		}
 
 		err = ctrl.AddAccount(ctx, request)
 		if err != nil {
 			log.Printf("Cannot process AddAccount" + err.Error())
+			continue
 		}
 		log.Println("Done processing AddAccount")
 	}

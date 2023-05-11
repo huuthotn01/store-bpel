@@ -22,17 +22,20 @@ func Consume(ctx context.Context, ctrl controller.ICustomerServiceController) {
 		msg, err := r.ReadMessage(ctx)
 		if err != nil {
 			log.Println("Could not consume message " + err.Error())
+			continue
 		}
 
 		var request *schema.AddCustomerRequest
 		err = json.Unmarshal(msg.Value, &request)
 		if err != nil {
 			log.Println("Could not unmarshal value " + err.Error())
+			continue
 		}
 
 		err = ctrl.AddCustomer(ctx, request)
 		if err != nil {
 			log.Println("Cannot process AddCustomer" + err.Error())
+			continue
 		}
 		log.Println("Done processing AddCustomer")
 	}
