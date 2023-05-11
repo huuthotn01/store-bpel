@@ -3,7 +3,6 @@ package controller
 import (
 	"context"
 	"reflect"
-	"store-bpel/event_service/config"
 	"store-bpel/event_service/schema"
 	"testing"
 )
@@ -35,15 +34,10 @@ func Test_eventServiceController_GetEventDetail(t *testing.T) {
 	}
 
 	ctx := context.Background()
-	cfg, err := config.Load()
-	if err != nil {
-		panic(err)
-	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			s := &eventServiceController{
-				cfg:        cfg,
 				repository: testRepository,
 			}
 			got, err := s.GetEventDetail(ctx, tt.args.eventId)

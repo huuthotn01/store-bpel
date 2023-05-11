@@ -3,7 +3,6 @@ package controller
 import (
 	"context"
 	"reflect"
-	"store-bpel/account_service/config"
 	"store-bpel/account_service/schema"
 	"testing"
 )
@@ -44,15 +43,10 @@ func Test_accountServiceController_SignIn(t *testing.T) {
 	}
 
 	ctx := context.Background()
-	cfg, err := config.Load()
-	if err != nil {
-		panic(err)
-	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			c := &accountServiceController{
-				cfg:        cfg,
 				repository: testRepository,
 			}
 			got, err := c.SignIn(ctx, tt.args.request)

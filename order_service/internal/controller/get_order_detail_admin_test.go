@@ -3,6 +3,7 @@ package controller
 import (
 	"context"
 	"reflect"
+	"store-bpel/order_service/internal/repository"
 	"store-bpel/order_service/schema"
 	"testing"
 )
@@ -130,6 +131,74 @@ func Test_orderServiceController_GetOrderDetailAdmin(t *testing.T) {
 			}
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("GetOrderDetailAdmin() got = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func Test_orderServiceController_mapListGoods(t *testing.T) {
+	type args struct {
+		data []*repository.GoodsModel
+	}
+	tests := []struct {
+		name string
+		args args
+		want *OrderGoodsAndMoneyData
+	}{
+		{
+			name: "Should map list goods correctly, case input has elements",
+			args: args{
+				data: []*repository.GoodsModel{
+					{
+						GoodsCode:  "goods-1",
+						Quantity:   3,
+						TotalPrice: 20000,
+						Promotion:  0.2,
+					},
+					{
+						GoodsCode:  "goods-2",
+						Quantity:   1,
+						TotalPrice: 50000,
+						Promotion:  0.1,
+					},
+				},
+			},
+			want: &OrderGoodsAndMoneyData{
+				ListGoods: []*schema.OrderGoodsResponse{
+					{
+						GoodsId:  "goods-1",
+						Quantity: 3,
+						Price:    20000,
+						Discount: 0.2,
+					},
+					{
+						GoodsId:  "goods-2",
+						Quantity: 1,
+						Price:    50000,
+						Discount: 0.1,
+					},
+				},
+				TotalGoods:    4,
+				TotalDiscount: 17000,
+			},
+		},
+		{
+			name: "Should map list goods correctly, case input has no element",
+			args: args{
+				data: []*repository.GoodsModel{},
+			},
+			want: &OrderGoodsAndMoneyData{
+				ListGoods:     []*schema.OrderGoodsResponse{},
+				TotalGoods:    0,
+				TotalDiscount: 0,
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c := &orderServiceController{}
+			if got := c.mapListGoods(tt.args.data); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("mapListGoods() = %v, want %v", got, tt.want)
 			}
 		})
 	}

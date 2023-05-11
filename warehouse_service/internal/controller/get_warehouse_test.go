@@ -3,7 +3,6 @@ package controller
 import (
 	"context"
 	"reflect"
-	"store-bpel/warehouse_service/config"
 	"store-bpel/warehouse_service/schema"
 	"testing"
 )
@@ -36,15 +35,10 @@ func Test_warehouseServiceController_GetWarehouse(t *testing.T) {
 	}
 
 	ctx := context.Background()
-	cfg, err := config.Load()
-	if err != nil {
-		panic(err)
-	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			c := &warehouseServiceController{
-				config:     cfg,
 				repository: testRepository,
 			}
 			got, err := c.GetWarehouse(ctx, tt.args.warehouseId)

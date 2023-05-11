@@ -2,7 +2,6 @@ package controller
 
 import (
 	"context"
-	"store-bpel/event_service/config"
 	"testing"
 )
 
@@ -24,15 +23,10 @@ func Test_eventServiceController_DeleteImage(t *testing.T) {
 	}
 
 	ctx := context.Background()
-	cfg, err := config.Load()
-	if err != nil {
-		panic(err)
-	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			s := &eventServiceController{
-				cfg:        cfg,
 				repository: testRepository,
 			}
 			if err := s.DeleteImage(ctx, tt.args.eventId); (err != nil) != tt.wantErr {

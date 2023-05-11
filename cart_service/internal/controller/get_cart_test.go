@@ -3,7 +3,6 @@ package controller
 import (
 	"context"
 	"reflect"
-	"store-bpel/cart_service/config"
 	"store-bpel/cart_service/schema"
 	"testing"
 )
@@ -49,15 +48,10 @@ func Test_cartServiceController_GetCart(t *testing.T) {
 	}
 
 	ctx := context.Background()
-	cfg, err := config.Load()
-	if err != nil {
-		panic(err)
-	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			s := &cartServiceController{
-				cfg:          cfg,
 				repository:   testRepository,
 				goodsAdapter: testGoods,
 			}

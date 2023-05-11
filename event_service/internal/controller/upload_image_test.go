@@ -2,7 +2,6 @@ package controller
 
 import (
 	"context"
-	"store-bpel/event_service/config"
 	"store-bpel/event_service/schema"
 	"testing"
 )
@@ -28,15 +27,10 @@ func Test_eventServiceController_UploadImage(t *testing.T) {
 	}
 
 	ctx := context.Background()
-	cfg, err := config.Load()
-	if err != nil {
-		panic(err)
-	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			s := &eventServiceController{
-				cfg:        cfg,
 				repository: testRepository,
 			}
 			if err := s.UploadImage(ctx, tt.args.request); (err != nil) != tt.wantErr {
