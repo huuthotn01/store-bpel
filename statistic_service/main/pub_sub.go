@@ -7,13 +7,14 @@ import (
 	"github.com/segmentio/kafka-go"
 	"log"
 	"store-bpel/library/kafka_lib"
+	"store-bpel/statistic_service/config"
 	"store-bpel/statistic_service/internal/controller"
 	"store-bpel/statistic_service/schema"
 )
 
-func Consume(ctx context.Context, ctrl controller.IStatisticServiceController) {
+func Consume(ctx context.Context, cfg *config.Config, ctrl controller.IStatisticServiceController) {
 	r := kafka.NewReader(kafka.ReaderConfig{
-		Brokers: []string{fmt.Sprintf("%s:%s", kafka_lib.BROKER_HOST, kafka_lib.BROKER_PORT)},
+		Brokers: []string{fmt.Sprintf("%s:%v", cfg.KafkaHost, cfg.KafkaPort)},
 		Topic:   kafka_lib.STATISTIC_SERVICE_TOPIC,
 		GroupID: "group-1",
 	})

@@ -34,13 +34,9 @@ type goodsServiceAdapter struct {
 }
 
 func NewGoodsAdapter(cfg *config.Config) IGoodsServiceAdapter {
-	host := "localhost"
-	if cfg.Env != "local" {
-		host = "goods-service"
-	}
 	return &goodsServiceAdapter{
 		httpClient: &http.Client{},
-		host:       host,
+		host:       cfg.GoodsServiceHost,
 		port:       cfg.GoodsServicePort,
 	}
 }

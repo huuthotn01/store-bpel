@@ -33,13 +33,9 @@ type staffServiceAdapter struct {
 }
 
 func NewStaffAdapter(cfg *config.Config) IStaffServiceAdapter {
-	host := "localhost"
-	if cfg.Env != "local" {
-		host = "staff-service"
-	}
 	return &staffServiceAdapter{
 		httpClient: &http.Client{},
-		host:       host,
+		host:       cfg.StaffServiceHost,
 		port:       cfg.StaffServicePort,
 	}
 }

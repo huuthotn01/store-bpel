@@ -8,28 +8,25 @@ import (
 	"time"
 )
 
-const (
-	BROKER_HOST = "broker"
-	BROKER_PORT = "29092"
-)
-
 type IKafkaLib interface {
 	Publish(ctx context.Context, topic string, msg []byte) error
 }
 
 type kafkaLib struct {
 	host string
+	port int
 }
 
-func NewKafkaLib() IKafkaLib {
+func NewKafkaLib(host string, port int) IKafkaLib {
 	return &kafkaLib{
-		host: BROKER_HOST,
+		host: host,
+		port: port,
 	}
 }
 
 func (k *kafkaLib) Publish(ctx context.Context, topic string, msg []byte) error {
 	w := kafka.NewWriter(kafka.WriterConfig{
-		Brokers: []string{fmt.Sprintf("%s:%s", BROKER_HOST, BROKER_PORT)},
+		Brokers: []string{fmt.Sprintf("%s:%v", k.host, k.port)},
 		Topic:   topic,
 	})
 

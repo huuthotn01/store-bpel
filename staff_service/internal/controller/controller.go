@@ -40,7 +40,7 @@ func NewController(config *config.Config, db *gorm.DB) IStaffServiceController {
 	accountAdapter := adapter.NewAccountAdapter(config)
 
 	// init kafka adapter
-	kafkaAdapter := kafka_lib.NewKafkaLib()
+	kafkaAdapter := kafka_lib.NewKafkaLib(config.KafkaHost, config.KafkaPort)
 
 	return &staffServiceController{
 		db:             db,

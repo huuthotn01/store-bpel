@@ -23,12 +23,8 @@ type orderServiceAdapter struct {
 }
 
 func NewOrderAdapter(cfg *config.Config) IOrderServiceAdapter {
-	host := "localhost"
-	if cfg.Env != "local" {
-		host = "order-service"
-	}
 	return &orderServiceAdapter{
-		host:       host,
+		host:       cfg.OrderServiceHost,
 		httpClient: &http.Client{},
 		port:       cfg.OrderServicePort,
 	}

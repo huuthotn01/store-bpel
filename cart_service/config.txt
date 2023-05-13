@@ -1,7 +1,9 @@
-ENV: local
 HTTP_PORT: 14061
 
+GOODS_SERVICE_HOST: localhost
 GOODS_SERVICE_PORT: 14080
+KAFKA_HOST: localhost
+KAFKA_PORT: 9092
 
 MYSQL:
   HOST: localhost

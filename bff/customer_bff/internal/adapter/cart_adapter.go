@@ -28,13 +28,9 @@ type cartServiceAdapter struct {
 }
 
 func NewCartAdapter(cfg *config.Config) ICartServiceAdapter {
-	host := "localhost"
-	if cfg.Env != "local" {
-		host = "cart-service"
-	}
 	return &cartServiceAdapter{
 		httpClient: &http.Client{},
-		host:       host,
+		host:       cfg.CartServiceHost,
 		port:       cfg.CartServicePort,
 	}
 }

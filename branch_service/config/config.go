@@ -6,9 +6,11 @@ import (
 )
 
 type Config struct {
-	Env      string       `json:"env" mapstructure:"env"`
 	HttpPort int          `json:"http_port" mapstructure:"http_port"`
 	MySQL    *MySQLConfig `json:"mysql" mapstructure:"mysql"`
+
+	KafkaHost string `json:"kafka_host" mapstructure:"kafka_host"`
+	KafkaPort int    `json:"kafka_port" mapstructure:"kafka_port"`
 }
 
 type MySQLConfig struct {
@@ -36,7 +38,6 @@ func Load() (config *Config, err error) {
 
 func loadDefaultConfig() *Config {
 	return &Config{
-		Env:      "docker",
 		HttpPort: 14000,
 		MySQL: &MySQLConfig{
 			Host:     "mysql",

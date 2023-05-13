@@ -6,14 +6,15 @@ import (
 	"fmt"
 	"github.com/segmentio/kafka-go"
 	"log"
+	"store-bpel/branch_service/config"
 	"store-bpel/branch_service/internal/controller"
 	"store-bpel/branch_service/schema"
 	"store-bpel/library/kafka_lib"
 )
 
-func Consume(ctx context.Context, ctrl controller.IBranchServiceController) {
+func Consume(ctx context.Context, cfg *config.Config, ctrl controller.IBranchServiceController) {
 	r := kafka.NewReader(kafka.ReaderConfig{
-		Brokers: []string{fmt.Sprintf("%s:%s", kafka_lib.BROKER_HOST, kafka_lib.BROKER_PORT)},
+		Brokers: []string{fmt.Sprintf("%s:%v", cfg.KafkaHost, cfg.KafkaPort)},
 		Topic:   kafka_lib.BRANCH_SERVICE_TOPIC,
 		GroupID: "group-1",
 	})

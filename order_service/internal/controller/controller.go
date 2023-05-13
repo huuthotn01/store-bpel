@@ -45,7 +45,7 @@ func NewController(cfg *config.Config, db *gorm.DB) IOrderServiceController {
 	goodsAdapter := adapter.NewGoodsAdapter(cfg)
 
 	// init kafka adapter
-	kafkaAdapter := kafka_lib.NewKafkaLib()
+	kafkaAdapter := kafka_lib.NewKafkaLib(cfg.KafkaHost, cfg.KafkaPort)
 
 	return &orderServiceController{
 		cfg:          cfg,

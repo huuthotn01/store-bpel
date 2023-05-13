@@ -47,7 +47,7 @@ func NewController(cfg *config.Config, db *gorm.DB) IAccountServiceController {
 	customerAdapter := adapter.NewCustomerAdapter(cfg)
 
 	// init kafka adapter
-	kafkaAdapter := kafka_lib.NewKafkaLib()
+	kafkaAdapter := kafka_lib.NewKafkaLib(cfg.KafkaHost, cfg.KafkaPort)
 
 	return &accountServiceController{
 		cfg:             cfg,
