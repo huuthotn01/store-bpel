@@ -1,5 +1,7 @@
-ENV: local
 HTTP_PORT: 14050
+
+KAFKA_HOST: localhost
+KAFKA_PORT: 9092
 
 MYSQL:
   HOST: localhost

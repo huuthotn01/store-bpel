@@ -29,13 +29,9 @@ type statisticServiceAdapter struct {
 }
 
 func NewStatisticAdapter(cfg *config.Config) IStatisticServiceAdapter {
-	host := "localhost"
-	if cfg.Env != "local" {
-		host = "statistic-service"
-	}
 	return &statisticServiceAdapter{
 		httpClient: &http.Client{},
-		host:       host,
+		host:       cfg.StatisticServiceHost,
 		port:       cfg.StatisticServicePort,
 	}
 }

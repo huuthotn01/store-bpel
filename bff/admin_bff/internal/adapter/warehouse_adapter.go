@@ -34,13 +34,9 @@ type warehouseServiceAdapter struct {
 }
 
 func NewWarehouseAdapter(cfg *config.Config) IWarehouseServiceAdapter {
-	host := "localhost"
-	if cfg.Env != "local" {
-		host = "warehouse-service"
-	}
 	return &warehouseServiceAdapter{
 		httpClient: &http.Client{},
-		host:       host,
+		host:       cfg.WarehouseServiceHost,
 		port:       cfg.WarehouseServicePort,
 	}
 }

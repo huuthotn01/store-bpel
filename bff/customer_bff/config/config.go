@@ -7,13 +7,16 @@ import (
 )
 
 type Config struct {
-	Env      string `json:"env" mapstructure:"env"`
-	HttpPort int    `json:"http_port" mapstructure:"http_port"`
+	HttpPort int `json:"http_port" mapstructure:"http_port"`
 
-	CustomerServicePort int `json:"customer_service_port" mapstructure:"customer_service_port"`
-	OrderServicePort    int `json:"order_service_port" mapstructure:"order_service_port"`
-	CartServicePort     int `json:"cart_service_port" mapstructure:"cart_service_port"`
-	AccountServicePort  int `json:"account_service_port" mapstructure:"account_service_port"`
+	CustomerServiceHost string `json:"customer_service_host" mapstructure:"customer_service_host"`
+	CustomerServicePort int    `json:"customer_service_port" mapstructure:"customer_service_port"`
+	OrderServiceHost    string `json:"order_service_host" mapstructure:"order_service_host"`
+	OrderServicePort    int    `json:"order_service_port" mapstructure:"order_service_port"`
+	CartServiceHost     string `json:"cart_service_host" mapstructure:"cart_service_host"`
+	CartServicePort     int    `json:"cart_service_port" mapstructure:"cart_service_port"`
+	AccountServiceHost  string `json:"account_service_host" mapstructure:"account_service_host"`
+	AccountServicePort  int    `json:"account_service_port" mapstructure:"account_service_port"`
 }
 
 func Load() (config *Config, err error) {
@@ -33,7 +36,6 @@ func Load() (config *Config, err error) {
 
 func loadDefaultConfig() *Config {
 	return &Config{
-		Env:                 "docker",
 		HttpPort:            20000,
 		CustomerServicePort: 14050,
 		OrderServicePort:    14070,

@@ -28,13 +28,9 @@ type customerServiceAdapter struct {
 }
 
 func NewCustomerAdapter(cfg *config.Config) ICustomerServiceAdapter {
-	host := "localhost"
-	if cfg.Env != "local" {
-		host = "customer-service"
-	}
 	return &customerServiceAdapter{
 		httpClient: &http.Client{},
-		host:       host,
+		host:       cfg.CustomerServiceHost,
 		port:       cfg.CustomerServicePort,
 	}
 }

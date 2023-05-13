@@ -24,13 +24,9 @@ type accountServiceAdapter struct {
 }
 
 func NewAccountAdapter(cfg *config.Config) IAccountServiceAdapter {
-	host := "localhost"
-	if cfg.Env != "local" {
-		host = "account-service"
-	}
 	return &accountServiceAdapter{
 		httpClient: &http.Client{},
-		host:       host,
+		host:       cfg.AccountServiceHost,
 		port:       cfg.AccountServicePort,
 	}
 }

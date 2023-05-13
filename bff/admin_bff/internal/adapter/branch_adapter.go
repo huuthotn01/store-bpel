@@ -30,13 +30,9 @@ type branchServiceAdapter struct {
 }
 
 func NewBranchAdapter(cfg *config.Config) IBranchServiceAdapter {
-	host := "localhost"
-	if cfg.Env != "local" {
-		host = "branch-service"
-	}
 	return &branchServiceAdapter{
 		httpClient: &http.Client{},
-		host:       host,
+		host:       cfg.BranchServiceHost,
 		port:       cfg.BranchServicePort,
 	}
 }

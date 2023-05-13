@@ -3,7 +3,7 @@ package controller
 import (
 	"context"
 	"store-bpel/goods_service/config"
-	adapter2 "store-bpel/goods_service/internal/adapter"
+	"store-bpel/goods_service/internal/adapter"
 	repo "store-bpel/goods_service/internal/repository"
 	"store-bpel/goods_service/schema"
 
@@ -30,9 +30,9 @@ type goodsServiceController struct {
 	cfg        *config.Config
 	repository repo.IGoodsServiceRepository
 
-	warehouseServiceAdapter adapter2.IWarehouseServiceAdapter
-	eventServiceAdapter     adapter2.IEventServiceAdapter
-	orderServiceAdapter     adapter2.IOrderServiceAdapter
+	warehouseServiceAdapter adapter.IWarehouseServiceAdapter
+	eventServiceAdapter     adapter.IEventServiceAdapter
+	orderServiceAdapter     adapter.IOrderServiceAdapter
 }
 
 func NewController(cfg *config.Config, db *gorm.DB) IGoodsServiceController {
@@ -40,13 +40,13 @@ func NewController(cfg *config.Config, db *gorm.DB) IGoodsServiceController {
 	repository := repo.NewRepository(db)
 
 	// init warehouse service adapter
-	whAdapter := adapter2.NewWarehouseAdapter(cfg)
+	whAdapter := adapter.NewWarehouseAdapter(cfg)
 
 	// init event service adapter
-	eventAdapter := adapter2.NewEventAdapter(cfg)
+	eventAdapter := adapter.NewEventAdapter(cfg)
 
 	// init order service adapter
-	orderAdapter := adapter2.NewOrderAdapter(cfg)
+	orderAdapter := adapter.NewOrderAdapter(cfg)
 
 	return &goodsServiceController{
 		cfg:                     cfg,

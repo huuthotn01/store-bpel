@@ -6,11 +6,11 @@ import (
 )
 
 type Config struct {
-	Env      string       `json:"env" mapstructure:"env"`
 	HttpPort int          `json:"http_port" mapstructure:"http_port"`
 	MySQL    *MySQLConfig `json:"mysql" mapstructure:"mysql"`
 
-	StaffServicePort int `json:"staff_service_port" mapstructure:"staff_service_port"`
+	StaffServiceHost string `json:"staff_service_host" mapstructure:"staff_service_host"`
+	StaffServicePort int    `json:"staff_service_port" mapstructure:"staff_service_port"`
 }
 
 type MySQLConfig struct {
@@ -38,7 +38,6 @@ func Load() (config *Config, err error) {
 
 func loadDefaultConfig() *Config {
 	return &Config{
-		Env:              "docker",
 		HttpPort:         14081,
 		StaffServicePort: 14082,
 		MySQL: &MySQLConfig{

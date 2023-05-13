@@ -26,13 +26,9 @@ type eventServiceAdapter struct {
 }
 
 func NewEventAdapter(cfg *config.Config) IEventServiceAdapter {
-	host := "localhost"
-	if cfg.Env != "local" {
-		host = "event-service"
-	}
 	return &eventServiceAdapter{
 		httpClient: &http.Client{},
-		host:       host,
+		host:       cfg.EventServiceHost,
 		port:       cfg.EventServicePort,
 	}
 }

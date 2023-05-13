@@ -1,4 +1,3 @@
-ENV: local
 HTTP_PORT: 14060
 
 MYSQL:

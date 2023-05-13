@@ -6,13 +6,16 @@ import (
 )
 
 type Config struct {
-	Env          string        `json:"env" mapstructure:"env"`
 	HttpPort     int           `json:"http_port" mapstructure:"http_port"`
 	MySQL        *MySQLConfig  `json:"mysql" mapstructure:"mysql"`
 	ServiceFlags *ServiceFlags `json:"service_flags" mapstructure:"service_flags"`
 
-	StaffServicePort    int `json:"staff_service_port" mapstructure:"staff_service_port"`
-	CustomerServicePort int `json:"customer_service_port" mapstructure:"customer_service_port"`
+	StaffServiceHost    string `json:"staff_service_host" mapstructure:"staff_service_host"`
+	StaffServicePort    int    `json:"staff_service_port" mapstructure:"staff_service_port"`
+	CustomerServiceHost string `json:"customer_service_host" mapstructure:"customer_service_host"`
+	CustomerServicePort int    `json:"customer_service_port" mapstructure:"customer_service_port"`
+	KafkaHost           string `json:"kafka_host" mapstructure:"kafka_host"`
+	KafkaPort           int    `json:"kafka_port" mapstructure:"kafka_port"`
 }
 
 type MySQLConfig struct {
@@ -44,7 +47,6 @@ func Load() (config *Config, err error) {
 
 func loadDefaultConfig() *Config {
 	return &Config{
-		Env:      "docker",
 		HttpPort: 14083,
 		MySQL: &MySQLConfig{
 			Host:     "mysql",
