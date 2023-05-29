@@ -2,7 +2,7 @@ name: Docker Image CI
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "master", "tho/*", "phong/*", "hien/*"]
 
 jobs:
   build:
@@ -12,8 +12,7 @@ jobs:
     - 
       name: Go test
       run: |
-        cd ../../
-        cd account_service/internal/controller && go test && cd ../../../
+        cd ../../account_service/internal/controller && go test && cd ../../../
         cd branch_service/internal/controller && go test && cd ../../../
         cd cart_service/internal/controller && go test && cd ../../../
         cd customer_service/internal/controller && go test && cd ../../../
