@@ -12,6 +12,8 @@ jobs:
     - 
       name: Go test
       run: |
+        ls
+        pwd
         cd ../../account_service/internal/controller && go test && cd ../../../
         cd branch_service/internal/controller && go test && cd ../../../
         cd cart_service/internal/controller && go test && cd ../../../
