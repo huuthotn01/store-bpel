@@ -19,4 +19,14 @@ jobs:
           fetch-depth: 0
 
       - name: Run tests
-        run: go test -cover ./account_service/internal/controller
+        run: |
+          go test -cover ./account_service/internal/controller
+          go test -cover ./branch_service/internal/controller
+          go test -cover ./cart_service/internal/controller
+          go test -cover ./customer_service/internal/controller
+          go test -cover ./event_service/internal/controller
+          go test -cover ./goods_service/internal/controller
+          go test -cover ./order_service/internal/controller
+          go test -cover ./staff_service/internal/controller
+          go test -cover ./statistic_service/internal/controller
+          go test -cover ./warehouse_service/internal/controller
