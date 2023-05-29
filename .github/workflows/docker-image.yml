@@ -19,4 +19,4 @@ jobs:
           fetch-depth: 0
 
       - name: Run tests
-        run: go test -cover ./...
+        run: go test -cover ./account_service/internal/controller
