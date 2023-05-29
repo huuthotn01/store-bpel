@@ -1,26 +1,22 @@
-name: Docker Image CI
+name: Go test
 
 on:
   push:
     branches: [ "master", "tho/*", "phong/*", "hien/*"]
 
 jobs:
-  build:
+  go-test:
     runs-on: ubuntu-20.04
-
     steps:
-    - 
-      name: Go test
-      run: |
-        ls
-        pwd
-        cd ../../account_service/internal/controller && go test && cd ../../../
-        cd branch_service/internal/controller && go test && cd ../../../
-        cd cart_service/internal/controller && go test && cd ../../../
-        cd customer_service/internal/controller && go test && cd ../../../
-        cd event_service/internal/controller && go test && cd ../../../
-        cd goods_service/internal/controller && go test && cd ../../../
-        cd order_service/internal/controller && go test && cd ../../../
-        cd staff_service/internal/controller && go test && cd ../../../
-        cd statistic_service/internal/controller && go test && cd ../../../
-        cd warehouse_service/internal/controller && go test && cd ../../../
+      - name: Setup Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.18
+          
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Run tests
+        run: go test -cover ./...
