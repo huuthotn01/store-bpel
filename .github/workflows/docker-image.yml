@@ -1,0 +1,27 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+
+    steps:
+    - 
+      name: Build the Docker images
+      run: |
+        docker build -f bff/admin_bff/Dockerfile -t huuthotn01/admin-bff:$(shell date '+%Y%m%d%H%M%S') .
+        docker build -f bff/customer_bff/Dockerfile -t huuthotn01/customer-bff:$(shell date '+%Y%m%d%H%M%S') .
+        docker build -f bff/shared_bff/Dockerfile -t huuthotn01/shared-bff:$(shell date '+%Y%m%d%H%M%S') .
+        docker build -f account_service/Dockerfile -t huuthotn01/account-service:$(shell date '+%Y%m%d%H%M%S') .
+        docker build -f branch_service/Dockerfile -t huuthotn01/branch-service:$(shell date '+%Y%m%d%H%M%S') .
+        docker build -f cart_service/Dockerfile -t huuthotn01/cart-service:$(shell date '+%Y%m%d%H%M%S') .
+        docker build -f customer_service/Dockerfile -t huuthotn01/customer-service:$(shell date '+%Y%m%d%H%M%S') .
+        docker build -f event_service/Dockerfile -t huuthotn01/event-service:$(shell date '+%Y%m%d%H%M%S') .
+        docker build -f goods_service/Dockerfile -t huuthotn01/goods-service:$(shell date '+%Y%m%d%H%M%S') .
+        docker build -f order_service/Dockerfile -t huuthotn01/order-service:$(shell date '+%Y%m%d%H%M%S') .
+        docker build -f staff_service/Dockerfile -t huuthotn01/staff-service:$(shell date '+%Y%m%d%H%M%S') .
+        docker build -f statistic_service/Dockerfile -t huuthotn01/statistic-service:$(shell date '+%Y%m%d%H%M%S') .
+        docker build -f warehouse_service/Dockerfile -t huuthotn01/warehouse-service:$(shell date '+%Y%m%d%H%M%S') .
