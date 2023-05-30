@@ -24,19 +24,16 @@ jobs:
       -
         name: Build Docker images
         run: imageTag=`$shell date '+%Y%m%d%H%M%S'` && 
-          docker build -f ../../bff/admin_bff/Dockerfile -t huuthotn01/admin-bff:$imageTag . &&
-          docker build -f ./store-bpel/bff/customer_bff/Dockerfile -t huuthotn01/customer-bff:$imageTag . &&
-          docker build -f ./store-bpel/bff/shared_bff/Dockerfile -t huuthotn01/shared-bff:$imageTag . &&
-          docker build -f ./store-bpel/account_service/Dockerfile -t huuthotn01/account-service:$imageTag . &&
-          docker build -f ./store-bpel/branch_service/Dockerfile -t huuthotn01/branch-service:$imageTag . &&
-          docker build -f ./store-bpel/cart_service/Dockerfile -t huuthotn01/cart-service:$imageTag . &&
-          docker build -f ./store-bpel/customer_service/Dockerfile -t huuthotn01/customer-service:$imageTag . &&
-          docker build -f ./store-bpel/event_service/Dockerfile -t huuthotn01/event-service:$imageTag . &&
-          docker build -f ./store-bpel/goods_service/Dockerfile -t huuthotn01/goods-service:$imageTag . &&
-          docker build -f ./store-bpel/order_service/Dockerfile -t huuthotn01/order-service:$imageTag . &&
-          docker build -f ./store-bpel/staff_service/Dockerfile -t huuthotn01/staff-service:$imageTag . &&
-          docker build -f ./store-bpel/statistic_service/Dockerfile -t huuthotn01/statistic-service:$imageTag . &&
-          docker build -f ./store-bpel/warehouse_service/Dockerfile -t huuthotn01/warehouse-service:$imageTag . 
+          docker build -f ./account_service/Dockerfile -t huuthotn01/account-service:$imageTag . &&
+          docker build -f ./branch_service/Dockerfile -t huuthotn01/branch-service:$imageTag . &&
+          docker build -f ./cart_service/Dockerfile -t huuthotn01/cart-service:$imageTag . &&
+          docker build -f ./customer_service/Dockerfile -t huuthotn01/customer-service:$imageTag . &&
+          docker build -f ./event_service/Dockerfile -t huuthotn01/event-service:$imageTag . &&
+          docker build -f ./goods_service/Dockerfile -t huuthotn01/goods-service:$imageTag . &&
+          docker build -f ./order_service/Dockerfile -t huuthotn01/order-service:$imageTag . &&
+          docker build -f ./staff_service/Dockerfile -t huuthotn01/staff-service:$imageTag . &&
+          docker build -f ./statistic_service/Dockerfile -t huuthotn01/statistic-service:$imageTag . &&
+          docker build -f ./warehouse_service/Dockerfile -t huuthotn01/warehouse-service:$imageTag . 
 
       -
         name: Build and push
