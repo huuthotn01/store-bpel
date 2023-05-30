@@ -1,25 +1,31 @@
-name: Docker Image CI
+name: Go test
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "master", "tho/*", "phong/*", "hien/*"]
 
 jobs:
-  build:
+  go-test:
     runs-on: ubuntu-20.04
-
     steps:
-    - 
-      name: Go test
-      run: |
-        cd ../../
-        cd account_service/internal/controller && go test && cd ../../../
-        cd branch_service/internal/controller && go test && cd ../../../
-        cd cart_service/internal/controller && go test && cd ../../../
-        cd customer_service/internal/controller && go test && cd ../../../
-        cd event_service/internal/controller && go test && cd ../../../
-        cd goods_service/internal/controller && go test && cd ../../../
-        cd order_service/internal/controller && go test && cd ../../../
-        cd staff_service/internal/controller && go test && cd ../../../
-        cd statistic_service/internal/controller && go test && cd ../../../
-        cd warehouse_service/internal/controller && go test && cd ../../../
+      - name: Setup Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.18
+          
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Run tests
+        run: |
+          go test -cover ./account_service/internal/controller
+          go test -cover ./branch_service/internal/controller
+          go test -cover ./cart_service/internal/controller
+          go test -cover ./customer_service/internal/controller
+          go test -cover ./event_service/internal/controller
+          go test -cover ./goods_service/internal/controller
+          go test -cover ./order_service/internal/controller
+          go test -cover ./statistic_service/internal/controller
+          go test -cover ./warehouse_service/internal/controller
