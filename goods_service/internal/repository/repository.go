@@ -35,13 +35,30 @@ func NewRepository(db *gorm.DB) IGoodsServiceRepository {
 	}
 }
 
+type FilterGoodsData struct {
+	GoodsCode string
+	CreatedAt string
+}
+
 func (r *goodsServiceRepository) FilterGoods(ctx context.Context, name string, newAdded bool) ([]string, error) {
-	var result []string
-	query := r.db.WithContext(ctx).Table(r.goodsTableName).Where("goods_name like '%" + name + "%'").Select("distinct goods_code")
+	var (
+		filteredData []*FilterGoodsData
+		result       []string
+	)
+	query := r.db.WithContext(ctx).Table(r.goodsTableName).Where("goods_name like '%" + name + "%'").Select("distinct goods_code, created_at")
 	if newAdded {
 		query = query.Where("created_at >= date_sub(curdate(), interval 30 day)").Order("created_at desc")
 	}
-	return result, query.Find(&result).Error
+	err := query.Find(&filteredData).Error
+	if err != nil {
+		return nil, err
+	}
+
+	for _, data := range filteredData {
+		result = append(result, data.GoodsCode)
+	}
+
+	return result, nil
 }
 
 func (r *goodsServiceRepository) GetGoodsDefault(ctx context.Context, pageSize, pageNum int) ([]string, error) {
