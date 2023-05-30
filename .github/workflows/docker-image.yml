@@ -2,7 +2,7 @@ name: Build Docker images
 
 on:
   push:
-    branches: [ "master", "tho/*"]
+    branches: [ "master"]
 
 jobs:
   docker:
