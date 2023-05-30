@@ -20,6 +20,10 @@ jobs:
         with:
           username: huuthotn01
           password: huutho-trannguyen-235532
+          
+      -
+        name: Check directory
+        run: ls -la | pwd
 
       -
         name: Build Docker images
