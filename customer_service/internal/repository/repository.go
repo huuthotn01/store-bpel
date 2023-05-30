@@ -34,5 +34,9 @@ func (r *customerServiceRepository) UpdateCustomerInfo(ctx context.Context, data
 }
 
 func (r *customerServiceRepository) AddCustomer(ctx context.Context, data *CustomerModel) error {
-	return r.db.WithContext(ctx).Table(r.customerTableName).Create(&data).Error
+	query := r.db.WithContext(ctx).Table(r.customerTableName)
+	if data.CustomerGender == "" {
+		query.Omit("customer_gender")
+	}
+	return query.Create(&data).Error
 }
