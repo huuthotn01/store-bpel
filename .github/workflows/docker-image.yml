@@ -27,6 +27,9 @@ jobs:
       -
         name: Build Docker images
         run: imageTag=`$shell date '+%Y%m%d%H%M%S'` && 
+          docker build -f ./bff/admin_bff/Dockerfile -t huuthotn01/admin-bff:$imageTag . &&
+          docker build -f ./bff/customer_bff/Dockerfile -t huuthotn01/customer-bff:$imageTag . &&
+          docker build -f ./bff/shared_bff/Dockerfile -t huuthotn01/shared-bff:$imageTag . &&
           docker build -f ./account_service/Dockerfile -t huuthotn01/account-service:$imageTag . &&
           docker build -f ./branch_service/Dockerfile -t huuthotn01/branch-service:$imageTag . &&
           docker build -f ./cart_service/Dockerfile -t huuthotn01/cart-service:$imageTag . &&
