@@ -26,7 +26,7 @@ func NewKafkaLib(host string, port int) IKafkaLib {
 
 func (k *kafkaLib) Publish(ctx context.Context, topic string, msg []byte) error {
 	w := kafka.NewWriter(kafka.WriterConfig{
-		Brokers: []string{fmt.Sprintf("%s:%v", k.host, k.port)},
+		Brokers: []string{fmt.Sprintf("%s:%d", k.host, k.port)},
 		Topic:   topic,
 	})
 
