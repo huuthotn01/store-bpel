@@ -26,6 +26,16 @@ func Test_accountServiceController_UpdateRole(t *testing.T) {
 			},
 		},
 		{
+			name: "Should return error when db return error getting account",
+			args: args{
+				username: "db-error-check-account",
+				request: &schema.UpdateRoleRequest{
+					Role: 3,
+				},
+			},
+			wantErr: true,
+		},
+		{
 			name: "Should update role successfully, role 7, request role not 7",
 			args: args{
 				username: "user-role-7",

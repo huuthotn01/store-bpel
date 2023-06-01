@@ -23,6 +23,24 @@ func Test_accountServiceController_CreateResetPassword(t *testing.T) {
 				},
 			},
 		},
+		{
+			name: "Should return error when db return error getting account",
+			args: args{
+				request: &schema.CreateResetPasswordRequest{
+					Username: "db-error-check-account",
+				},
+			},
+			wantErr: true,
+		},
+		{
+			name: "Should return error when db return error updating otp code",
+			args: args{
+				request: &schema.CreateResetPasswordRequest{
+					Username: "db-update-otp-fail",
+				},
+			},
+			wantErr: true,
+		},
 	}
 
 	ctx := context.Background()
@@ -63,6 +81,16 @@ func Test_accountServiceController_ConfirmOTP(t *testing.T) {
 				request: &schema.ConfirmOTPRequest{
 					Username: "test-user",
 					Otp:      "invalid-otp",
+				},
+			},
+			wantErr: true,
+		},
+		{
+			name: "Should return error when db return error updating password",
+			args: args{
+				request: &schema.ConfirmOTPRequest{
+					Username: "db-update-password-fail",
+					Otp:      "test-otp",
 				},
 			},
 			wantErr: true,

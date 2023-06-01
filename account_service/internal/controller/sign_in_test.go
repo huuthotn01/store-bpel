@@ -31,6 +31,26 @@ func Test_accountServiceController_SignIn(t *testing.T) {
 			},
 		},
 		{
+			name: "Should return error when password not correct",
+			args: args{
+				request: &schema.SignInRequest{
+					Username: "test-user",
+					Password: "wrong pass",
+				},
+			},
+			wantErr: true,
+		},
+		{
+			name: "Should return error when db return error getting account",
+			args: args{
+				request: &schema.SignInRequest{
+					Username: "db-error-check-account",
+					Password: "testpwd",
+				},
+			},
+			wantErr: true,
+		},
+		{
 			name: "Should return error when account not activated",
 			args: args{
 				request: &schema.SignInRequest{
