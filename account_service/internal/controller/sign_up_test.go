@@ -34,6 +34,26 @@ func Test_accountServiceController_SignUp(t *testing.T) {
 			},
 			wantErr: true,
 		},
+		{
+			name: "Should return error when db return error but not error record not found",
+			args: args{
+				request: &schema.SignUpRequest{
+					Username: "db-error-check-account",
+					Password: "db-error",
+				},
+			},
+			wantErr: true,
+		},
+		{
+			name: "Should return error when db return error adding account",
+			args: args{
+				request: &schema.SignUpRequest{
+					Username: "db-add-account-fail",
+					Password: "db-error",
+				},
+			},
+			wantErr: true,
+		},
 	}
 
 	ctx := context.Background()

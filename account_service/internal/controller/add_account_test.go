@@ -35,6 +35,17 @@ func Test_accountServiceController_AddAccount(t *testing.T) {
 				},
 			},
 		},
+		{
+			name: "Should return error when db return error adding account",
+			args: args{
+				request: &schema.AddAccountRequest{
+					Username: "db-add-account-fail",
+					Role:     7,
+					Email:    "test@mail.com",
+				},
+			},
+			wantErr: true,
+		},
 	}
 
 	ctx := context.Background()

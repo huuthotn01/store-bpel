@@ -43,6 +43,27 @@ func Test_accountServiceController_GetListAccount(t *testing.T) {
 				},
 			},
 		},
+		{
+			name: "Should return error when get list account from db failed",
+			args: args{
+				username: "get-list-account-fail",
+			},
+			wantErr: true,
+		},
+		{
+			name: "Should return error when customer adapter failed",
+			args: args{
+				username: "cust-adapter-fail",
+			},
+			wantErr: true,
+		},
+		{
+			name: "Should return error when staff adapter failed",
+			args: args{
+				username: "staff-adapter-fail",
+			},
+			wantErr: true,
+		},
 	}
 
 	ctx := context.Background()

@@ -36,6 +36,17 @@ func Test_accountServiceController_ChangePassword(t *testing.T) {
 			},
 			wantErr: true,
 		},
+		{
+			name: "Should return error when db return error update password",
+			args: args{
+				request: &schema.ChangePasswordRequest{
+					Username:    "db-error-check-account",
+					OldPassword: "unmatchedpwd",
+					NewPassword: "newpwd",
+				},
+			},
+			wantErr: true,
+		},
 	}
 
 	ctx := context.Background()

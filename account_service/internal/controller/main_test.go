@@ -38,6 +38,27 @@ func NewTestRepo() TestRepository {
 }
 
 func (r *testRepo) GetListAccount(ctx context.Context, username string) ([]*repository.AccountModel, error) {
+	if username == "get-list-account-fail" {
+		return nil, errors.New("some random error")
+	}
+	if username == "cust-adapter-fail" {
+		return []*repository.AccountModel{
+			{
+				UserRole:    1,
+				Username:    "cust-adapter-fail",
+				IsActivated: 1,
+			},
+		}, nil
+	}
+	if username == "staff-adapter-fail" {
+		return []*repository.AccountModel{
+			{
+				UserRole:    3,
+				Username:    "staff-adapter-fail",
+				IsActivated: 1,
+			},
+		}, nil
+	}
 	return []*repository.AccountModel{
 		{
 			UserRole:    1,
@@ -53,7 +74,13 @@ func (r *testRepo) GetListAccount(ctx context.Context, username string) ([]*repo
 }
 
 func (r *testRepo) GetAccount(ctx context.Context, username string) (*repository.AccountModel, error) {
-	if username == "new-customer" {
+	if username == "db-error-check-account" {
+		return nil, errors.New("some random error")
+	}
+	if username == "db-error-add-account" {
+		return nil, errors.New("error adding account")
+	}
+	if username == "new-customer" || username == "db-add-account-fail" {
 		return nil, gorm.ErrRecordNotFound
 	}
 	pass, err := util.HashPasswordBcrypt("testpwd")
@@ -80,18 +107,30 @@ func (r *testRepo) GetAccount(ctx context.Context, username string) (*repository
 }
 
 func (r *testRepo) AddAccount(ctx context.Context, data *repository.AccountModel) error {
+	if data.Username == "db-add-account-fail" {
+		return errors.New("some random error")
+	}
 	return nil
 }
 
 func (r *testRepo) UpdateRole(ctx context.Context, username string, role int, password string) error {
+	if username == "db-update-role-fail" {
+		return errors.New("some random error")
+	}
 	return nil
 }
 
 func (r *testRepo) UpdatePassword(ctx context.Context, username string, password string) error {
+	if username == "db-update-password-fail" {
+		return errors.New("some random error")
+	}
 	return nil
 }
 
 func (r *testRepo) UpdateOTPCode(ctx context.Context, username string, otp string) error {
+	if username == "db-update-otp-fail" {
+		return errors.New("some random error")
+	}
 	return nil
 }
 
@@ -117,6 +156,9 @@ func NewTestStaffAdapter() TestStaffAdapter {
 }
 
 func (a *testStaffAdapter) GetDetailStaff(ctx context.Context, staffId string) (*staff_schema.GetStaffResponseData, error) {
+	if staffId == "staff-adapter-fail" {
+		return nil, errors.New("some random error")
+	}
 	return &staff_schema.GetStaffResponseData{
 		StaffId:     "staff-1",
 		PhoneNumber: "0123456789",
@@ -138,6 +180,9 @@ func NewTestCustomerAdapter() TestCustomerAdapter {
 }
 
 func (a *testCustomerAdapter) GetCustomer(ctx context.Context, username string) (*customer_schema.GetCustomerInfoResponseData, error) {
+	if username == "cust-adapter-fail" {
+		return nil, errors.New("some random error")
+	}
 	return &customer_schema.GetCustomerInfoResponseData{
 		Phone: "0111111111",
 		Email: "cust-1@gmail.com",
