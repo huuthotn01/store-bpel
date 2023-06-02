@@ -38,6 +38,54 @@ func Test_orderServiceController_CreateOfflineOrder(t *testing.T) {
 				},
 			},
 		},
+		{
+			name: "Should return error when order service return error",
+			args: args{
+				request: &schema.MakeOfflineOrderRequest{
+					GoodsList: []*schema.OrderGoodsRequest{
+						{
+							GoodsId:   "invalid-goods-id",
+							Size:      "XL",
+							Color:     "red",
+							Quantity:  3,
+							UnitPrice: 5000,
+							Price:     15000,
+							Tax:       0.1,
+							Discount:  0.3,
+						},
+					},
+					TransactionDate: "2023-01-01",
+					TotalPrice:      15000,
+					BranchId:        "branch-1",
+					StaffId:         "staff-1",
+				},
+			},
+			wantErr: true,
+		},
+		{
+			name: "Should return error when db make offline order fails",
+			args: args{
+				request: &schema.MakeOfflineOrderRequest{
+					GoodsList: []*schema.OrderGoodsRequest{
+						{
+							GoodsId:   "goods-1",
+							Size:      "XL",
+							Color:     "red",
+							Quantity:  3,
+							UnitPrice: 5000,
+							Price:     15000,
+							Tax:       0.1,
+							Discount:  0.3,
+						},
+					},
+					TransactionDate: "2023-01-01",
+					TotalPrice:      15000,
+					BranchId:        "branch-1",
+					StaffId:         "invalid-offline-order",
+				},
+			},
+			wantErr: true,
+		},
 	}
 
 	ctx := context.Background()

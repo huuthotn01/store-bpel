@@ -3,6 +3,7 @@ package controller
 import (
 	"context"
 	"errors"
+	"gorm.io/gorm"
 	"store-bpel/order_service/internal/repository"
 	"store-bpel/order_service/schema"
 )
@@ -50,7 +51,7 @@ func (c *orderServiceController) GetOrderDetailAdmin(ctx context.Context, orderI
 	}
 
 	// order not exists
-	if errors.Is(err, repository.ErrOrderNotFound) {
+	if !errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, err
 	}
 

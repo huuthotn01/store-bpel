@@ -40,6 +40,20 @@ func Test_goodsServiceController_GetProductDetail(t *testing.T) {
 				},
 			},
 		},
+		{
+			name: "Should return error when db get goods image fail",
+			args: args{
+				goodsId: "invalid-goods-img",
+			},
+			wantErr: true,
+		},
+		{
+			name: "Should return error when db get goods detail fail",
+			args: args{
+				goodsId: "invalid-goods",
+			},
+			wantErr: true,
+		},
 	}
 
 	ctx := context.Background()

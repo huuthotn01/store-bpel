@@ -2,6 +2,7 @@ package controller
 
 import (
 	"context"
+	"errors"
 	"gorm.io/gorm"
 	"os"
 	"store-bpel/event_service/internal/repository"
@@ -35,6 +36,20 @@ func NewTestRepo() TestRepository {
 }
 
 func (t *testRepo) GetAllEvent(ctx context.Context) ([]*repository.EventModel, error) {
+	if ctx.Value("status") == "db-fail" {
+		return nil, errors.New("some random error")
+	}
+	if ctx.Value("status") == "invalid-event" {
+		return []*repository.EventModel{
+			{
+				EventId:   "invalid-event",
+				Name:      "Test Event 1",
+				Discount:  0.5,
+				StartTime: "2023-01-01",
+				EndTime:   "2023-06-01",
+			},
+		}, nil
+	}
 	return []*repository.EventModel{
 		{
 			EventId:   "event-1",
@@ -64,6 +79,9 @@ func (t *testRepo) GetAllEventCurrent(ctx context.Context, date int) ([]*reposit
 }
 
 func (t *testRepo) GetGoods(ctx context.Context, eventId string) ([]string, error) {
+	if eventId == "invalid-event" {
+		return nil, errors.New("some random error")
+	}
 	if eventId == "event-1" {
 		return []string{"goods-1", "goods-2"}, nil
 	}
@@ -71,6 +89,9 @@ func (t *testRepo) GetGoods(ctx context.Context, eventId string) ([]string, erro
 }
 
 func (t *testRepo) GetEvent(ctx context.Context, eventId string) (*repository.EventModel, error) {
+	if eventId == "invalid" {
+		return nil, errors.New("some random error")
+	}
 	if eventId == "event-2" {
 		return &repository.EventModel{
 			EventId:   "event-2",
@@ -104,6 +125,9 @@ func (t *testRepo) DeleteEvent(ctx context.Context, eventId string) error {
 }
 
 func (t *testRepo) GetEventByGoods(ctx context.Context, goodsId string) ([]*repository.EventModel, error) {
+	if goodsId == "invalid-goods" {
+		return nil, errors.New("some random error")
+	}
 	return []*repository.EventModel{
 		{
 			EventId:  "event-1",
