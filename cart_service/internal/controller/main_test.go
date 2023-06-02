@@ -2,6 +2,7 @@ package controller
 
 import (
 	"context"
+	"errors"
 	"os"
 	"store-bpel/cart_service/internal/repository"
 	"store-bpel/goods_service/schema"
@@ -26,6 +27,9 @@ func NewTestGoodsAdapter() TestGoodsAdapter {
 }
 
 func (t *testGoodsAdapter) GetProductDetail(ctx context.Context, productId string) (*schema.GetGoodsDefaultResponseData, error) {
+	if productId == "invalid-goods" {
+		return nil, errors.New("some random error")
+	}
 	return &schema.GetGoodsDefaultResponseData{
 		ListQuantity: []*schema.GetGoodsDefault_QuantityList{
 			{

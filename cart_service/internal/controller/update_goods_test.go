@@ -36,6 +36,21 @@ func Test_cartServiceController_UpdateGoods(t *testing.T) {
 				},
 			},
 		},
+		{
+			name: "Should return error when goods adapter return error",
+			args: args{
+				cartId: "customer-1",
+				request: []*schema.AddGoodsRequest{
+					{
+						GoodsId:    "invalid-goods",
+						GoodsSize:  "XL",
+						GoodsColor: "red",
+						Quantity:   2,
+					},
+				},
+			},
+			wantErr: true,
+		},
 	}
 
 	ctx := context.Background()

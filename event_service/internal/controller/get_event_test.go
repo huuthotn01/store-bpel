@@ -8,13 +8,17 @@ import (
 )
 
 func Test_eventServiceController_GetEvent(t *testing.T) {
+	ctx := context.Background()
+
 	tests := []struct {
 		name    string
+		ctx     context.Context
 		want    []*schema.GetEventData
 		wantErr bool
 	}{
 		{
 			name: "Should get all events correctly",
+			ctx:  ctx,
 			want: []*schema.GetEventData{
 				{
 					Id:        "event-1",
@@ -34,16 +38,24 @@ func Test_eventServiceController_GetEvent(t *testing.T) {
 				},
 			},
 		},
+		{
+			name:    "Should return error when event not valid",
+			ctx:     context.WithValue(ctx, "status", "invalid-event"),
+			wantErr: true,
+		},
+		{
+			name:    "Should return error when db return error get event",
+			ctx:     context.WithValue(ctx, "status", "db-fail"),
+			wantErr: true,
+		},
 	}
-
-	ctx := context.Background()
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			s := &eventServiceController{
 				repository: testRepository,
 			}
-			got, err := s.GetEvent(ctx)
+			got, err := s.GetEvent(tt.ctx)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("GetEvent() error = %v, wantErr %v", err, tt.wantErr)
 				return

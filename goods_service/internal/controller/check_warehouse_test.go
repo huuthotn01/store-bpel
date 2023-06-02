@@ -45,6 +45,32 @@ func Test_goodsServiceController_CheckWarehouse(t *testing.T) {
 				},
 			},
 		},
+		{
+			name: "Should return error when db get goods in wh data fail",
+			args: args{
+				request: &schema.CheckWarehouseRequest{
+					Elements: []*schema.CheckWarehouseRequestElement{
+						{
+							GoodsCode: "invalid-goods-code",
+						},
+					},
+				},
+			},
+			wantErr: true,
+		},
+		{
+			name: "Should return error when db get goods in wh data return no data",
+			args: args{
+				request: &schema.CheckWarehouseRequest{
+					Elements: []*schema.CheckWarehouseRequestElement{
+						{
+							GoodsCode: "no-data-goods",
+						},
+					},
+				},
+			},
+			wantErr: true,
+		},
 	}
 
 	ctx := context.Background()

@@ -80,6 +80,9 @@ func (t *testRepo) GetBranchDetail(ctx context.Context, branchId string) (*repos
 }
 
 func (t *testRepo) GetBranchStaff(ctx context.Context, branchId string) ([]*repository.BranchStaffModel, error) {
+	if branchId == "branch-not-found" {
+		return nil, gorm.ErrRecordNotFound
+	}
 	return []*repository.BranchStaffModel{
 		{
 			StaffCode: "staff-1",

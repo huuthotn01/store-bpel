@@ -137,6 +137,13 @@ func Test_branchServiceController_GetBranchStaff(t *testing.T) {
 			},
 			want: []string{"staff-1", "staff-2", "staff-3"},
 		},
+		{
+			name: "Should return error when branch not exists",
+			args: args{
+				branchId: "branch-not-found",
+			},
+			wantErr: true,
+		},
 	}
 
 	ctx := context.Background()

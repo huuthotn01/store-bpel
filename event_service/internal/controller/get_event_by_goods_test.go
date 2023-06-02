@@ -35,6 +35,13 @@ func Test_eventServiceController_GetEventByGoods(t *testing.T) {
 				},
 			},
 		},
+		{
+			name: "Should return error when db get event by goods fail",
+			args: args{
+				goodsId: "invalid-goods",
+			},
+			wantErr: true,
+		},
 	}
 
 	ctx := context.Background()

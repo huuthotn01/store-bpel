@@ -2,6 +2,7 @@ package controller
 
 import (
 	"context"
+	"errors"
 	"os"
 	event_schema "store-bpel/event_service/schema"
 	"store-bpel/goods_service/internal/repository"
@@ -92,10 +93,19 @@ func NewTestRepo() TestRepository {
 }
 
 func (t *testRepo) FilterGoods(ctx context.Context, name string, newAdded bool) ([]string, error) {
+	if name == "invalid-name" {
+		return nil, errors.New("some random error")
+	}
+	if name == "empty-name" {
+		return []string{}, nil
+	}
 	return []string{"goods-1"}, nil
 }
 
 func (t *testRepo) GetGoods(ctx context.Context) ([]*repository.GoodsModel, error) {
+	if ctx.Value("status") == "invalid-goods" {
+		return nil, errors.New("some random error")
+	}
 	return []*repository.GoodsModel{
 		{
 			GoodsCode:  "goods-1",
@@ -117,6 +127,9 @@ func (t *testRepo) GetGoodsDefault(ctx context.Context, limit, offset int) ([]st
 }
 
 func (t *testRepo) GetImages(ctx context.Context) ([]*repository.GoodsImg, error) {
+	if ctx.Value("status") == "invalid-image" {
+		return nil, errors.New("some random error")
+	}
 	return []*repository.GoodsImg{
 		{
 			GoodsCode:  "goods-1",
@@ -132,6 +145,9 @@ func (t *testRepo) GetImages(ctx context.Context) ([]*repository.GoodsImg, error
 }
 
 func (t *testRepo) GetGoodsImages(ctx context.Context, goodsId string) ([]*repository.GoodsImg, error) {
+	if goodsId == "invalid-goods-img" {
+		return nil, errors.New("some random error")
+	}
 	return []*repository.GoodsImg{
 		{
 			GoodsCode:  "goods-1",
@@ -151,6 +167,9 @@ func (t *testRepo) GetGoodsImageUrls(ctx context.Context, goodsId string) ([]str
 }
 
 func (t *testRepo) GetDetailGoods(ctx context.Context, goodsId string) ([]*repository.GoodsModel, error) {
+	if goodsId == "invalid-goods" {
+		return nil, errors.New("some random error")
+	}
 	return []*repository.GoodsModel{
 		{
 			GoodsCode:  "goods-1",
@@ -180,6 +199,12 @@ func (t *testRepo) UpdateGoodsIsForSaleToNo(ctx context.Context, goodsId string)
 }
 
 func (t *testRepo) GetGoodsInWHData(ctx context.Context, data *repository.GoodsInWh) ([]*repository.GoodsInWh, error) {
+	if data.GoodsCode == "no-data-goods" {
+		return []*repository.GoodsInWh{}, nil
+	}
+	if data.GoodsCode == "invalid-goods-code" {
+		return nil, errors.New("some random error")
+	}
 	return []*repository.GoodsInWh{
 		{
 			GoodsCode:  "goods-1",
@@ -207,7 +232,18 @@ func (t *testRepo) UpdateGoodsInWHTransfer(ctx context.Context, data *repository
 }
 
 func (t *testRepo) GetWarehouseByGoods(ctx context.Context, goodsId string) ([]*repository.GoodsInWh, error) {
-	return nil, nil
+	if goodsId == "invalid-goods-wh" {
+		return nil, errors.New("some random error")
+	}
+	return []*repository.GoodsInWh{
+		{
+			GoodsCode:  "goods-1",
+			GoodsSize:  "XXL",
+			GoodsColor: "red",
+			WhCode:     "wh-1",
+			Quantity:   2,
+		},
+	}, nil
 }
 
 func (t *testRepo) AddGoodsImage(ctx context.Context, data *repository.GoodsImg) error {

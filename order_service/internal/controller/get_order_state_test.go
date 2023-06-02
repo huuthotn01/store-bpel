@@ -40,6 +40,20 @@ func Test_orderServiceController_GetOnlineOrdersStatus(t *testing.T) {
 				},
 			},
 		},
+		{
+			name: "Should return error when db get private code fails",
+			args: args{
+				orderId: "invalid-order",
+			},
+			wantErr: true,
+		},
+		{
+			name: "Should return error when db get order state fails",
+			args: args{
+				orderId: "invalid-order-state",
+			},
+			wantErr: true,
+		},
 	}
 
 	ctx := context.Background()

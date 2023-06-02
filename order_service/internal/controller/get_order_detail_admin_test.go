@@ -115,6 +115,20 @@ func Test_orderServiceController_GetOrderDetailAdmin(t *testing.T) {
 				},
 			},
 		},
+		{
+			name: "Should return error when db get online order fails",
+			args: args{
+				orderId: 10,
+			},
+			wantErr: true,
+		},
+		{
+			name: "Should return error when db get offline order fails",
+			args: args{
+				orderId: 0,
+			},
+			wantErr: true,
+		},
 	}
 
 	ctx := context.Background()

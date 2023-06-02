@@ -75,6 +75,27 @@ func Test_goodsServiceController_SearchGoods(t *testing.T) {
 				},
 			},
 		},
+		{
+			name: "Should return error when db filter goods fail",
+			args: args{
+				request: &schema.SearchGoodsRequest{
+					Query:    "invalid-name",
+					PageSize: 5,
+					Category: 1,
+				},
+			},
+			wantErr: true,
+		},
+		{
+			name: "Should return nothing when db filter goods return nothing",
+			args: args{
+				request: &schema.SearchGoodsRequest{
+					Query:    "empty-name",
+					PageSize: 5,
+					Category: 1,
+				},
+			},
+		},
 	}
 
 	ctx := context.Background()

@@ -2,6 +2,7 @@ package controller
 
 import (
 	"context"
+	"errors"
 	"gorm.io/gorm"
 	"os"
 	"store-bpel/goods_service/schema"
@@ -45,6 +46,9 @@ func NewTestStaffAdapter() TestGoodsAdapter {
 }
 
 func (t *testGoodsAdapter) GetProductDetail(ctx context.Context, productId string) (*schema.GetGoodsDefaultResponseData, error) {
+	if productId == "invalid-goods-id" {
+		return nil, errors.New("some random error")
+	}
 	return &schema.GetGoodsDefaultResponseData{
 		Name:        "Goods Name",
 		GoodsType:   "Type 1",
@@ -258,7 +262,10 @@ func (t *testRepo) GetOrdersByCustomer(ctx context.Context, customerId string) (
 }
 
 func (t *testRepo) GetOnlineOrderDetail(ctx context.Context, privateOrderId int) (*repository.OnlineOrdersResponse, error) {
-	if privateOrderId == 3 || privateOrderId == 4 {
+	if privateOrderId == 10 {
+		return nil, errors.New("some random error")
+	}
+	if privateOrderId == 3 || privateOrderId == 4 || privateOrderId == 0 {
 		return nil, gorm.ErrRecordNotFound
 	}
 	return &repository.OnlineOrdersResponse{
@@ -325,6 +332,9 @@ func (t *testRepo) GetOnlineOrderDetail(ctx context.Context, privateOrderId int)
 }
 
 func (t *testRepo) GetOfflineOrderDetail(ctx context.Context, privateOrderId int) (*repository.OfflineOrdersResponse, error) {
+	if privateOrderId == 0 {
+		return nil, errors.New("some random error")
+	}
 	if privateOrderId == 5 || privateOrderId == 6 {
 		return nil, gorm.ErrRecordNotFound
 	}
@@ -370,10 +380,19 @@ func (t *testRepo) GetOfflineOrderDetail(ctx context.Context, privateOrderId int
 }
 
 func (t *testRepo) GetPrivateOrderCode(ctx context.Context, orderId string) (int, error) {
+	if orderId == "invalid-order" {
+		return 0, errors.New("some random error")
+	}
+	if orderId == "invalid-order-state" {
+		return 9, nil
+	}
 	return 5, nil
 }
 
 func (t *testRepo) GetOrderState(ctx context.Context, orderId int) ([]*repository.OrderStateModel, error) {
+	if orderId == 9 {
+		return nil, errors.New("some random error")
+	}
 	return []*repository.OrderStateModel{
 		{
 			OrderCode: 5,
@@ -410,6 +429,9 @@ func (t *testRepo) CreateOnlineOrder(ctx context.Context, data *repository.Onlin
 }
 
 func (t *testRepo) CreateOfflineOrder(ctx context.Context, data *repository.OfflineOrdersData) error {
+	if data.StaffId == "invalid-offline-order" {
+		return errors.New("some random error")
+	}
 	return nil
 }
 

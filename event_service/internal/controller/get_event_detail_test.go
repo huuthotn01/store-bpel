@@ -31,6 +31,20 @@ func Test_eventServiceController_GetEventDetail(t *testing.T) {
 				Goods:     []string{"goods-3", "goods-4"},
 			},
 		},
+		{
+			name: "Should return error when db get goods return error",
+			args: args{
+				eventId: "invalid-event",
+			},
+			wantErr: true,
+		},
+		{
+			name: "Should return error when db get event return error",
+			args: args{
+				eventId: "invalid",
+			},
+			wantErr: true,
+		},
 	}
 
 	ctx := context.Background()
