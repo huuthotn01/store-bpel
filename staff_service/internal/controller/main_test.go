@@ -3,6 +3,7 @@ package controller
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"fmt"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -49,6 +50,9 @@ func NewTestAccountAdapter() TestAccountAdapter {
 }
 
 func (t *testAccountAdapter) UpdateRole(ctx context.Context, username string, request *account_schema.UpdateRoleRequest) error {
+	if username == "invalid-account" {
+		return errors.New("some random error")
+	}
 	return nil
 }
 
@@ -76,6 +80,9 @@ func NewTestRepo() TestRepository {
 }
 
 func (t *testRepo) GetStaff(ctx context.Context, staffName, staffId string) ([]*repository.StaffModel, error) {
+	if staffId == "invalid-staff" {
+		return nil, errors.New("some random error")
+	}
 	return []*repository.StaffModel{
 		{
 			StaffId:   "staff-1",
@@ -91,10 +98,16 @@ func (t *testRepo) GetStaff(ctx context.Context, staffName, staffId string) ([]*
 }
 
 func (t *testRepo) AddStaff(ctx context.Context, staff *repository.StaffModel) error {
+	if staff.StaffId == "invalid-staff" {
+		return errors.New("some random error")
+	}
 	return nil
 }
 
 func (t *testRepo) GetStaffDetail(ctx context.Context, staffId string) (*repository.StaffModel, error) {
+	if staffId == "invalid-staff" {
+		return nil, errors.New("some random error")
+	}
 	return &repository.StaffModel{
 		StaffId:   "staff-1",
 		StaffName: "Staff One",
@@ -103,6 +116,9 @@ func (t *testRepo) GetStaffDetail(ctx context.Context, staffId string) (*reposit
 }
 
 func (t *testRepo) UpdateStaff(ctx context.Context, data *repository.StaffModel) error {
+	if data.StaffId == "invalid-staff" {
+		return errors.New("some random error")
+	}
 	return nil
 }
 
@@ -115,10 +131,16 @@ func (t *testRepo) DeleteStaffRemove(ctx context.Context, staffId string) error 
 }
 
 func (t *testRepo) CreateAccount(ctx context.Context, data *repository.AccountModel) error {
+	if data.StaffId == "invalid-staff-account" {
+		return errors.New("some random error")
+	}
 	return nil
 }
 
 func (t *testRepo) GetStaffAttendance(ctx context.Context, staffId string) ([]*repository.AttendanceModel, error) {
+	if staffId == "invalid-staff" {
+		return nil, errors.New("some random error")
+	}
 	return []*repository.AttendanceModel{
 		{
 			StaffId:        "staff-1",
@@ -137,6 +159,9 @@ func (t *testRepo) GetStaffAttendance(ctx context.Context, staffId string) ([]*r
 }
 
 func (t *testRepo) CreateStaffRequest(ctx context.Context, request *repository.RequestsModel) error {
+	if request.StaffId == "invalid-staff-request" {
+		return errors.New("some random error")
+	}
 	return nil
 }
 
