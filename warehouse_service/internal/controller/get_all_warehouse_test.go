@@ -8,13 +8,17 @@ import (
 )
 
 func Test_warehouseServiceController_GetAllWarehouse(t *testing.T) {
+	ctx := context.Background()
+
 	tests := []struct {
 		name    string
+		ctx     context.Context
 		want    []*schema.GetWarehouseResponseData
 		wantErr bool
 	}{
 		{
 			name: "Should get all warehouses correctly",
+			ctx:  ctx,
 			want: []*schema.GetWarehouseResponseData{
 				{
 					WarehouseCode: "warehouse-1",
@@ -36,16 +40,19 @@ func Test_warehouseServiceController_GetAllWarehouse(t *testing.T) {
 				},
 			},
 		},
+		{
+			name:    "Should return error when db get all warehouse fails",
+			ctx:     context.WithValue(ctx, "status", "fail"),
+			wantErr: true,
+		},
 	}
-
-	ctx := context.Background()
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			c := &warehouseServiceController{
 				repository: testRepository,
 			}
-			got, err := c.GetAllWarehouse(ctx)
+			got, err := c.GetAllWarehouse(tt.ctx)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("GetAllWarehouse() error = %v, wantErr %v", err, tt.wantErr)
 				return

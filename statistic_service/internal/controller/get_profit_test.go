@@ -42,6 +42,18 @@ func Test_statisticServiceController_GetProfit(t *testing.T) {
 				},
 			},
 		},
+		{
+			name: "Should return error when db get overall stat fails",
+			args: args{
+				request: &schema.FilterGetStatisticRequest{
+					BranchId: []string{"invalid-branch"},
+					Gender:   []int{1, 2, 3},
+					Start:    "2023-01-01",
+					End:      "2023-01-03",
+				},
+			},
+			wantErr: true,
+		},
 	}
 
 	ctx := context.Background()
