@@ -28,12 +28,17 @@ func (s *staffServiceController) UpdateStaff(ctx context.Context, request *schem
 		return err
 	}
 
-	role, err := strconv.Atoi(request.Role)
-	if err == nil {
+	if request.Role != "" {
+		role, err := strconv.Atoi(request.Role)
+		if err != nil {
+			return err
+		}
 		err = s.accountAdapter.UpdateRole(ctx, staffId, &accountSchema.UpdateRoleRequest{
 			Role: role,
 		})
-		return err
+		if err != nil {
+			return err
+		}
 	}
 
 	if request.WorkingPlace != "" {

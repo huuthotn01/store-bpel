@@ -36,6 +36,13 @@ func Test_staffServiceController_GetStaff(t *testing.T) {
 				},
 			},
 		},
+		{
+			name: "Should return error when db get staff fails",
+			args: args{
+				staffId: "invalid-staff",
+			},
+			wantErr: true,
+		},
 	}
 
 	ctx := context.Background()
@@ -77,6 +84,13 @@ func Test_staffServiceController_GetDetailStaff(t *testing.T) {
 				StaffName: "Staff One",
 				Gender:    "MALE",
 			},
+		},
+		{
+			name: "Should return error when db get staff detail fails",
+			args: args{
+				staffId: "invalid-staff",
+			},
+			wantErr: true,
 		},
 	}
 

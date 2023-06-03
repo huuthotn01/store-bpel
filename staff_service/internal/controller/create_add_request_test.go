@@ -36,6 +36,28 @@ func Test_staffServiceController_CreateAddRequest(t *testing.T) {
 				},
 			},
 		},
+		{
+			name: "Should return error when db create staff request fails",
+			args: args{
+				request: &schema.CreateAddRequest{
+					Name:         "Huu Tho",
+					Birthdate:    "2001-01-01",
+					Hometown:     "Hue",
+					CitizenId:    "9999999999",
+					Phone:        "0123456789",
+					Street:       "THT",
+					Ward:         "11",
+					District:     "10",
+					Province:     "HCMC",
+					WorkingPlace: "HCMUT",
+					Gender:       "MALE",
+					Salary:       1000000,
+					Role:         "3",
+					Email:        "invalid-staff-request@gmail.com",
+				},
+			},
+			wantErr: true,
+		},
 	}
 
 	ctx := context.Background()

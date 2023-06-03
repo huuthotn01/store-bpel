@@ -38,6 +38,13 @@ func Test_staffServiceController_GetStaffAttendance(t *testing.T) {
 				},
 			},
 		},
+		{
+			name: "Should return error when db get staff attendance fails",
+			args: args{
+				staffId: "invalid-staff",
+			},
+			wantErr: true,
+		},
 	}
 
 	ctx := context.Background()

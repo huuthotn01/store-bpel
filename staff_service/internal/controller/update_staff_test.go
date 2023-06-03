@@ -27,6 +27,44 @@ func Test_staffServiceController_UpdateStaff(t *testing.T) {
 				staffId: "staff-1",
 			},
 		},
+		{
+			name: "Should return error when db update staff fails",
+			args: args{
+				request: &schema.UpdateStaffRequest{
+					Name:     "HTTN",
+					Street:   "Ly Thuong Kiet",
+					Province: "Binh Duong",
+				},
+				staffId: "invalid-staff",
+			},
+			wantErr: true,
+		},
+		{
+			name: "Should return error when request role invalid",
+			args: args{
+				request: &schema.UpdateStaffRequest{
+					Name:     "HTTN",
+					Street:   "Ly Thuong Kiet",
+					Province: "Binh Duong",
+					Role:     "invalid",
+				},
+				staffId: "staff-1",
+			},
+			wantErr: true,
+		},
+		{
+			name: "Should return error when account adapter fails",
+			args: args{
+				request: &schema.UpdateStaffRequest{
+					Name:     "HTTN",
+					Street:   "Ly Thuong Kiet",
+					Province: "Binh Duong",
+					Role:     "3",
+				},
+				staffId: "invalid-account",
+			},
+			wantErr: true,
+		},
 	}
 
 	ctx := context.Background()
