@@ -2,6 +2,7 @@ package controller
 
 import (
 	"context"
+	"errors"
 	"os"
 	"store-bpel/staff_service/schema"
 	"store-bpel/warehouse_service/internal/repository"
@@ -26,6 +27,9 @@ func NewTestStaffAdapter() TestStaffAdapter {
 }
 
 func (t *testStaffAdapter) GetDetailStaff(ctx context.Context, staffId string) (*schema.GetStaffResponseData, error) {
+	if staffId == "invalid-staff" {
+		return nil, errors.New("some random error")
+	}
 	if staffId == "staff-1" {
 		return &schema.GetStaffResponseData{
 			StaffId:     "staff-1",
@@ -112,6 +116,16 @@ func (t *testRepo) RemoveWarehouseStaff(ctx context.Context, staffId string) err
 }
 
 func (t *testRepo) GetWarehouseManager(ctx context.Context, warehouseId string) (*repository.StaffInWh, error) {
+	if warehouseId == "invalid-warehouse" {
+		return nil, errors.New("some random error")
+	}
+	if warehouseId == "invalid-warehouse-manager" {
+		return &repository.StaffInWh{
+			StaffCode:     "invalid-staff",
+			WarehouseCode: "warehouse-1",
+			Role:          "5",
+		}, nil
+	}
 	return &repository.StaffInWh{
 		StaffCode:     "staff-1",
 		WarehouseCode: "warehouse-1",
@@ -136,6 +150,9 @@ func (t *testRepo) GetWarehouse(ctx context.Context, warehouseId string) (*repos
 }
 
 func (t *testRepo) GetAllWarehouse(ctx context.Context) ([]*repository.WarehouseModel, error) {
+	if ctx.Value("status") == "fail" {
+		return nil, errors.New("some random error")
+	}
 	return []*repository.WarehouseModel{
 		{
 			WarehouseCode: "warehouse-1",

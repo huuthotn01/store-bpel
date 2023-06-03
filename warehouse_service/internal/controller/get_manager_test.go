@@ -40,6 +40,20 @@ func Test_warehouseServiceController_GetWarehouseManager(t *testing.T) {
 				Email:       "staff-1@gmail.com",
 			},
 		},
+		{
+			name: "Should return error when db get warehouse manager fails",
+			args: args{
+				warehouseId: "invalid-warehouse",
+			},
+			wantErr: true,
+		},
+		{
+			name: "Should return error when staff adapter fails",
+			args: args{
+				warehouseId: "invalid-warehouse-manager",
+			},
+			wantErr: true,
+		},
 	}
 
 	ctx := context.Background()

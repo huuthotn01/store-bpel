@@ -2,6 +2,7 @@ package controller
 
 import (
 	"context"
+	"errors"
 	"os"
 	"store-bpel/statistic_service/internal/repository"
 	"testing"
@@ -29,6 +30,12 @@ func (t *testRepo) AddOrderData(ctx context.Context, goodsModel []*repository.Go
 }
 
 func (t *testRepo) GetOverallStat(ctx context.Context, start, end string, goodsId string, branchId []string, gender []int, goodsType []string) ([]*repository.OverallStatData, error) {
+	if len(branchId) > 0 && branchId[0] == "invalid-branch" {
+		return nil, errors.New("some random error")
+	}
+	if goodsId == "invalid-goods" {
+		return nil, errors.New("some random error")
+	}
 	return []*repository.OverallStatData{
 		{
 			Revenue: 1000,
